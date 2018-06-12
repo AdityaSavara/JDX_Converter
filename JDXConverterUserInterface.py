@@ -1,4 +1,4 @@
-yesimport JDXConverter
+import JDXConverter
 import string
 import numpy
 import csv
@@ -58,7 +58,7 @@ def combineArray(Array1, Array2):
 
 def exportToCSV(filename, OverallArray, listOfFiles, MoleculeNames, ENumbers, MWeights):
 
-	f5 = open(filename, 'w')
+	f5 = open(filename, 'wb')
 
 	#write the molecues
 	f5.write('Information/Notes: ')
@@ -83,7 +83,7 @@ def exportToCSV(filename, OverallArray, listOfFiles, MoleculeNames, ENumbers, MW
 	f5.write('\n')
 
 	Array1=OverallArray
-	printRow= len(Array1)//100
+	printRow= len(Array1)/100
 	printArray =[]
 	zeros = True
 
@@ -97,7 +97,7 @@ def exportToCSV(filename, OverallArray, listOfFiles, MoleculeNames, ENumbers, MW
 		if zeros == False:
 			f5.write('%d,'%(i))	
 			for y in range(printRow):	
-				f5.write('%d,'%(Array1[100*y +i-1]))
+				f5.write('%d,'%(Array1[100*y +i]))
 			f5.write('\n')
 		
 
@@ -113,35 +113,35 @@ listOfFiles=list()
 
 fileYorN=''
 
-print("would you like to load references from a csv file? Enter 'yes' or 'no'. If not then you will enter files manually.")
-fileYorN=input()
+print "would you like to load references from a csv file? Enter 'yes' or 'no'. If not then you will enter files manually."
+fileYorN=raw_input()
 
 
 if (fileYorN =='no'):
-	print("Welcome! Enter the name of the molecule, it's mass, it's electron number and the associated JDX file in order to generate your raw data fields")
-	print("Enter the molecule's Name: ")
-	moleculeName = input()
+	print "Welcome! Enter the name of the molecule, it's mass, it's electron number and the associated JDX file in order to generate your raw data fields"
+	print "Enter the molecule's Name: "
+	moleculeName = raw_input()
 
 
 
 	while moleculeName != 'EXIT':
 		MoleculeNames.append(moleculeName)
-		print(" enter the electron Number: ")
-		ENumber = input()
+		print " enter the electron Number: "
+		ENumber = raw_input()
 		ENumbers.append(ENumber)
-		print(" enter the Molecular Weight:")
-		MWeight= input()
+		print " enter the Molecular Weight:"
+		MWeight= raw_input()
 		MWeights.append(MWeight)
-		print("enter the file name(EX: oxygenMass.jdx): ")
-		filename=input()
+		print "enter the file name(EX: oxygenMass.jdx): "
+		filename=raw_input()
 		listOfFiles.append(filename)
-		print("Enter the name of the next molecule or type EXIT to finish entering molecules")
-		moleculeName=input()
+		print "Enter the name of the next molecule or type EXIT to finish entering molecules"
+		moleculeName=raw_input()
 
 elif(fileYorN=='yes'):
 	fileInputName=''
-	print("enter the file input name please:")
-	fileInputName=input()
+	print "enter the file input name please:"
+	fileInputName=raw_input()
 	#input_file ='attempt.csv'
 	list_holder=[]
 	spamReader = csv.reader(open('%s' %fileInputName), delimiter=',')
@@ -166,4 +166,4 @@ for i in listOfFiles:
 	holderArray=createArray(jcampDict, i)
 	OverallArray=combineArray(OverallArray, holderArray)
 
-exportToCSV("ConvertedSpectra.csv", OverallArray, listOfFiles, MoleculeNames, ENumbers, MWeights)
+exportToCSV("RawData.csv", OverallArray, listOfFiles, MoleculeNames, ENumbers, MWeights)
