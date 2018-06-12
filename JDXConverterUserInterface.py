@@ -1,4 +1,4 @@
-import JDXConverter
+yesimport JDXConverter
 import string
 import numpy
 import csv
@@ -10,7 +10,7 @@ from numpy import genfromtxt
 
 
 
-def createArray(jcampDict, CWfilename):
+def createArray(jcampDict, filename):
 	DataArray =[]
 
 	counterY=0
@@ -56,9 +56,9 @@ def combineArray(Array1, Array2):
 	
 	return Array1
 
-def exportToCSV(CWfilename, OverallArray, listOfFiles, MoleculeNames, ENumbers, MWeights):
+def exportToCSV(filename, OverallArray, listOfFiles, MoleculeNames, ENumbers, MWeights):
 
-	f5 = open(CWfilename, 'w')
+	f5 = open(filename, 'w')
 
 	#write the molecues
 	f5.write('Information/Notes: ')
@@ -133,8 +133,8 @@ if (fileYorN =='no'):
 		MWeight= input()
 		MWeights.append(MWeight)
 		print("enter the file name(EX: oxygenMass.jdx): ")
-		CWfilename=input()
-		listOfFiles.append(CWfilename)
+		filename=input()
+		listOfFiles.append(filename)
 		print("Enter the name of the next molecule or type EXIT to finish entering molecules")
 		moleculeName=input()
 
