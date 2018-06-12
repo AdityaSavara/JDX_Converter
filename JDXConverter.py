@@ -221,7 +221,7 @@ def JCAMP_calc_xsec(jcamp_dict, wavemin=None, wavemax=None, skip_nonquant=True, 
         elif (p_units.lower() == 'ppm'):
             p = p * 759.8 * 1.0E-6       ## scale PPM units at atmospheric pressure to partial pressure in mmHg
     else:
-        if debug: print(('No pressure "p" value entry for ' + jcamp_dict['title'] + '. Using the default p = 150.0 mmHg ...'))
+        if debug: print('No pressure "p" value entry for ' + jcamp_dict['title'] + '. Using the default p = 150.0 mmHg ...')
         if skip_nonquant: return({'info':None, 'x':None, 'xsec':None, 'y':None})
         p = 150.0
         if debug: print('Partial pressure variable not found. Using 150mmHg as a default ...')
@@ -266,8 +266,8 @@ def is_float(s):
             except ValueError:
                 return(False)
         else:
-            bool = list(True for i in range(0,len(s)))
-            for i in range(0,len(s)):
+            bool = list(True for i in xrange(0,len(s)))
+            for i in xrange(0,len(s)):
                 try:
                     temp = float(s[i])
                 except ValueError:
