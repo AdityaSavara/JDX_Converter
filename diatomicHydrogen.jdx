@@ -1,0 +1,27 @@
+##TITLE=Hydrogen
+##JCAMP-DX=4.24
+##DATA TYPE=MASS SPECTRUM
+##ORIGIN=American Petroleum Institute Research Project 44
+##OWNER=NIST Mass Spectrometry Data Center
+Collection (C) 2014 copyright by the U.S. Secretary of Commerce
+on behalf of the United States of America. All rights reserved.
+##CAS REGISTRY NO=1333-74-0
+##$NIST MASS SPEC NO=245692
+##MOLFORM=H2
+##MW=2
+##$NIST SOURCE=MSDC
+##XUNITS=M/Z
+##YUNITS=RELATIVE INTENSITY
+##XFACTOR=1
+##YFACTOR=1
+##FIRSTX=1
+##LASTX=2
+##FIRSTY=210
+##MAXX=2
+##MINX=1
+##MAXY=9999
+##MINY=210
+##NPOINTS=2
+##PEAK TABLE=(XY..XY)
+1,210 2,9999
+##END=

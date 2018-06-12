@@ -1,0 +1,26 @@
+##TITLE=Carbon monoxide
+##JCAMP-DX=4.24
+##DATA TYPE=MASS SPECTRUM
+##OWNER=NIST Mass Spectrometry Data Center
+Collection (C) 2014 copyright by the U.S. Secretary of Commerce
+on behalf of the United States of America. All rights reserved.
+##CAS REGISTRY NO=630-08-0
+##$NIST MASS SPEC NO=19
+##MOLFORM=C O
+##MW=28
+##$NIST SOURCE=MSDC
+##XUNITS=M/Z
+##YUNITS=RELATIVE INTENSITY
+##XFACTOR=1
+##YFACTOR=1
+##FIRSTX=12
+##LASTX=29
+##FIRSTY=470
+##MAXX=29
+##MINX=12
+##MAXY=9999
+##MINY=120
+##NPOINTS=4
+##PEAK TABLE=(XY..XY)
+12,470 16,170 28,9999 29,120
+##END=

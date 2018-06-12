@@ -1,0 +1,29 @@
+##TITLE=Ethane
+##JCAMP-DX=4.24
+##DATA TYPE=MASS SPECTRUM
+##OWNER=NIST Mass Spectrometry Data Center
+Collection (C) 2014 copyright by the U.S. Secretary of Commerce
+on behalf of the United States of America. All rights reserved.
+##CAS REGISTRY NO=74-84-0
+##$NIST MASS SPEC NO=23
+##MOLFORM=C2 H6
+##MW=30
+##$NIST SOURCE=MSDC
+##XUNITS=M/Z
+##YUNITS=RELATIVE INTENSITY
+##XFACTOR=1
+##YFACTOR=1
+##FIRSTX=2
+##LASTX=31
+##FIRSTY=20
+##MAXX=31
+##MINX=2
+##MAXY=9999
+##MINY=10
+##NPOINTS=14
+##PEAK TABLE=(XY..XY)
+2,20 12,40 13,100 14,300
+15,440 16,10 24,50 25,350
+26,2322 27,3323 28,9999 29,2152
+30,2622 31,50
+##END=

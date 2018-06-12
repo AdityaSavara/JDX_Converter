@@ -1,0 +1,28 @@
+##TITLE=Ethylene
+##JCAMP-DX=4.24
+##DATA TYPE=MASS SPECTRUM
+##OWNER=NIST Mass Spectrometry Data Center
+Collection (C) 2014 copyright by the U.S. Secretary of Commerce
+on behalf of the United States of America. All rights reserved.
+##CAS REGISTRY NO=74-85-1
+##$NIST MASS SPEC NO=18814
+##MOLFORM=C2 H4
+##MW=28
+##$NIST SOURCE=MSDC
+##XUNITS=M/Z
+##YUNITS=RELATIVE INTENSITY
+##XFACTOR=1
+##YFACTOR=1
+##FIRSTX=2
+##LASTX=30
+##FIRSTY=10
+##MAXX=30
+##MINX=2
+##MAXY=9999
+##MINY=10
+##NPOINTS=12
+##PEAK TABLE=(XY..XY)
+2,10 12,50 13,90 14,210
+15,30 24,230 25,781 26,5295
+27,6236 28,9999 29,230 30,10
+##END=
