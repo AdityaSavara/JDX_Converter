@@ -1,4 +1,4 @@
-yesimport JDXConverter
+import JDXConverter
 import string
 import numpy
 import csv
@@ -7,6 +7,8 @@ import timeit
 import math
 import sys
 from numpy import genfromtxt
+
+#This should not merge easily
 
 
 
