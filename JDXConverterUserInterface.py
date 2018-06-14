@@ -8,6 +8,8 @@ import math
 import sys
 from numpy import genfromtxt
 
+#This should not merge easily
+
 
 
 def createArray(jcampDict, filename):
