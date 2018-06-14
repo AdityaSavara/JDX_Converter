@@ -1,4 +1,4 @@
-yesimport JDXConverter
+import JDXConverter
 import string
 import numpy
 import csv
