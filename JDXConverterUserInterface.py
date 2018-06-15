@@ -8,8 +8,6 @@ import math
 import sys
 from numpy import genfromtxt
 
-#This should not merge easily
-
 
 
 def createArray(jcampDict, filename):
@@ -153,8 +151,8 @@ elif(fileYorN=='yes'):
 
     for i in range(1, len(list_holder)):
         
-        "The below line has been added to allow the program to draw files from \
-        outside it's own directory." 
+   #    The below line has been added to allow the program to draw files from \
+   #    outside it's own directory.
         list_holder[i][3] = "Documentation\\" + list_holder[i][3]
 
         MoleculeNames.append(list_holder[i][0])
