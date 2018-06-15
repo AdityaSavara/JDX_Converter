@@ -65,7 +65,7 @@ def exportToCSV(filename, OverallArray, listOfFiles, MoleculeNames, ENumbers, MW
     #write the molecues
     f5.write('Information/Notes: ')
     f5.write('\n')
-    f5.write('Molecues,')
+    f5.write('Molecules,')
     for i in MoleculeNames:
         f5.write('%s,' %i)
         #print i
