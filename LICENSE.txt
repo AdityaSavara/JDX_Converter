@@ -1,0 +1,1 @@
+This will be our license for the JDX Converter program when we have a final version. 
