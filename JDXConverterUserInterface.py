@@ -7,7 +7,7 @@ import timeit
 import math
 import sys
 from numpy import genfromtxt
-
+import os.path
 
 
 def createArray(jcampDict, filename):
@@ -58,6 +58,7 @@ def combineArray(Array1, Array2):
 
 def exportToCSV(filename, OverallArray, listOfFiles, MoleculeNames, ENumbers, MWeights):
 
+    
     f5 = open(filename, 'w')
 
     #write the molecues
@@ -99,7 +100,12 @@ def exportToCSV(filename, OverallArray, listOfFiles, MoleculeNames, ENumbers, MW
             for y in range(printRow):    
                 f5.write('%d,'%(Array1[100*y +i-1]))
             f5.write('\n')
-        
+
+
+
+#mkaing the directory for exported files, if it isn't already there
+if not os.path.exists("OutputFiles"):
+  os.makedirs("OutputFiles")        
 
 moleculeName=''
 MoleculeNames=list()
@@ -148,19 +154,31 @@ elif(fileYorN=='yes'):
     for row in spamReader:
         list_holder.append(row)
 
-
+#Checking if a directory exists to be drawn from
+if os.path.isdir("JDX-Files"):
+    print("hello")
+    #This for loop draws from a directory of the user's choice (hard-coded)
     for i in range(1, len(list_holder)):
-        
-   #    The below line has been added to allow the program to draw files from \
-   #    outside it's own directory.
-        list_holder[i][3] = "Documentation\\" + list_holder[i][3]
-
+            
+# The below line has been added to allow the program to draw files from 
+  # outside it's own directory.
+        list_holder[i][3] = "JDX-Files\\" + list_holder[i][3]
+    
         MoleculeNames.append(list_holder[i][0])
         ENumbers.append(list_holder[i][1])
         MWeights.append(list_holder[i][2])
         listOfFiles.append(list_holder[i][3])
-        
-
+            
+#Otherwise, assume that the files are in the directory of the JDXConv-UI
+else:
+    
+#This for loop draws files from the current directory
+        for i in range(1, len(list_holder)):
+            
+            MoleculeNames.append(list_holder[i][0])
+            ENumbers.append(list_holder[i][1])
+            MWeights.append(list_holder[i][2])
+            listOfFiles.append(list_holder[i][3])
 
 
 OverallArray=[]
@@ -170,4 +188,4 @@ for i in listOfFiles:
     holderArray=createArray(jcampDict, i)
     OverallArray=combineArray(OverallArray, holderArray)
 
-exportToCSV("ConvertedSpectra.csv", OverallArray, listOfFiles, MoleculeNames, ENumbers, MWeights)
+exportToCSV("OutputFiles\\ConvertedSpectra.csv", OverallArray, listOfFiles, MoleculeNames, ENumbers, MWeights)
