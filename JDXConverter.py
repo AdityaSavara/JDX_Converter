@@ -1,330 +1,201 @@
-from numpy import array, linspace, amin, amax, alen, append, arange, float64, logical_and, log10
-import re
+import JCampSG
 import string
-import pdb
-from math import log10
+import numpy
+import csv
+import time
+import timeit
+import math
+import sys
+from numpy import genfromtxt
+import os.path
 
+#This variable determines the largest fragment size that the program can handle
+MaximumAtomicUnit = 300
 
-'''
-jcamp.py contains functions useful for parsing JCAMP-DX formatted files containing spectral data. The main
-function `JCAMP_reader()` formats the input file into a Python dictionary, while `JCAMP_calc_xsec()`
-converts a given JCAMP-style data dictionary from absorption units to cross-section (m^2).
-'''
+def createArray(jcampDict, filename):
+    DataArray =[]
 
-__all__ = ['JCAMP_reader', 'JCAMP_calc_xsec', 'is_float']
+    counterY=0
+    counter =0
+    for number in jcampDict['x']:    
+        counter = counter +1
+        counterY2=0
+        while counter != float(number):
+        
+            DataArray.append(0)
+            #fileData.write('%f,'%zero)
+            #fileData.write('\n')
+            counter = counter +1 
 
-##=====================================================================================================
-def JCAMP_reader(filename):
-    '''
-    Read a JDX-format file, and return a dictionary containing the header info, a 1D numpy vectors `x` for
-    the abscissa information (e.g. wavelength or wavenumber) and `y` for the ordinate information (e.g.
-    transmission).
-
-    Parameters
-    ----------
-    filename : str
-        The JCAMP-DX filename to read.
-
-    Returns
-    -------
-    jcamp_dict : dict
-        The dictionary containing the header and data vectors.
-    '''
-
-    f = open(filename, 'r')
-    jcamp_dict = {}
-    xstart = []
-    xnum = []
-    y = []
-    x = []
-    datastart = False
-    values_pattern = re.compile('\s*\w\s*')
-    jcamp_numbers_pattern = re.compile(r'([+-]?\d+\.\d*)|([+-]?\d+)')
-
-    for line in f:
-        if not line.strip(): continue
-        if line.startswith('$$'): continue
-
-        ## Lines beginning with '##' are header lines.
-        if line.startswith('##'):
-            line = line.strip('##')
-            (lhs,rhs) = line.split('=', 1)
-            lhs = lhs.strip().lower()
-            rhs = rhs.strip()
-            continuation = rhs.endswith('=')
-
-            if rhs.isdigit():
-                jcamp_dict[lhs] = int(rhs)
-            elif is_float(rhs):
-                jcamp_dict[lhs] = float(rhs)
+        for number2 in jcampDict['y']:
+            if counterY2 == counterY:
+                
+                DataArray.append(number2) 
+                #fileData.write('%f,'%number2)
+                #fileData.write('\n')
+                #counterY2 =counterY2 + 1
+                break;
             else:
-                jcamp_dict[lhs] = rhs
+                counterY2=counterY2 +1  
 
-            if (lhs in ('xydata','xypoints','peak table')):
-                datastart = True
-                datatype = rhs
-                continue        ## data starts on next line
-            elif (lhs == 'end'):
-                datastart = False
+        counterY= counterY +1
 
-        if datastart and (datatype == '(X++(Y..Y))'):
-            ## If the line does not start with '##' or '$$' then it should be a data line.
-            ## The pair of lines below involve regex splitting on floating point numbers and integers. We can't just
-            ## split on spaces because JCAMP allows minus signs to replace spaces in the case of negative numbers.
-            new = re.split(jcamp_numbers_pattern, line.strip())
-            new = [n for n in new if n != '' and n is not None]
-            datavals = [n for n in new if n.strip() != '']
+    if len(DataArray) < MaximumAtomicUnit:
+        for i in range(len(DataArray), 100):
+            DataArray.append(0)
+    print (DataArray)      
+    return DataArray
 
-            if not all(is_float(datavals)): continue
-            xstart.append(float(datavals[0]))
-            xnum.append(len(datavals)-1)
-            for dataval in datavals[1:]:
-                y.append(float(dataval))
-        elif datastart and (('xypoints' in jcamp_dict) or ('xydata' in jcamp_dict)) and (datatype == '(XY..XY)'):
-            datavals = [v.strip() for v in line.split(',')]     ## split at commas and remove whitespace
-            if not all(is_float(datavals)): continue
-            datavals = array(datavals)
-            x.extend(datavals[0::2])        ## every other data point starting at the zeroth
-            y.extend(datavals[1::2])        ## every other data point starting at the first
-        elif datastart and ('peak table' in jcamp_dict) and (datatype == '(XY..XY)'):
-            line = line.replace(',',' ')
-            datavals = [v.strip() for v in line.split(' ') if v]  ## be careful not to allow empty strings
-            #datavals = values_pattern.split(line)
-            #datavals = [v for v]
-            #print('datavals=', datavals)
-            if not all(is_float(datavals)): continue
-            datavals = array(datavals)
-            x.extend(datavals[0::2])        ## every other data point starting at the zeroth
-            y.extend(datavals[1::2])        ## every other data point starting at the first
+def combineArray(Array1, Array2):
+    
+    for i in range(100):
+        Array1.append(Array2[i])
+    
+    
+    return Array1
 
-    if ('xydata' in jcamp_dict) and (jcamp_dict['xydata'] == '(X++(Y..Y))'):
-        ## You got all of the Y-values. Next you need to figure out how to generate the missing X's...
-        ## First look for the "lastx" dictionary entry. You will need that one to finish the set.
-        xstart.append(jcamp_dict['lastx'])
-        x = array([])
-        for n in range(len(xnum)):
-            x = append(x, linspace(xstart[n],xstart[n+1],xnum[n]))
-        y = array(y)
-    else:
-        x = array([float(xval) for xval in x])
-        y = array([float(yval) for yval in y])
+def exportToCSV(filename, OverallArray, listOfFiles, MoleculeNames, ENumbers, MWeights):
 
-    ## The "xfactor" and "yfactor" variables contain any scaling information that may need to be applied
-    ## to the data. Go ahead and apply them.
-    if ('xfactor' in jcamp_dict): x = x * jcamp_dict['xfactor']
-    if ('yfactor' in jcamp_dict): y = y * jcamp_dict['yfactor']
-    jcamp_dict['x'] = x
-    jcamp_dict['y'] = y
+    
+    f5 = open(filename, 'w')
 
-    return(jcamp_dict)
+    #write the molecues
+    f5.write('Information/Notes: ')
+    f5.write('\n')
+    f5.write('Molecules,')
+    for i in MoleculeNames:
+        f5.write('%s,' %i)
+        #print i
+    f5.write('\n')
 
-##=====================================================================================================
-def JCAMP_calc_xsec(jcamp_dict, wavemin=None, wavemax=None, skip_nonquant=True, debug=False):
-    '''
-    Taking as input a JDX file, extract the spectrum information and transform the absorption spectrum
-    from existing units to absorption cross-section.
+    #write the Electron Numbers
+    f5.write('Electron number,')
+    for i in ENumbers:
+        f5.write('%f,'%(int(i)))
+        #print i
+    f5.write('\n')
 
-    This function also corrects for unphysical data (such as negative transmittance values, or
-    transmission above 1.0), and calculates absorbance if transmittance given. Instead of a return
-    value, the function inserts the information into the input dictionary.
+    f5.write('Molecular Weight,')
+    for i in MWeights:
+        f5.write('%f,' %(float(i)))
+        #print i
+    f5.write('\n')
 
-    Parameters
-    ----------
-    jcamp_dict : dict
-        A JCAMP spectrum dictionary.
-    wavemin : float, optional
-        The shortest wavelength in the spectrum to limit the calculation to.
-    wavemax : float, optional
-        The longest wavelength in the spectrum to limit the calculation to.
-    skip_nonquant: bool
-        If True then return "None" if the spectrum is missing quantitative data. If False, then try \
-        to fill in missing quantitative values with defaults.
-    '''
-
-    x = jcamp_dict['x']
-    y = jcamp_dict['y']
-
-    T = 296.0            ## the temperature (23 degC) used by NIST when collecting spectra
-    R = 1.0355E-25       ## the constant for converting data (includes the gas constant)
-
-    ## Note: normally when we convert from wavenumber to wavelength units, the ordinate must be nonuniformly
-    ## rescaled in order to compensate. But this is only true if we resample the abscissa to a uniform sampling
-    ## grid. In this case here, we keep the sampling grid nonuniform in wavelength space, such that each digital
-    ## bin retains its proportionality to energy, which is what we want.
-    if (jcamp_dict['xunits'].lower() in ('1/cm','cm-1','cm^-1')):
-        jcamp_dict['wavenumbers'] = array(x)            ## note that array() always performs a copy
-        x = 10000.0 / x
-        jcamp_dict['wavelengths'] = x
-    elif (jcamp_dict['xunits'].lower() in ('micrometers','um','wavelength (um)')):
-        jcamp_dict['wavelengths'] = x
-        jcamp_dict['wavenumbers'] = 10000.0 / x
-    elif (jcamp_dict['xunits'].lower() in ('nanometers','nm','wavelength (nm)')):
-        x = x * 1000.0
-        jcamp_dict['wavelengths'] = x
-        jcamp_dict['wavenumbers'] = 10000.0 / x
-    else:
-        raise ValueError('Don\'t know how to convert the spectrum\'s x units ("' + jcamp_dict['xunits'] + '") to micrometers.')
-
-    ## Correct for any unphysical negative values.
-    y[y < 0.0] = 0.0
-
-    ## Make sure "y" refers to absorbance.
-    if (jcamp_dict['yunits'].lower() == 'transmittance'):
-        ## If in transmittance, then any y > 1.0 are unphysical.
-        y[y > 1.0] = 1.0
-
-        ## convert to absorbance
-        y = log10(1.0 / y)
-
-        jcamp_dict['absorbance'] = y
-    elif (jcamp_dict['yunits'].lower() == 'absorbance'):
-        pass
-    elif (jcamp_dict['yunits'].lower() == '(micromol/mol)-1m-1 (base 10)'):
-        jcamp_dict['yunits'] = 'xsec (m^2))'
-        jcamp_dict['xsec'] = y
-    else:
-        raise ValueError('Don\'t know how to convert the spectrum\'s y units ("' + jcamp_dict['yunits'] + '") to absorbance.')
+    Array1=OverallArray
+    printRow= len(Array1)//100
+    printArray =[]
+    zeros = True
 
 
-    ## Determine the effective path length "ell" of the measurement chamber, in meters.
-    if ('path length' in jcamp_dict):
-        (val,unit) = jcamp_dict['path length'].lower().split()[0:2]
-        if (unit == 'cm'):
-            ell = float(val) / 100.0
-        elif (unit == 'm'):
-            ell = float(val)
-        elif (unit == 'mm'):
-            ell = float(val) / 1000.0
-        else:
-            ell = 0.1
-    else:
-        if skip_nonquant: return({'info':None, 'x':None, 'xsec':None, 'y':None})
-        ell = 0.1
-        if debug: print('Path length variable not found. Using 0.1m as a default ...')
+    
+    for i in range(100):
+        zeros = True
+        for k in range(printRow):
+            if Array1[100*k +i] != 0:
+                zeros =False                
+        if zeros == False:
+            f5.write('%d,'%(i))    
+            for y in range(printRow):    
+                f5.write('%d,'%(Array1[100*y +i-1]))
+            f5.write('\n')
 
-    assert(alen(x) == alen(y))
 
-    if ('npoints' in jcamp_dict):
-        if (alen(x) != jcamp_dict['npoints']):
-            npts_retrieved = str(alen(x))
-            msg = '"' + jcamp_dict['title'] + '": Number of data points retrieved (' + npts_retrieved + \
-                  ') does not equal the expected length (npoints = ' + str(jcamp_dict['npoints']) + ')!'
-            raise ValueError(msg)
 
-    ## For each gas, manually define the pressure "p" at which the measurement was taken (in units of mmHg).
-    ## These values are obtained from the NIST Infrared spectrum database, which for some reason did not
-    ## put the partial pressure information into the header.
-    if ('partial_pressure' in jcamp_dict):
-        p = float(jcamp_dict['partial_pressure'].split()[0])
-        p_units = jcamp_dict['partial_pressure'].split()[1]
-        if (p_units.lower() == 'mmhg'):
-            pass
-        elif (p_units.lower() == 'ppm'):
-            p = p * 759.8 * 1.0E-6       ## scale PPM units at atmospheric pressure to partial pressure in mmHg
-    else:
-        if debug: print(('No pressure "p" value entry for ' + jcamp_dict['title'] + '. Using the default p = 150.0 mmHg ...'))
-        if skip_nonquant: return({'info':None, 'x':None, 'xsec':None, 'y':None})
-        p = 150.0
-        if debug: print('Partial pressure variable not found. Using 150mmHg as a default ...')
+#mkaing the directory for exported files, if it isn't already there
+if not os.path.exists("OutputFiles"):
+  os.makedirs("OutputFiles")        
 
-    ## Convert the absorbance units to cross-section in meters squared per molecule.
-    xsec = y * T * R / (p * ell)
+moleculeName=''
+MoleculeNames=list()
+ENumber = 0
+ENumbers =list()
+MWeight =0.0 
+MWeights=list()
+filenames=''
+listOfFiles=list()
 
-    ## With a third-party-spectrometer, I've found convincing evidence that the NIST spectra for propane and butane have
-    ## an artificial DC baseline (and one that the PNNL data also do not have). So let's just subtract it here.
-    if (jcamp_dict['title'].lower() in ('propane','n_butane','butane')):
-        okay = logical_and(jcamp_dict['wavelengths'] >= 8.0, jcamp_dict['wavelengths'] <= 12.0)
-        minvalue = amin(xsec[okay])
-        #print('Subtracting a baseline of %g from %s' % (minvalue, jcamp_dict['title']))
-        xsec = xsec - minvalue
 
-    ## Add the "xsec" values to the data dictionary.
-    jcamp_dict['xsec'] = xsec
+fileYorN=''
 
-    return
+print("would you like to load molecular information from a csv file? Enter 'yes' or 'no'. If not, then you will enter files manually.")
+fileYorN=input()
 
-##=====================================================================================================
-def is_float(s):
-    '''
-    Test if a string, or list of strings, contains a numeric value(s).
 
-    Parameters
-    ----------
-    s : str, or list of str
-        The string or list of strings to test.
+if (fileYorN =='no'):
+    print("Welcome! Enter the name of the molecule, it's mass, it's electron number and the associated JDX file in order to generate your raw data fields")
+    print("Enter the molecule's Name: ")
+    moleculeName = input()
 
-    Returns
-    -------
-    is_float_bool : bool or list of bool
-        A single boolean or list of boolean values indicating whether each input can be converted into a float.
-    '''
 
-    if isinstance(s,tuple) or isinstance(s,list):
-        if not all(isinstance(i,str) for i in s): raise TypeError("Input 's' is not a list of strings")
-        if len(s) == 0:
-            try:
-                temp = float(i)
-            except ValueError:
-                return(False)
-        else:
-            bool = list(True for i in range(0,len(s)))
-            for i in range(0,len(s)):
-                try:
-                    temp = float(s[i])
-                except ValueError:
-                    bool[i] = False
-        return(bool)
-    else:
-        if not isinstance(s,str): raise TypeError("Input 's' is not a string")
-        try:
-            temp = float(s)
-            return(True)
-        except ValueError:
-            return(False)
 
-## =================================================================================================
-## =================================================================================================
+    while moleculeName != 'EXIT':
+        MoleculeNames.append(moleculeName)
+        print(" enter the electron Number: ")
+        ENumber = input()
+        ENumbers.append(ENumber)
+        print(" enter the Molecular Weight:")
+        MWeight= input()
+        MWeights.append(MWeight)
+        print("enter the file name(EX: oxygenMass.jdx): ")
+        filename=input()
+        listOfFiles.append(filename)
+        print("Enter the name of the next molecule or type EXIT to finish entering molecules")
+        moleculeName=input()
 
-if __name__ == "__main__":
-    import matplotlib.pyplot as plt
-    filename = './infrared_spectra/methane.jdx'
-    jcamp_dict = JCAMP_reader(filename)
-    plt.plot(jcamp_dict['x'], jcamp_dict['y'])
-    plt.title(filename)
-    plt.xlabel(jcamp_dict['xunits'])
-    plt.ylabel(jcamp_dict['yunits'])
+elif(fileYorN=='yes'):
+    fileInputName=''
+    print("enter the file input name please:")
+    fileInputName=input()
+    #input_file ='attempt.csv'
+    list_holder=[]
+    spamReader = csv.reader(open('%s' %fileInputName), delimiter=',')
+    for row in spamReader:
+        list_holder.append(row)
+        
+        
+#The user is provided with the option to direct the functions output as they would like.  
+print("Would you like to specify an output location? If yes, type the path to the location. For default, type 'no'.")
+outputDirectory = input()
+#If the user selects default, then the output is piped to "OutputFiles"
+if outputDirectory == "no":
+    outputDirectory = "OutputFiles"
 
-    JCAMP_calc_xsec(jcamp_dict, skip_nonquant=False, debug=True)
-    plt.figure()
-    plt.plot(jcamp_dict['wavelengths'], jcamp_dict['xsec'])
-    plt.title(filename)
-    plt.xlabel('um')
-    plt.ylabel('Cross-section (m^2)')
 
-    filename = './uvvis_spectra/toluene.jdx'
-    plt.figure()
-    jcamp_dict = JCAMP_reader(filename)
-    plt.plot(jcamp_dict['x'], jcamp_dict['y'], 'r-')
-    plt.title(filename)
-    plt.xlabel(jcamp_dict['xunits'])
-    plt.ylabel(jcamp_dict['yunits'])
+#mkaing the directory for exported files, if it isn't already there
+if not os.path.exists(outputDirectory):
+  os.makedirs(outputDirectory)
 
-    filename = './mass_spectra/ethanol_ms.jdx'
-    jcamp_dict = JCAMP_reader(filename)
-    plt.figure()
-    for n in arange(alen(jcamp_dict['x'])):
-        plt.plot((jcamp_dict['x'][n],jcamp_dict['x'][n]), (0.0, jcamp_dict['y'][n]), 'm-', linewidth=2.0)
-    plt.title(filename)
-    plt.xlabel(jcamp_dict['xunits'])
-    plt.ylabel(jcamp_dict['yunits'])
+#Checking if a directory exists to be drawn from
+if os.path.isdir("JDX-Files"):
+    #This for loop draws from a directory of the user's choice (hard-coded)
+    for i in range(1, len(list_holder)):
+            
+# The below line has been added to allow the program to draw files from 
+  # outside it's own directory.
+        list_holder[i][3] = "JDX-Files\\" + list_holder[i][3]
+    
+        MoleculeNames.append(list_holder[i][0])
+        ENumbers.append(list_holder[i][1])
+        MWeights.append(list_holder[i][2])
+        listOfFiles.append(list_holder[i][3])
+            
+#Otherwise, assume that the files are in the directory of the JDXConv-UI
+else:
+    
+#This for loop draws files from the current directory
+        for i in range(1, len(list_holder)):
+            
+            MoleculeNames.append(list_holder[i][0])
+            ENumbers.append(list_holder[i][1])
+            MWeights.append(list_holder[i][2])
+            listOfFiles.append(list_holder[i][3])
 
-    filename = './raman_spectra/tannic_acid.jdx'
-    jcamp_dict = JCAMP_reader(filename)
-    plt.figure()
-    plt.plot(jcamp_dict['x'], jcamp_dict['y'], 'k-')
-    plt.title(filename)
-    plt.xlabel(jcamp_dict['xunits'])
-    plt.ylabel(jcamp_dict['yunits'])
 
-    plt.show()
+OverallArray=[]
+holderArray=[]
+for i in listOfFiles:
+    jcampDict=JCampSG.JCAMP_reader(i)
+    holderArray=createArray(jcampDict, i)
+    OverallArray=combineArray(OverallArray, holderArray)
 
+exportToCSV("%s\\ConvertedSpectra.csv" %outputDirectory, OverallArray, listOfFiles, MoleculeNames, ENumbers, MWeights)
