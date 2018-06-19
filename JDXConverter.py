@@ -154,10 +154,10 @@ elif(fileYorN=='yes'):
         
         
 #The user is provided with the option to direct the functions output as they would like.  
-print("Would you like to specify an output location? If yes, type the path to the location. For default, type 'no'.")
+print("Would you like to specify an output location? If yes, type the path to the location. For default, hit enter.")
 outputDirectory = input()
 #If the user selects default, then the output is piped to "OutputFiles"
-if outputDirectory == "no":
+if outputDirectory == "":
     outputDirectory = "OutputFiles"
 
 
