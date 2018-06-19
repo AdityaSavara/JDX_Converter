@@ -166,13 +166,13 @@ if not os.path.exists(outputDirectory):
   os.makedirs(outputDirectory)
 
 #Checking if a directory exists to be drawn from
-if os.path.isdir("JDX-Files"):
+if os.path.isdir("JDXFiles"):
     #This for loop draws from a directory of the user's choice (hard-coded)
     for i in range(1, len(list_holder)):
             
 # The below line has been added to allow the program to draw files from 
   # outside it's own directory.
-        list_holder[i][3] = "JDX-Files\\" + list_holder[i][3]
+        list_holder[i][3] = "JDXFiles\\" + list_holder[i][3]
     
         MoleculeNames.append(list_holder[i][0])
         ENumbers.append(list_holder[i][1])
