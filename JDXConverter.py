@@ -41,14 +41,13 @@ def createArray(jcampDict, filename):
         counterY= counterY +1
 
     if len(DataArray) < MaximumAtomicUnit:
-        for i in range(len(DataArray), 100):
+        for i in range(len(DataArray), MaximumAtomicUnit):
             DataArray.append(0)
-    print (DataArray)      
     return DataArray
 
 def combineArray(Array1, Array2):
     
-    for i in range(100):
+    for i in range(MaximumAtomicUnit):
         Array1.append(Array2[i])
     
     
@@ -82,21 +81,21 @@ def exportToCSV(filename, OverallArray, listOfFiles, MoleculeNames, ENumbers, MW
     f5.write('\n')
 
     Array1=OverallArray
-    printRow= len(Array1)//100
+    printRow= len(Array1)//MaximumAtomicUnit
     printArray =[]
     zeros = True
 
 
     
-    for i in range(100):
+    for i in range(MaximumAtomicUnit):
         zeros = True
         for k in range(printRow):
-            if Array1[100*k +i] != 0:
+            if Array1[MaximumAtomicUnit*k +i] != 0:
                 zeros =False                
         if zeros == False:
             f5.write('%d,'%(i))    
             for y in range(printRow):    
-                f5.write('%d,'%(Array1[100*y +i-1]))
+                f5.write('%d,'%(Array1[MaximumAtomicUnit*y +i-1]))
             f5.write('\n')
 
 
