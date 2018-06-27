@@ -159,30 +159,31 @@ if outputDirectory == "":
 if not os.path.exists(outputDirectory):
   os.makedirs(outputDirectory)
 
+if fileYorN == 'yes':
 #Checking if a directory exists to be drawn from
-if os.path.isdir("JDXFiles"):
+    if os.path.isdir("JDXFiles"):
     #This for loop draws from a directory of the user's choice (hard-coded)
-    for i in range(1, len(list_holder)):
+        for i in range(1, len(list_holder)):
             
 # The below line has been added to allow the program to draw files from 
   # outside it's own directory.
-        list_holder[i][3] = "JDXFiles\\" + list_holder[i][3]
+            list_holder[i][3] = "JDXFiles\\" + list_holder[i][3]
     
-        MoleculeNames.append(list_holder[i][0])
-        ENumbers.append(list_holder[i][1])
-        MWeights.append(list_holder[i][2])
-        listOfFiles.append(list_holder[i][3])
+            MoleculeNames.append(list_holder[i][0])
+            ENumbers.append(list_holder[i][1])
+            MWeights.append(list_holder[i][2])
+            listOfFiles.append(list_holder[i][3])
             
 #Otherwise, assume that the files are in the directory of the JDXConv-UI
-else:
+    else:
     
 #This for loop draws files from the current directory
-    for i in range(1, len(list_holder)):
+        for i in range(1, len(list_holder)):
             
-        MoleculeNames.append(list_holder[i][0])
-        ENumbers.append(list_holder[i][1])
-        MWeights.append(list_holder[i][2])
-        listOfFiles.append(list_holder[i][3])
+            MoleculeNames.append(list_holder[i][0])
+            ENumbers.append(list_holder[i][1])
+            MWeights.append(list_holder[i][2])
+            listOfFiles.append(list_holder[i][3])
 
 
 OverallArray=[]
