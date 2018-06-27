@@ -97,12 +97,7 @@ def exportToCSV(filename, OverallArray, listOfFiles, MoleculeNames, ENumbers, MW
             for y in range(printRow):    
                 f5.write('%d,'%(Array1[MaximumAtomicUnit*y +i-1]))
             f5.write('\n')
-
-
-
-#mkaing the directory for exported files, if it isn't already there
-if not os.path.exists("OutputFiles"):
-  os.makedirs("OutputFiles")        
+      
 
 moleculeName=''
 MoleculeNames=list()
@@ -182,12 +177,12 @@ if os.path.isdir("JDXFiles"):
 else:
     
 #This for loop draws files from the current directory
-        for i in range(1, len(list_holder)):
+    for i in range(1, len(list_holder)):
             
-            MoleculeNames.append(list_holder[i][0])
-            ENumbers.append(list_holder[i][1])
-            MWeights.append(list_holder[i][2])
-            listOfFiles.append(list_holder[i][3])
+        MoleculeNames.append(list_holder[i][0])
+        ENumbers.append(list_holder[i][1])
+        MWeights.append(list_holder[i][2])
+        listOfFiles.append(list_holder[i][3])
 
 
 OverallArray=[]
