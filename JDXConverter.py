@@ -116,7 +116,7 @@ fileYorN=input()
 
 
 if (fileYorN =='no'):
-    print("Welcome! Enter the name of the molecule, it's mass, it's electron number and the associated JDX file in order to generate your raw data fields")
+    print("Welcome! Enter the name of the molecule, it's mass, it's number of electrons (or the number -1 if you don't need that) and the associated JDX file in order to generate a csv spectrum file")
     print("Enter the molecule's Name: ")
     moleculeName = input()
 
