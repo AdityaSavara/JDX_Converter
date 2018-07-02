@@ -58,26 +58,28 @@ def exportToCSV(filename, OverallArray, listOfFiles, MoleculeNames, ENumbers, MW
     
     f5 = open(filename, 'w')
 
-    #write the molecues
-    f5.write('Information/Notes: ')
+    #write the header
+    f5.write('Source:, ')
+    for i in range(len(MoleculeNames)):
+        f5.write('Not Specified,')
     f5.write('\n')
+    
+    #write the molecules
     f5.write('Molecules,')
     for i in MoleculeNames:
         f5.write('%s,' %i)
-        #print i
     f5.write('\n')
 
     #write the Electron Numbers
     f5.write('Electron number,')
     for i in ENumbers:
         f5.write('%f,'%(int(i)))
-        #print i
     f5.write('\n')
 
+    #write the molecular weights
     f5.write('Molecular Weight,')
     for i in MWeights:
         f5.write('%f,' %(float(i)))
-        #print i
     f5.write('\n')
 
     Array1=OverallArray
@@ -160,6 +162,7 @@ if outputDirectory == "":
 if not os.path.exists(outputDirectory):
   os.makedirs(outputDirectory)
 
+#only if files exist to draw from
 if fileYorN == 'yes':
 #Checking if a directory exists to be drawn from
     if os.path.isdir("JDXFiles"):
