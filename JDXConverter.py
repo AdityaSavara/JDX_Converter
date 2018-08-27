@@ -87,18 +87,20 @@ def exportToCSV(filename, OverallArray, listOfFiles, MoleculeNames, ENumbers, MW
     printArray =[]
     zeros = True
 
-
     
-    for i in range(MaximumAtomicUnit):
+    for i in range(1,MaximumAtomicUnit+1):
+        print(i)
         zeros = True
         for k in range(printRow):
-            if Array1[MaximumAtomicUnit*k +i] != 0:
+            if Array1[MaximumAtomicUnit*k +i-1] != 0: #The -1 is for array indexing
                 zeros =False                
         if zeros == False:
             f5.write('%d,'%(i))    
             for y in range(printRow):    
-                f5.write('%d,'%(Array1[MaximumAtomicUnit*y +i-1]))
+                f5.write('%d,'%(Array1[MaximumAtomicUnit*y +i-1])) #The -1 is for array indexing
             f5.write('\n')
+            
+    f5.close()
       
 
 moleculeName=''
