@@ -136,7 +136,8 @@ fileYorN=input()
 
 
 if (fileYorN =='no'):
-    print("Welcome! Enter the name of the molecule, it's mass, it's number of electrons (or the number -1 if you don't need that) and the associated JDX file in order to generate a csv spectrum file")
+    print("Welcome! Enter the name of the molecule, its mass, its ionization factor relative to nitrogen (put unknown if you don't know), its ionization type (put unknown if you don't know), its number of electrons (or the number -1 if you don't need that), and the associated JDX file in order to generate a csv spectrum file")
+    print("If a molecule name has a comma in it (e.g. 1,3-pentadiene) or any other input has a comma in it, we recommend using an _ (e.g. 1_3-pentadiene) since this information is stored in a comma separated value file.")
     print("Enter the molecule's Name: ")
     moleculeName = input()
 
