@@ -1,38 +1,38 @@
-Molecule Name,Electrons,Mass,File Name,knownMoleculeIonizationType,knownIonizationFactorRelativeToN2
-1butanal,40,72.11,1butanal.jdx,Aldehyde,unknown
-1butanol,42,74.12,1butanol.jdx,Alcohol,unknown
-1butene,32,56.11,1butene.jdx,Hydrogen non-metal-ides,unknown
-1pentene,40,70.13,1pentene.jdx,Hydrogen non-metal-ides,unknown
-2butanone,40,72.11,2butanone.jdx,Ketone,unknown
-2buten1ol(crotyl alcohol),40,72.11,2buten1ol(crotyl alcohol).jdx,Alcohol,unknown
-2butenalE(crotonaldehyde),38,70.09,2butenalE(crotonaldehyde).jdx,Aldehyde,unknown
-2butenalZ(crotonaldehyde),38,70.09,2butenalZ(crotonaldehyde).jdx,Aldehyde,unknown
-2buteneE,32,56.1063,2buteneE.jdx,Hydrogen non-metal-ides,unknown
-2buteneZ,32,56.11,2buteneZ.jdx,Hydrogen non-metal-ides,unknown
-2methylbut1ene,40,70.13,2methylbut1ene.jdx,Hydrogen non-metal-ides,unknown
-2methylbut2ene,40,70.13,2methylbut2ene.jdx,Hydrogen non-metal-ides,unknown
-2pentanone,48,86.13,2pentanone.jdx,Ketone,unknown
-2penteneE,40,70.13,2penteneE.jdx,Hydrogen non-metal-ides,unknown
-2penteneZ,40,70.13,2penteneZ.jdx,Hydrogen non-metal-ides,unknown
-3methylbut1ene,40,70.13,3methylbut1ene.jdx,Hydrogen non-metal-ides,unknown
-3pentanone,48,86.13,3pentanone.jdx,Ketone,unknown
-13butadiene,30,54.09,13butadiene.jdx,Hydrogen non-metal-ides,unknown
-acetaldehyde,24,44.05,acetaldehyde.jdx,Aldehyde,2.6
-aceticacid,32,60.05,aceticacid.jdx,Carboxylic Acid,unknown
-acetone,32,58.08,acetone.jdx,Ketone,3.73
-butane,34,58.12,butane.jdx,Hydrogen non-metal-ides,4.78
-carbon dioxide,22,44.01,carbon dioxide.jdx,Carbon containing nonmetals,1.44
-carbon monoxide,14,28.01,carbon monoxide.jdx,Carbon containing nonmetals,1.07
-diatomicHydrogen,2,2.02,diatomicHydrogen.jdx,Hydrogen non-metal-ides,0.43
-diethylether,42,74.12,diethylether.jdx,Ether,5.1
-ethane,18,30.07,ethane.jdx,Hydrogen non-metal-ides,2.63
-ethanol,26,46.07,ethanol.jdx,Alcohol,3.25
-ethene,16,28.05,ethene.jdx,Hydrogen non-metal-ides,2.31
-ethylacetate,48,88.11,ethylacetate.jdx,unknown,unknown
-hexane,50,86.18,hexane.jdx,Hydrogen non-metal-ides,6.6
-isobutene,32,56.11,isobutene.jdx,Hydrogen non-metal-ides,3.6
-methane,10,16.04,methane.jdx,Hydrogen non-metal-ides,1.52
-pentane,42,72.15,pentane.jdx,Hydrogen non-metal-ides,5.92
-propane,26,44.1,propane.jdx,Hydrogen non-metal-ides,3.83
-propene,24,42.08,propene.jdx,Hydrogen non-metal-ides,3.47
-water,10,18.02,water.jdx,Hydrogen non-metal-ides,0.97
+Molecule Name,Electrons,Mass,File Name,knownMoleculeIonizationType,knownIonizationFactorRelativeToN2,SourceOfFragmentationPattern,SourceOfIonizationInformation
+1butanal,40,72.11,1butanal.jdx,Aldehyde,unknown,NIST Webbook,None
+1butanol,42,74.12,1butanol.jdx,Alcohol,unknown,NIST Webbook,None
+1butene,32,56.11,1butene.jdx,Hydrogen non-metal-ides,unknown,NIST Webbook,None
+1pentene,40,70.13,1pentene.jdx,Hydrogen non-metal-ides,unknown,NIST Webbook,None
+2butanone,40,72.11,2butanone.jdx,Ketone,unknown,NIST Webbook,None
+2buten1ol(crotyl alcohol),40,72.11,2buten1ol(crotyl alcohol).jdx,Alcohol,unknown,NIST Webbook,None
+2butenalE(crotonaldehyde),38,70.09,2butenalE(crotonaldehyde).jdx,Aldehyde,unknown,NIST Webbook,None
+2butenalZ(crotonaldehyde),38,70.09,2butenalZ(crotonaldehyde).jdx,Aldehyde,unknown,NIST Webbook,None
+2buteneE,32,56.1063,2buteneE.jdx,Hydrogen non-metal-ides,unknown,NIST Webbook,None
+2buteneZ,32,56.11,2buteneZ.jdx,Hydrogen non-metal-ides,unknown,NIST Webbook,None
+2methylbut1ene,40,70.13,2methylbut1ene.jdx,Hydrogen non-metal-ides,unknown,NIST Webbook,None
+2methylbut2ene,40,70.13,2methylbut2ene.jdx,Hydrogen non-metal-ides,unknown,NIST Webbook,None
+2pentanone,48,86.13,2pentanone.jdx,Ketone,unknown,NIST Webbook,None
+2penteneE,40,70.13,2penteneE.jdx,Hydrogen non-metal-ides,unknown,NIST Webbook,None
+2penteneZ,40,70.13,2penteneZ.jdx,Hydrogen non-metal-ides,unknown,NIST Webbook,None
+3methylbut1ene,40,70.13,3methylbut1ene.jdx,Hydrogen non-metal-ides,unknown,NIST Webbook,None
+3pentanone,48,86.13,3pentanone.jdx,Ketone,unknown,NIST Webbook,None
+13butadiene,30,54.09,13butadiene.jdx,Hydrogen non-metal-ides,unknown,NIST Webbook,None
+acetaldehyde,24,44.05,acetaldehyde.jdx,Aldehyde,2.6,NIST Webbook,UHV-24/UHV-24p Ionization Gauge Instruction Manual - Table A1 - https://www.mksinst.com/docs/ur/GaugeGasCorrection.aspx  
+aceticacid,32,60.05,aceticacid.jdx,Carboxylic Acid,unknown,NIST Webbook,None
+acetone,32,58.08,acetone.jdx,Ketone,3.73,NIST Webbook,UHV-24/UHV-24p Ionization Gauge Instruction Manual - Table A1 - https://www.mksinst.com/docs/ur/GaugeGasCorrection.aspx  
+butane,34,58.12,butane.jdx,Hydrogen non-metal-ides,4.78,NIST Webbook,UHV-24/UHV-24p Ionization Gauge Instruction Manual - Table A1 - https://www.mksinst.com/docs/ur/GaugeGasCorrection.aspx  
+carbon dioxide,22,44.01,carbon dioxide.jdx,Carbon containing nonmetals,1.44,NIST Webbook,UHV-24/UHV-24p Ionization Gauge Instruction Manual - Table A1 - https://www.mksinst.com/docs/ur/GaugeGasCorrection.aspx  
+carbon monoxide,14,28.01,carbon monoxide.jdx,Carbon containing nonmetals,1.07,NIST Webbook,UHV-24/UHV-24p Ionization Gauge Instruction Manual - Table A1 - https://www.mksinst.com/docs/ur/GaugeGasCorrection.aspx  
+diatomicHydrogen,2,2.02,diatomicHydrogen.jdx,Hydrogen non-metal-ides,0.43,NIST Webbook,UHV-24/UHV-24p Ionization Gauge Instruction Manual - Table A1 - https://www.mksinst.com/docs/ur/GaugeGasCorrection.aspx  
+diethylether,42,74.12,diethylether.jdx,Ether,5.1,NIST Webbook,UHV-24/UHV-24p Ionization Gauge Instruction Manual - Table A1 - https://www.mksinst.com/docs/ur/GaugeGasCorrection.aspx  
+ethane,18,30.07,ethane.jdx,Hydrogen non-metal-ides,2.63,NIST Webbook,UHV-24/UHV-24p Ionization Gauge Instruction Manual - Table A1 - https://www.mksinst.com/docs/ur/GaugeGasCorrection.aspx  
+ethanol,26,46.07,ethanol.jdx,Alcohol,3.25,NIST Webbook,UHV-24/UHV-24p Ionization Gauge Instruction Manual - Table A1 - https://www.mksinst.com/docs/ur/GaugeGasCorrection.aspx  
+ethene,16,28.05,ethene.jdx,Hydrogen non-metal-ides,2.31,NIST Webbook,UHV-24/UHV-24p Ionization Gauge Instruction Manual - Table A1 - https://www.mksinst.com/docs/ur/GaugeGasCorrection.aspx  
+ethylacetate,48,88.11,ethylacetate.jdx,unknown,unknown,NIST Webbook,None
+hexane,50,86.18,hexane.jdx,Hydrogen non-metal-ides,6.6,NIST Webbook,UHV-24/UHV-24p Ionization Gauge Instruction Manual - Table A1 - https://www.mksinst.com/docs/ur/GaugeGasCorrection.aspx  
+isobutene,32,56.11,isobutene.jdx,Hydrogen non-metal-ides,3.6,NIST Webbook,UHV-24/UHV-24p Ionization Gauge Instruction Manual - Table A1 - https://www.mksinst.com/docs/ur/GaugeGasCorrection.aspx  
+methane,10,16.04,methane.jdx,Hydrogen non-metal-ides,1.52,NIST Webbook,UHV-24/UHV-24p Ionization Gauge Instruction Manual - Table A1 - https://www.mksinst.com/docs/ur/GaugeGasCorrection.aspx  
+pentane,42,72.15,pentane.jdx,Hydrogen non-metal-ides,5.92,NIST Webbook,UHV-24/UHV-24p Ionization Gauge Instruction Manual - Table A1 - https://www.mksinst.com/docs/ur/GaugeGasCorrection.aspx  
+propane,26,44.1,propane.jdx,Hydrogen non-metal-ides,3.83,NIST Webbook,UHV-24/UHV-24p Ionization Gauge Instruction Manual - Table A1 - https://www.mksinst.com/docs/ur/GaugeGasCorrection.aspx  
+propene,24,42.08,propene.jdx,Hydrogen non-metal-ides,3.47,NIST Webbook,UHV-24/UHV-24p Ionization Gauge Instruction Manual - Table A1 - https://www.mksinst.com/docs/ur/GaugeGasCorrection.aspx  
+water,10,18.02,water.jdx,Hydrogen non-metal-ides,0.97,NIST Webbook,UHV-24/UHV-24p Ionization Gauge Instruction Manual - Table A1 - https://www.mksinst.com/docs/ur/GaugeGasCorrection.aspx  
