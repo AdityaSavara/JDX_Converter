@@ -53,33 +53,56 @@ def combineArray(Array1, Array2):
     
     return Array1
 
-def exportToCSV(filename, OverallArray, listOfFiles, MoleculeNames, ENumbers, MWeights):
+def exportToCSV(filename, OverallArray, listOfFiles, MoleculeNames, ENumbers, MWeights, knownMoleculeIonizationTypes, knownIonizationFactorsRelativeToN2, SourceOfFragmentationPatterns, SourceOfIonizationData):
 
     
     f5 = open(filename, 'w')
-
-    #write the header
-    f5.write('Source:, ')
+    
+    f5.write('#CommentsLine:')
     for i in range(len(MoleculeNames)):
-        f5.write('Not Specified,')
+        f5.write(',')
     f5.write('\n')
     
     #write the molecules
-    f5.write('Molecules,')
+    f5.write('Molecules')
     for i in MoleculeNames:
-        f5.write('%s,' %i)
+        f5.write(',%s' %i)
     f5.write('\n')
 
     #write the Electron Numbers
-    f5.write('Electron number,')
+    f5.write('Electron Numbers')
     for i in ENumbers:
-        f5.write('%f,'%(int(i)))
+        f5.write(',%f'%(int(i)))
     f5.write('\n')
-
+    
+    #write the ionization type
+    f5.write('knownMoleculesIonizationTypes')
+    for i in knownMoleculeIonizationTypes:
+        f5.write(',%s'%i)
+    f5.write('\n')
+    
+    #write the ionization factor
+    f5.write('knownIonizationFactorsRelativeToN2')
+    for i in knownIonizationFactorsRelativeToN2:
+        f5.write(',%s'%i)
+    f5.write('\n')
+    
+    #write the header
+    f5.write('SourceOfFragmentationPatterns')
+    for i in SourceOfFragmentationPatterns:
+        f5.write(',%s' %i)
+    f5.write('\n')
+    
+    #write the ionization data source
+    f5.write("SourceOfIonizationData")
+    for i in SourceOfIonizationData:
+        f5.write(',%s' %i)
+    f5.write('\n')
+    
     #write the molecular weights
-    f5.write('Molecular Weight,')
+    f5.write('Molecular Mass')
     for i in MWeights:
-        f5.write('%f,' %(float(i)))
+        f5.write(',%f' %(float(i)))
     f5.write('\n')
 
     Array1=OverallArray
@@ -95,20 +118,27 @@ def exportToCSV(filename, OverallArray, listOfFiles, MoleculeNames, ENumbers, MW
             if Array1[MaximumAtomicUnit*k +i-1] != 0: #The -1 is for array indexing
                 zeros =False                
         if zeros == False:
-            f5.write('%d,'%(i))    
+            f5.write('%d'%(i))    
             for y in range(printRow):    
-                f5.write('%d,'%(Array1[MaximumAtomicUnit*y +i-1])) #The -1 is for array indexing
+                f5.write(',%d'%(Array1[MaximumAtomicUnit*y +i-1])) #The -1 is for array indexing
             f5.write('\n')
             
     f5.close()
       
-
+SourceOfFragmentationPattern = ''
+SourceOfFragmentationPatterns = list()
+SourceOfIonizationDatum = ''
+SourceOfIonizationData = list()
 moleculeName=''
 MoleculeNames=list()
 ENumber = 0
 ENumbers =list()
 MWeight =0.0 
 MWeights=list()
+knownMoleculeIonizationType = ''
+knownMoleculeIonizationTypes = list()
+knownIonizationFactorRelativeToN2 = 0.0
+knownIonizationFactorsRelativeToN2 = list()
 filenames=''
 listOfFiles=list()
 
@@ -120,7 +150,8 @@ fileYorN=input()
 
 
 if (fileYorN =='no'):
-    print("Welcome! Enter the name of the molecule, it's mass, it's number of electrons (or the number -1 if you don't need that) and the associated JDX file in order to generate a csv spectrum file")
+    print("Welcome! Enter the name of the molecule, its mass, its ionization factor relative to nitrogen (put unknown if you don't know), its ionization type (put unknown if you don't know), its number of electrons (or the number -1 if you don't need that), and the associated JDX file in order to generate a csv spectrum file")
+    print("If a molecule name has a comma in it (e.g. 1,3-pentadiene) or any other input has a comma in it, we recommend using an _ (e.g. 1_3-pentadiene) since this information is stored in a comma separated value file.")
     print("Enter the molecule's Name: ")
     moleculeName = input()
 
@@ -131,9 +162,21 @@ if (fileYorN =='no'):
         print(" enter the electron Number: ")
         ENumber = input()
         ENumbers.append(ENumber)
+        print(" enter the molecule's ionization type (Enter unknown if unknown): ")
+        knownMoleculeIonizationType = input()
+        knownMoleculeIonizationTypes.append(knownMoleculeIonizationType)
+        print(" enter the molecule's ionization factor relative to N2 (Enter a unknown if unknown): ")
+        knownIonizationFactorRelativeToN2 = input()
+        knownIonizationFactorsRelativeToN2.append(knownIonizationFactorRelativeToN2)
+        print(" enter the source of the fragmention pattern: ")
+        SourceOfFragmentationPattern = input()
+        SourceOfFragmentationPatterns.append(SourceOfFragmentationPattern)
+        print(" enter the source of the ionization data: ")
+        SourceOfIonizationDatum = input()
+        SourceOfIonizationData.append(SourceOfIonizationDatum)
         print(" enter the Molecular Weight:")
         MWeight= input()
-        MWeights.append(MWeight)
+        MWeights.append(MWeight)        
         print("enter the file name(EX: oxygen.jdx):")
         print("If the file is in a separate directory, \ninclude the path(EX: JDXFiles\oxygen.jdx):")
         filename=input()
@@ -179,6 +222,10 @@ if fileYorN == 'yes':
             ENumbers.append(list_holder[i][1])
             MWeights.append(list_holder[i][2])
             listOfFiles.append(list_holder[i][3])
+            knownMoleculeIonizationTypes.append(list_holder[i][4])
+            knownIonizationFactorsRelativeToN2.append(list_holder[i][5])
+            SourceOfFragmentationPatterns.append(list_holder[i][6])
+            SourceOfIonizationData.append(list_holder[i][7])
             
 #Otherwise, assume that the files are in the directory of the JDXConv-UI
     else:
@@ -190,7 +237,10 @@ if fileYorN == 'yes':
             ENumbers.append(list_holder[i][1])
             MWeights.append(list_holder[i][2])
             listOfFiles.append(list_holder[i][3])
-
+            knownMoleculeIonizationTypes.append(list_holder[i][4])
+            knownIonizationFactorsRelativeToN2.append(list_holder[i][5])
+            SourceOfFragmentationPatterns.append(list_holder[i][6])
+            SourceOfIonizationData.append(list_holder[i][7])
 
 OverallArray=[]
 holderArray=[]
@@ -199,4 +249,4 @@ for i in listOfFiles:
     holderArray=createArray(jcampDict, i)
     OverallArray=combineArray(OverallArray, holderArray)
 
-exportToCSV("%s\\ConvertedSpectra.csv" %outputDirectory, OverallArray, listOfFiles, MoleculeNames, ENumbers, MWeights)
+exportToCSV("%s\\ConvertedSpectra.csv" %outputDirectory, OverallArray, listOfFiles, MoleculeNames, ENumbers, MWeights, knownMoleculeIonizationTypes, knownIonizationFactorsRelativeToN2, SourceOfFragmentationPatterns, SourceOfIonizationData)
