@@ -17,22 +17,22 @@ Molecule Name,Electrons,Mass,File Name,knownMoleculeIonizationType,knownIonizati
 3methylbut1ene,40,70.13,3methylbut1ene.jdx,Organic,unknown,NIST Webbook,None
 3pentanone,48,86.13,3pentanone.jdx,Organic,unknown,NIST Webbook,None
 13butadiene,30,54.09,13butadiene.jdx,Organic,unknown,NIST Webbook,None
-acetaldehyde,24,44.05,acetaldehyde.jdx,Organic,2.6,NIST Webbook,UHV-24/UHV-24p Ionization Gauge Instruction Manual - Table A1 - https://www.mksinst.com/docs/ur/GaugeGasCorrection.aspx  
+acetaldehyde,24,44.05,acetaldehyde.jdx,Organic,unknown,NIST Webbook,None
 aceticacid,32,60.05,aceticacid.jdx,Organic,unknown,NIST Webbook,None
-acetone,32,58.08,acetone.jdx,Organic,3.73,NIST Webbook,UHV-24/UHV-24p Ionization Gauge Instruction Manual - Table A1 - https://www.mksinst.com/docs/ur/GaugeGasCorrection.aspx  
-butane,34,58.12,butane.jdx,Organic,4.78,NIST Webbook,UHV-24/UHV-24p Ionization Gauge Instruction Manual - Table A1 - https://www.mksinst.com/docs/ur/GaugeGasCorrection.aspx  
-carbon dioxide,22,44.01,carbon dioxide.jdx,Organic; Inorganic,1.44,NIST Webbook,UHV-24/UHV-24p Ionization Gauge Instruction Manual - Table A1 - https://www.mksinst.com/docs/ur/GaugeGasCorrection.aspx  
-carbon monoxide,14,28.01,carbon monoxide.jdx,Organic; Inorganic,1.07,NIST Webbook,UHV-24/UHV-24p Ionization Gauge Instruction Manual - Table A1 - https://www.mksinst.com/docs/ur/GaugeGasCorrection.aspx  
-diatomicHydrogen,2,2.02,diatomicHydrogen.jdx,Inorganic,0.43,NIST Webbook,UHV-24/UHV-24p Ionization Gauge Instruction Manual - Table A1 - https://www.mksinst.com/docs/ur/GaugeGasCorrection.aspx  
-diethylether,42,74.12,diethylether.jdx,Organic,5.1,NIST Webbook,UHV-24/UHV-24p Ionization Gauge Instruction Manual - Table A1 - https://www.mksinst.com/docs/ur/GaugeGasCorrection.aspx  
-ethane,18,30.07,ethane.jdx,Organic,2.63,NIST Webbook,UHV-24/UHV-24p Ionization Gauge Instruction Manual - Table A1 - https://www.mksinst.com/docs/ur/GaugeGasCorrection.aspx  
-ethanol,26,46.07,ethanol.jdx,Organic,3.25,NIST Webbook,UHV-24/UHV-24p Ionization Gauge Instruction Manual - Table A1 - https://www.mksinst.com/docs/ur/GaugeGasCorrection.aspx  
-ethene,16,28.05,ethene.jdx,Organic,2.31,NIST Webbook,UHV-24/UHV-24p Ionization Gauge Instruction Manual - Table A1 - https://www.mksinst.com/docs/ur/GaugeGasCorrection.aspx  
+acetone,32,58.08,acetone.jdx,Organic,unknown,NIST Webbook,None
+butane,34,58.12,butane.jdx,Organic,unknown,NIST Webbook,None
+carbon dioxide,22,44.01,carbon dioxide.jdx,Organic; Inorganic,1.44,NIST Webbook,unknown
+carbon monoxide,14,28.01,carbon monoxide.jdx,Organic; Inorganic,1.07,NIST Webbook,unknown
+diatomicHydrogen,2,2.02,diatomicHydrogen.jdx,Inorganic,0.43,NIST Webbook,unknown
+diethylether,42,74.12,diethylether.jdx,Organic,unknown,NIST Webbook,None
+ethane,18,30.07,ethane.jdx,Organic,unknown,NIST Webbook,None
+ethanol,26,46.07,ethanol.jdx,Organic,unknown,NIST Webbook,None
+ethene,16,28.05,ethene.jdx,Organic,unknown,NIST Webbook,None
 ethylacetate,48,88.11,ethylacetate.jdx,Organic,unknown,NIST Webbook,None
-hexane,50,86.18,hexane.jdx,Organic,6.6,NIST Webbook,UHV-24/UHV-24p Ionization Gauge Instruction Manual - Table A1 - https://www.mksinst.com/docs/ur/GaugeGasCorrection.aspx  
-isobutene,32,56.11,isobutene.jdx,Organic,3.6,NIST Webbook,UHV-24/UHV-24p Ionization Gauge Instruction Manual - Table A1 - https://www.mksinst.com/docs/ur/GaugeGasCorrection.aspx  
-methane,10,16.04,methane.jdx,Organic,1.52,NIST Webbook,UHV-24/UHV-24p Ionization Gauge Instruction Manual - Table A1 - https://www.mksinst.com/docs/ur/GaugeGasCorrection.aspx  
-pentane,42,72.15,pentane.jdx,Organic,5.92,NIST Webbook,UHV-24/UHV-24p Ionization Gauge Instruction Manual - Table A1 - https://www.mksinst.com/docs/ur/GaugeGasCorrection.aspx  
-propane,26,44.1,propane.jdx,Organic,3.83,NIST Webbook,UHV-24/UHV-24p Ionization Gauge Instruction Manual - Table A1 - https://www.mksinst.com/docs/ur/GaugeGasCorrection.aspx  
-propene,24,42.08,propene.jdx,Organic,3.47,NIST Webbook,UHV-24/UHV-24p Ionization Gauge Instruction Manual - Table A1 - https://www.mksinst.com/docs/ur/GaugeGasCorrection.aspx  
-water,10,18.02,water.jdx,Inorganic,0.97,NIST Webbook,UHV-24/UHV-24p Ionization Gauge Instruction Manual - Table A1 - https://www.mksinst.com/docs/ur/GaugeGasCorrection.aspx  
+hexane,50,86.18,hexane.jdx,Organic,unknown,NIST Webbook,None
+isobutene,32,56.11,isobutene.jdx,Organic,unknown,NIST Webbook,None
+methane,10,16.04,methane.jdx,Organic,unknown,NIST Webbook,None
+pentane,42,72.15,pentane.jdx,Organic,unknown,NIST Webbook,None
+propane,26,44.1,propane.jdx,Organic,unknown,NIST Webbook,None
+propene,24,42.08,propene.jdx,Organic,unknown,NIST Webbook,None
+water,10,18.02,water.jdx,Inorganic,0.97,NIST Webbook,unknown
