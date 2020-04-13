@@ -6,7 +6,11 @@ from math import log10
 
 '''
 JCampSG.py is a derivative work of JCamp software originally built by Nathan Hagen 
-and shared on GithHub, licensed under the MIT license. The following License applies only to this file. 
+and shared on GithHub, licensed under the MIT license. 
+
+https://github.com/nzhagen/jcamp/blob/master/jcamp.py
+
+The following License applies only to this file. 
 
 Copyright (c) 2013 Nathan Hagen
 
