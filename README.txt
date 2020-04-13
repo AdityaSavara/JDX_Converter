@@ -6,12 +6,13 @@ This repository contains JDXConverter.py as the user interface and JCampSG.py as
 JDXConverter.py has two methods of JDX file input: manual and via a csv information file. Manual is useful for going through the molecules one at a time with a smaller number of JDX files to convert. A csv reference file is useful for converting multiple spectra contained in JDX files.
 
 **Installation and dependencies:
+The easiest way get the dependencies is to first install anaconda, then open spyder (installed with anaconda).
 Download the repository, which includes example files. 
 The module does include files which has dependencies on : JCampSG.py (included), and also requires one or more modules from Scipy.
 
 **Running the Example Set:
-Open the JDXConverter.py in a Python Development Environment.
-The example set will run using a reference csv file. When prompted to enter if you would like to load references from a csv file, type yes. 
+Run the JDXConverter.py using (such as from a command prompt or from inside spyder etc.)
+The example set of molecuele files will be converted based on the provided example reference csv file. When prompted to enter if you would like to load references from a csv file, type yes. 
 Enter the MoleculesInfo.csv when asked for the reference file name.
 When prompted for an output location, use the default location, so simply press enter.
 ConvertedSpectra.csv can now be found in the OutputFiles folder.
