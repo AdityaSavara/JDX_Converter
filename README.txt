@@ -12,8 +12,8 @@ The module does include files which has dependencies on : JCampSG.py (included),
 
 **Running the Example Set:
 Run the JDXConverter.py using (such as from a command prompt or from inside spyder etc.)
-The example set of molecule files will be converted based to create a mass spectrometry pattern reference file. When prompted to enter if you would like to load references from a csv file, type yes. 
-Enter the MoleculesInfo.csv when asked for the reference file name.
+The example set of molecule files will be converted based to create a mass spectrometry pattern reference file. When prompted to enter whether  you would like to load reference fragmentation patterns from a csv file, type yes. 
+Enter MoleculesInfo.csv when asked for the file name.
 When prompted for an output location, use the default location, so simply press enter.
 ConvertedSpectra.csv can now be found in the OutputFiles folder.
 
