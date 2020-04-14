@@ -25,9 +25,3 @@ Open JDXConverter.py on the development environment and select run.
 * If yes is selected: The program will prompt you to enter the name of the reference csv. Enter the name (e.g. MoleculesInfo.csv). The JDXConverter will then prompt you to enter an output location. The default location will be the OutputFiles folder. The converted spectra will by default appear as ConvertedSpectra.csv. 
 * If no was selected: The program will provide prompts to enter in the individual molecule information and the JDX file name. For manual input, follow the prompts to enter the molecule name, electron number, molecular mass, ionization type, and ionization factor. The JDXConverter will then ask for the JDX filename. If the JDX file is in the same folder as the JDXConverter simply enter filename.jdx (e.g. water.jdx). * If the file is included in a subdirectory, precede the filename with DirectoryName\\ (e.g. JDXFiles\\water.jdx). 
 * Finally, the JDXConverter will prompt you to enter an output location or to use the default location. The converted spectra will by default be put into a file named ConvertedSpectra.csv.
-
-
-Authors:
-Savara Group
-Acknowledgements:
-Nathan Hagen and any other contributors to the original jcamp.py
