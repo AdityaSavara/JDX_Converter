@@ -8,6 +8,91 @@ import math
 import sys
 from numpy import genfromtxt
 import os.path
+import httplib2
+from bs4 import BeautifulSoup, element , SoupStrainer
+import bs4 
+import requests 
+import pymatgen.core.composition
+import urllib.request
+import cgi
+import httplib2
+
+def getMassSpectrumURL(URL):
+    http = httplib2.Http()
+    status, response = http.request(URL)
+
+    all_links = BeautifulSoup(response, parse_only=SoupStrainer('a'), features='html.parser')
+
+    for link in all_links:
+        if link.has_attr('href'):
+            value = link['href']
+            if(value.find('#Mass-Spec')>0):
+                domain = 'https://webbook.nist.gov'
+                mass_spec_url = domain + value
+                return mass_spec_url
+
+def getJDXDownloadURL(mass_spectrum_url):
+    http = httplib2.Http()
+    status, response = http.request(mass_spectrum_url)
+
+    all_links = BeautifulSoup(response, parse_only=SoupStrainer('a'), features='html.parser')
+
+    for link in all_links:
+        if link.has_attr('href'):
+            value = link['href']
+            if(value.find('JCAMP')>0):
+                domain = 'https://webbook.nist.gov'
+                download_url = domain + value
+                return download_url
+
+def getMolecularWeight(URL):
+    
+    webpage = requests.get(URL) 
+    soup = BeautifulSoup(webpage.content, "lxml")
+
+    molecularWeight = soup.find("a", attrs={"title": 'IUPAC definition of relative molecular mass (molecular weight)'}).find_parent().nextSibling
+    return float(molecularWeight)
+
+def getMolecularFormula(URL):
+    
+    webpage = requests.get(URL) 
+    soup = BeautifulSoup(webpage.content, "lxml")
+
+    formula_tag = soup.find("a", attrs={"title": 'IUPAC definition of empirical formula'}).find_parent().next_siblings
+    formula = ''
+    for sib in formula_tag:                                                                                             #sib is the siblings inside formula_tag
+        if(type(sib) == bs4.element.Tag):
+            formula = formula +sib.text
+        else:
+            formula = formula + sib
+
+    return formula
+
+def getElectronNumbers(formula):
+    comp = pymatgen.core.composition.Composition(formula)
+    return comp.total_electrons
+
+def getJDXDownloadURL(mass_spectrum_url):
+    http = httplib2.Http()
+    status, response = http.request(mass_spectrum_url)
+
+    for link in BeautifulSoup(response, parse_only=SoupStrainer('a'), features='html.parser'):
+        if link.has_attr('href'):
+            value = link['href']
+            if(value.find('JCAMP')>0):
+                domain = 'https://webbook.nist.gov'
+                mass_spec_url = domain + value
+                return mass_spec_url
+
+def getJDX(URL,molecule_name):
+    # URL = "https://webbook.nist.gov/cgi/cbook.cgi?JCAMP=C67561&Index=0&Type=Mass"
+    remotefile = urllib.request.urlopen(URL)
+    remotefileName = remotefile.info()['Content-Disposition']
+    value, params = cgi.parse_header(remotefileName)
+    # filename = params["filename"]
+    filename = molecule_name+".jdx"
+    urllib.request.urlretrieve(URL, filename)
+    return filename
 
 #This variable determines the largest fragment size that the program can handle
 MaximumAtomicUnit = 300
