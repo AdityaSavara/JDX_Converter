@@ -1,0 +1,29 @@
+##TITLE=Propyne
+##JCAMP-DX=4.24
+##DATA TYPE=MASS SPECTRUM
+##OWNER=NIST Mass Spectrometry Data Center
+Collection (C) 2014 copyright by the U.S. Secretary of Commerce
+on behalf of the United States of America. All rights reserved.
+##CAS REGISTRY NO=74-99-7
+##$NIST MASS SPEC NO=18849
+##MOLFORM=C3 H4
+##MW=40
+##$NIST SOURCE=MSDC
+##XUNITS=M/Z
+##YUNITS=RELATIVE INTENSITY
+##XFACTOR=1
+##YFACTOR=1
+##FIRSTX=12
+##LASTX=42
+##FIRSTY=170
+##MAXX=42
+##MINX=12
+##MAXY=9999
+##MINY=20
+##NPOINTS=14
+##PEAK TABLE=(XY..XY)
+12,170 13,170 14,120 15,110
+24,110 25,250 26,250 36,530
+37,1982 38,2853 39,7917 40,9999
+41,350 42,20
+##END=
