@@ -303,7 +303,7 @@ def startCommandLine():
         while moleculeName != 'EXIT':
             MoleculeNames.append(moleculeName)
 
-            print("Retrieve info from NIST webbook?")
+            print("Retrieve info from NIST webbook? (Y or N)")
             WebbookChoice = input()
             if WebbookChoice.lower() == 'Y'.lower():
                 print("WELCOME!")
