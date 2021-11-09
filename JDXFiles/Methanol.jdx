@@ -1,0 +1,30 @@
+##TITLE=Methyl Alcohol
+##JCAMP-DX=4.24
+##DATA TYPE=MASS SPECTRUM
+##ORIGIN=Japan AIST/NIMC Database- Spectrum MS-NW- 72
+##OWNER=NIST Mass Spectrometry Data Center
+Collection (C) 2014 copyright by the U.S. Secretary of Commerce
+on behalf of the United States of America. All rights reserved.
+##CAS REGISTRY NO=67-56-1
+##$NIST MASS SPEC NO=229809
+##MOLFORM=C H4 O
+##MW=32
+##$NIST SOURCE=MSDC
+##XUNITS=M/Z
+##YUNITS=RELATIVE INTENSITY
+##XFACTOR=1
+##YFACTOR=1
+##FIRSTX=2
+##LASTX=34
+##FIRSTY=30
+##MAXX=34
+##MINX=2
+##MAXY=9999
+##MINY=10
+##NPOINTS=16
+##PEAK TABLE=(XY..XY)
+2,30 12,20 13,60 14,169
+15,1239 16,10 17,30 18,70
+19,10 28,459 29,4459 30,649
+31,9999 32,7439 33,119 34,10
+##END=
