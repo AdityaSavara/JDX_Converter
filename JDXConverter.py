@@ -509,7 +509,7 @@ def takeInputAsList(molecule_name):
     return molecule_names
 
 # exportToCSV("%s\\ConvertedSpectra.csv" %outputDirectory, OverallArray,  MoleculeNames, ENumbers, MWeights, knownMoleculeIonizationTypes, knownIonizationFactorsRelativeToN2, SourceOfFragmentationPatterns, SourceOfIonizationData)
-getMultipleSpectrumFromNIST()
+
 # Feature Request:
 # Currently this application supports input from the user as following
 # Example INPUT : Methanol;Ethanol;Butanol OR
@@ -518,4 +518,8 @@ getMultipleSpectrumFromNIST()
 # EXIT     
 # But it cannot take input like ['Methanol','Butanol','Ethanol']
 
-
+if __name__ == "__main__":
+    # getMultipleSpectrumFromNIST()
+    molecule_name= 'Ethanol'
+    url = f'https://webbook.nist.gov/cgi/cbook.cgi?Name={molecule_name}&Units=SI'
+    print(getMolecularFormula(url))
