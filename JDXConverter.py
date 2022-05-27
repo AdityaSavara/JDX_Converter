@@ -18,11 +18,13 @@ import cgi
 import httplib2
 
 def getMassSpectrumURL(URL):
+
     """
     This function will take the NISTWebbook Website URL of a particular molecule and extract the Mass Spectrum URL from that webpage
     INPUT: URL ( NISTWebbook URL of a specific molecule)
     OUTPUT: mass_spec_url ( mass spectrum URL of that specific molecule )
     """
+
     http = httplib2.Http()
     status, response = http.request(URL)
 
@@ -37,11 +39,13 @@ def getMassSpectrumURL(URL):
                 return mass_spec_url
 
 def getJDXDownloadURL(mass_spectrum_url):
+
     """
     This function will take the mass spectrum url of a specific molecule and extract the "Download spectrum in JCAMP-DX format" URL
     INPUT: mass_spectrum_url ( Specific molecule's mass spectrum webpage's URL . Example : https://webbook.nist.gov/cgi/cbook.cgi?ID=C64175&Units=SI&Mask=200#Mass-Spec )
     OUTPUT: download_url (Specific molecule's mass spectrum's JDX Format file download link. Example : https://webbook.nist.gov/cgi/cbook.cgi?JCAMP=C64175&Index=0&Type=Mass )
     """
+
     http = httplib2.Http()
     status, response = http.request(mass_spectrum_url)
 
@@ -56,11 +60,13 @@ def getJDXDownloadURL(mass_spectrum_url):
                 return download_url
 
 def getMolecularWeight(URL):
+
     """
     This function will take the specific molecule's NISTWebBook URL and fetch the Molecular weight value from that web page.
     INPUT: URL (specific molecule's NISTWebBook URL that contains the details of that molecule. ) 
     OUTPUT: molecularWeight ( the molecular weight value from the NISTWebBook page of the specific molecule. The value is in Float dataType )
     """
+
     webpage = requests.get(URL) 
     soup = BeautifulSoup(webpage.content, "lxml")
 
@@ -68,11 +74,13 @@ def getMolecularWeight(URL):
     return float(molecularWeight)
 
 def getMolecularFormula(URL):
+
     """
     This function will extract the Formula from the specific molecule's NISTWebBook URL.
     INPUT: URL (specific molecule's NISTWebBook URL that contains the details of that molecule. )
     OUTPUT: formula (extracted molecular formula string from the NISTWebBook URL)
     """
+
     
     webpage = requests.get(URL) 
     soup = BeautifulSoup(webpage.content, "lxml")
@@ -88,11 +96,13 @@ def getMolecularFormula(URL):
     return formula
 
 def getElectronNumbers(formula):
+
     """
     This function will take the molecular formula string and using the pymatgen's function to output the total electron number of the specific molecule.
     INPUT: formula ( molecular formula string of the specific molecule )
     OUTPUT: total_electrons ( total electron count of the specific molecule )
     """
+
     comp = pymatgen.core.composition.Composition(formula)
     return comp.total_electrons
 
@@ -102,6 +112,7 @@ def getJDXDownloadURL(mass_spectrum_url):
     INPUT: mass_spectrum_url(specific molecule's mass spectrum webpage's URL)
     OUTPUT: mass_spec_url ( specific molecule's mass spectrum in JCAMP-DX format download URL)
     """
+
     http = httplib2.Http()
     status, response = http.request(mass_spectrum_url)
 
@@ -114,6 +125,7 @@ def getJDXDownloadURL(mass_spectrum_url):
                 return mass_spec_url
 
 def getJDX(URL,molecule_name):
+
     """
     This function retrieves the JDX Formatted file of a specific molecule taking in the NISTWebBook URL and the molecule's name
     INPUT: URL (mass spectrum in JCAMP-DX format download URL) | molecule_name (specific molecule's name to name the jdx formatted file in the output directory)
@@ -454,7 +466,10 @@ def startCommandLine():
         holderArray=createArray(jcampDict, i)
         OverallArray=combineArray(OverallArray, holderArray)
 
+
 def getSpectrumFromNIST(molecule_name):
+    print("WELCOME!")
+    molecule_name = input("Enter the name of the Molecule: ")
     url = f'https://webbook.nist.gov/cgi/cbook.cgi?Name={molecule_name}&Units=SI'
 
     mass_spectrum_url = getMassSpectrumURL(url)
@@ -476,6 +491,7 @@ def getSpectrumFromNIST(molecule_name):
     Molecules = []
     Molecules.append(molecule_name)
     exportToCSV("%s\\%s" %(outputDirectory,filename), overAllArray, Molecules, electron_numbers, molecular_weight, knownMoleculeIonizationTypes, knownIonizationFactorsRelativeToN2, SourceOfFragmentationPatterns, SourceOfIonizationData)
+
 
 def getMultipleSpectrumFromNIST():      #Keeping the function name as "getMultipleSpectrumFromNIST, will ask for appropriate name"
     print("WELCOME")
@@ -520,6 +536,8 @@ def takeInputAsList(molecule_name):
 
 if __name__ == "__main__":
     # getMultipleSpectrumFromNIST()
+    # exportToCSV("%s\\ConvertedSpectra.csv" %outputDirectory, OverallArray,  MoleculeNames, ENumbers, MWeights, knownMoleculeIonizationTypes, knownIonizationFactorsRelativeToN2, SourceOfFragmentationPatterns, SourceOfIonizationData)
+    # executeForSingleMolecule()
     molecule_name= 'Ethanol'
     url = f'https://webbook.nist.gov/cgi/cbook.cgi?Name={molecule_name}&Units=SI'
     print(getMolecularFormula(url))
