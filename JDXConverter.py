@@ -444,3 +444,10 @@ def startCommandLine():
         OverallArray=combineArray(OverallArray, holderArray)
 
     exportToCSV("%s\\ConvertedSpectra.csv" %outputDirectory, OverallArray,  MoleculeNames, ENumbers, MWeights, knownMoleculeIonizationTypes, knownIonizationFactorsRelativeToN2, SourceOfFragmentationPatterns, SourceOfIonizationData)
+
+if __name__ == "__main__":
+    # getMultipleSpectrumFromNIST()
+    # molecule_name= 'Ethanol'
+    # url = f'https://webbook.nist.gov/cgi/cbook.cgi?Name={molecule_name}&Units=SI'
+    # print(getMolecularFormula(url))
+    startCommandLine()
