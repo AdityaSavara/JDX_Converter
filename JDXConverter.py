@@ -1,21 +1,3 @@
-import JCampSG
-import string
-import numpy
-import csv
-import time
-import timeit
-import math
-import sys
-from numpy import genfromtxt
-import os.path
-from bs4 import BeautifulSoup, SoupStrainer
-import httplib2
-import requests 
-import bs4 
-import pymatgen.core.composition
-import urllib.request
-import cgi
-
 #This variable determines the largest fragment size that the program can handle
 MaximumAtomicUnit = 300
 
@@ -23,9 +5,11 @@ def getMassSpectrumURL(URL):
 
     """
     This function will take the NISTWebbook Website URL of a particular molecule and extract the Mass Spectrum URL from that webpage
-    INPUT: URL ( NISTWebbook URL of a specific molecule)
+    INPUT: URL ( NISTWebbook URL of a specific molecule. Example: https://webbook.nist.gov/cgi/cbook.cgi?Name=Methanol&Units=SI )
     OUTPUT: mass_spec_url ( mass spectrum URL of that specific molecule )
     """
+    import httplib2
+    from bs4 import BeautifulSoup, SoupStrainer
 
     http = httplib2.Http()
     status, response = http.request(URL)
@@ -47,6 +31,8 @@ def getJDXDownloadURL(mass_spectrum_url):
     INPUT: mass_spectrum_url ( Specific molecule's mass spectrum webpage's URL . Example : https://webbook.nist.gov/cgi/cbook.cgi?ID=C64175&Units=SI&Mask=200#Mass-Spec )
     OUTPUT: download_url (Specific molecule's mass spectrum's JDX Format file download link. Example : https://webbook.nist.gov/cgi/cbook.cgi?JCAMP=C64175&Index=0&Type=Mass )
     """
+    import httplib2
+    from bs4 import BeautifulSoup, SoupStrainer
 
     http = httplib2.Http()
     status, response = http.request(mass_spectrum_url)
@@ -65,9 +51,11 @@ def getMolecularWeight(URL):
 
     """
     This function will take the specific molecule's NISTWebBook URL and fetch the Molecular weight value from that web page.
-    INPUT: URL (specific molecule's NISTWebBook URL that contains the details of that molecule. ) 
+    INPUT: URL (specific molecule's NISTWebBook URL that contains the details of that molecule. Example: https://webbook.nist.gov/cgi/cbook.cgi?Name=Methanol&Units=SI ) 
     OUTPUT: molecularWeight ( the molecular weight value from the NISTWebBook page of the specific molecule. The value is in Float dataType )
     """
+    import requests
+    from bs4 import BeautifulSoup
 
     webpage = requests.get(URL) 
     soup = BeautifulSoup(webpage.content, "lxml")
@@ -79,10 +67,12 @@ def getMolecularFormula(URL):
 
     """
     This function will extract the Formula from the specific molecule's NISTWebBook URL.
-    INPUT: URL (specific molecule's NISTWebBook URL that contains the details of that molecule. )
+    INPUT: URL (specific molecule's NISTWebBook URL that contains the details of that molecule. Example: https://webbook.nist.gov/cgi/cbook.cgi?Name=Methanol&Units=SI)
     OUTPUT: formula (extracted molecular formula string from the NISTWebBook URL)
     """
-
+    import bs4
+    import requests
+    from bs4 import BeautifulSoup
     
     webpage = requests.get(URL) 
     soup = BeautifulSoup(webpage.content, "lxml")
@@ -101,9 +91,10 @@ def getElectronNumbers(formula):
 
     """
     This function will take the molecular formula string and using the pymatgen's function to output the total electron number of the specific molecule.
-    INPUT: formula ( molecular formula string of the specific molecule )
+    INPUT: formula ( molecular formula string of the specific molecule. Example: CH4 )
     OUTPUT: total_electrons ( total electron count of the specific molecule )
     """
+    import pymatgen.core.composition
 
     comp = pymatgen.core.composition.Composition(formula)
     return comp.total_electrons
@@ -114,6 +105,8 @@ def getJDXDownloadURL(mass_spectrum_url):
     INPUT: mass_spectrum_url(specific molecule's mass spectrum webpage's URL)
     OUTPUT: mass_spec_url ( specific molecule's mass spectrum in JCAMP-DX format download URL)
     """
+    import httplib2
+    from bs4 import BeautifulSoup, SoupStrainer
 
     http = httplib2.Http()
     status, response = http.request(mass_spectrum_url)
@@ -133,6 +126,9 @@ def getJDX(URL,molecule_name):
     INPUT: URL (mass spectrum in JCAMP-DX format download URL) | molecule_name (specific molecule's name to name the jdx formatted file in the output directory)
     OUTPUT: returns the filename with the output directory path
     """
+    import urllib.request
+    import cgi
+
     # URL = "https://webbook.nist.gov/cgi/cbook.cgi?JCAMP=C67561&Index=0&Type=Mass"
     remotefile = urllib.request.urlopen(URL)
     remotefileName = remotefile.info()['Content-Disposition']
@@ -143,6 +139,9 @@ def getJDX(URL,molecule_name):
     return filename
 
 def getOverAllArray(listOfFiles):
+    
+    import JCampSG
+
     OverallArray=[]
     holderArray=[]
     # for i in listOfFiles:
