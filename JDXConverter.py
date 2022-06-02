@@ -192,11 +192,65 @@ def combineArray(Array1, Array2):
     
     return Array1
 
-def exportToCSV(filename, OverallArray, listOfFiles, MoleculeNames, ENumbers, MWeights, knownMoleculeIonizationTypes, knownIonizationFactorsRelativeToN2, SourceOfFragmentationPatterns, SourceOfIonizationData):
+def exportToCSV(filename, OverallArray, MoleculeNames, ENumbers, MWeights, knownMoleculeIonizationTypes, knownIonizationFactorsRelativeToN2, SourceOfFragmentationPatterns, SourceOfIonizationData):
+    """
+    This function basically takes in all the metadata of molecules and write them into csv file/files
+    """
+    import os.path
 
-    
-    f5 = open(filename, 'w')
-    
+    if(os.path.exists(filename)):
+        f5 = open(filename, 'w')
+    else:
+        directory_name = filename.split('\\')[0]
+        os.mkdir(directory_name)
+        f5 = open(filename, 'w')
+    # if(len(MoleculeNames) == 1):
+    #     f5.write('#CommentsLine:')
+    #     f5.write(',')
+    #     f5.write('\n')
+        
+    #     #write the molecules
+    #     f5.write('Molecules')
+    #     f5.write(',')
+    #     f5.write(MoleculeNames[0])
+    #     f5.write('\n')
+
+    #     #write the Electron Numbers
+    #     f5.write('Electron Numbers')
+    #     f5.write(',')
+    #     f5.write(str(ENumbers))
+    #     f5.write('\n')
+        
+    #     #write the ionization type
+    #     f5.write('knownMoleculesIonizationTypes')
+    #     f5.write(',')
+    #     f5.write(knownMoleculeIonizationTypes[0])
+    #     f5.write('\n')
+        
+    #     #write the ionization factor
+    #     f5.write('knownIonizationFactorsRelativeToN2')
+    #     f5.write(',')
+    #     f5.write(knownIonizationFactorsRelativeToN2[0])
+    #     f5.write('\n')
+        
+    #     #write the header
+    #     f5.write('SourceOfFragmentationPatterns')
+    #     f5.write(',')
+    #     f5.write(SourceOfFragmentationPatterns[0])
+    #     f5.write('\n')
+        
+    #     #write the ionization data source
+    #     f5.write("SourceOfIonizationData")
+    #     f5.write(',')
+    #     f5.write(SourceOfIonizationData[0])
+    #     f5.write('\n')
+        
+    #     #write the molecular weights
+    #     f5.write('Molecular Mass')
+    #     f5.write(',')
+    #     f5.write(str(MWeights))
+    #     f5.write('\n')
+    # else:
     f5.write('#CommentsLine:')
     for i in range(len(MoleculeNames)):
         f5.write(',')
@@ -212,6 +266,7 @@ def exportToCSV(filename, OverallArray, listOfFiles, MoleculeNames, ENumbers, MW
     f5.write('Electron Numbers')
     for i in ENumbers:
         f5.write(',%f'%(int(i)))
+    # f5.write(str(ENumbers))
     f5.write('\n')
     
     #write the ionization type
@@ -242,14 +297,14 @@ def exportToCSV(filename, OverallArray, listOfFiles, MoleculeNames, ENumbers, MW
     f5.write('Molecular Mass')
     for i in MWeights:
         f5.write(',%f' %(float(i)))
+    # f5.write(str(MWeights))
     f5.write('\n')
-
+    
     Array1=OverallArray
     printRow= len(Array1)//MaximumAtomicUnit
     printArray =[]
     zeros = True
 
-    
     for i in range(1,MaximumAtomicUnit+1):
         print(i)
         zeros = True
