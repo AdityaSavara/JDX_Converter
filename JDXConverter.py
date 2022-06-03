@@ -349,7 +349,7 @@ def getMultipleSpectrumFromNIST():      #Keeping the function name as "getMultip
     """
     # print("WELCOME")
 
-    print("START ENTERING MOLECULE NAMES. Type EXIT to finish entering molecules. ")
+    print("ENTER A MOLECULE NAME, OR MULTIPLE MOLECULE NAMES. Separate multiple names using ';'.")
 
     molecule_names = []
 
