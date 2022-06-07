@@ -146,7 +146,7 @@ def getOverAllArray(listOfFiles):
     holderArray=[]
     # for i in listOfFiles:
     jcampDict=JCampSG.JCAMP_reader(listOfFiles)
-    holderArray=createArray(jcampDict, listOfFiles)
+    holderArray=createArray(jcampDict)
     OverallArray=combineArray(OverallArray, holderArray)
     return OverallArray
 
