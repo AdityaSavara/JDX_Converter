@@ -509,14 +509,14 @@ def startCommandLine():
                 SourceOfFragmentationPatterns.append(list_holder[i][6])
                 SourceOfIonizationData.append(list_holder[i][7])
 
-    OverallArray=[]
-    holderArray=[]
+    AllSpectra=[]
+    individual_spectrum=[]
     for i in listOfFiles:
         jcampDict=JCampSG.JCAMP_reader(i)
-        holderArray=createArray(jcampDict, i)
-        OverallArray=combineArray(OverallArray, holderArray)
+        individual_spectrum=createArray(jcampDict, i)
+        AllSpectra=combineArray(AllSpectra, individual_spectrum)
 
-    exportToCSV("%s\\ConvertedSpectra.csv" %outputDirectory, OverallArray,  MoleculeNames, ENumbers, MWeights, knownMoleculeIonizationTypes, knownIonizationFactorsRelativeToN2, SourceOfFragmentationPatterns, SourceOfIonizationData)
+    exportToCSV("%s\\ConvertedSpectra.csv" %outputDirectory, AllSpectra,  MoleculeNames, ENumbers, MWeights, knownMoleculeIonizationTypes, knownIonizationFactorsRelativeToN2, SourceOfFragmentationPatterns, SourceOfIonizationData)
 
 if __name__ == "__main__":
     # getMultipleSpectrumFromNIST()
