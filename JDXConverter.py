@@ -443,7 +443,7 @@ def startCommandLine():
 
                 individual_spectrum.extend(spectrum_data)
                 AllSpectra = combineArray(AllSpectra , individual_spectrum)
-                
+
                 print(f"RETRIEVED {moleculeName} from NIST WebBook")
  
             else:
@@ -470,6 +470,9 @@ def startCommandLine():
                 print("If the file is in a separate directory, \ninclude the path(EX: JDXFiles\oxygen.jdx):")
                 filename=input()
                 listOfFiles.append(filename)
+
+                AllSpectra = getSpectrumDataFromLocalJDX(listOfFiles)
+
                 print("Enter the name of the next molecule or type EXIT to finish entering molecules")
                 moleculeName=input()
 
