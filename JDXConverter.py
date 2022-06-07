@@ -440,6 +440,10 @@ def startCommandLine():
                 SourceOfIonizationData.append(SourceOfIonizationDatum)
                 MWeights.append(molecular_weight)   
                 ENumbers.append(electron_numbers)
+
+                individual_spectrum.extend(spectrum_data)
+                AllSpectra = combineArray(AllSpectra , individual_spectrum)
+                
                 print(f"RETRIEVED {moleculeName} from NIST WebBook")
  
             else:
@@ -526,7 +530,7 @@ def startCommandLine():
                 knownIonizationFactorsRelativeToN2.append(list_holder[i][5])
                 SourceOfFragmentationPatterns.append(list_holder[i][6])
                 SourceOfIonizationData.append(list_holder[i][7])
-                
+
         #This outer If block handles the manual file selection logic from Local path, so adding this spectrumData Fetching at the end of this IF block.        
         AllSpectra = getSpectrumDataFromLocalJDX(listOfFiles)
 
