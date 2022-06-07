@@ -390,7 +390,6 @@ def startCommandLine():
     """
     Driver function for this application... #TODO: Functionalize this function more, Add more information to the comment section.
     """
-    import JCampSG
     import os.path
     import csv
       
@@ -434,7 +433,7 @@ def startCommandLine():
             print("Retrieve info from NIST webbook? Y/N")
             WebbookChoice = input()
             if WebbookChoice.lower() == 'Y'.lower():
-                overAllArray,molecular_formula,molecular_weight,electron_numbers,knownMoleculeIonizationType, knownIonizationFactorRelativeToN2, SourceOfFragmentationPattern, SourceOfIonizationDatum = getMetaDataForMolecule(moleculeName)
+                spectrum_data,molecular_formula,molecular_weight,electron_numbers,knownMoleculeIonizationType, knownIonizationFactorRelativeToN2, SourceOfFragmentationPattern, SourceOfIonizationDatum = getMetaDataForMolecule(moleculeName)
                 knownMoleculeIonizationTypes.append(knownMoleculeIonizationType)
                 knownIonizationFactorsRelativeToN2.append(knownIonizationFactorRelativeToN2)
                 SourceOfFragmentationPatterns.append(SourceOfFragmentationPattern)
