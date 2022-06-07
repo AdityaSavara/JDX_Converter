@@ -410,6 +410,8 @@ def startCommandLine():
     knownIonizationFactorsRelativeToN2 = list()
     filenames=''
     listOfFiles=list()
+    AllSpectra=[]
+    individual_spectrum=[]
 
 
     fileYorN=''
@@ -526,8 +528,7 @@ def startCommandLine():
                 SourceOfFragmentationPatterns.append(list_holder[i][6])
                 SourceOfIonizationData.append(list_holder[i][7])
 
-    AllSpectra=[]
-    individual_spectrum=[]
+    
     for i in listOfFiles:
         jcampDict=JCampSG.JCAMP_reader(i)
         individual_spectrum=createArray(jcampDict, i)
