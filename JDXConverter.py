@@ -529,10 +529,7 @@ def startCommandLine():
                 SourceOfIonizationData.append(list_holder[i][7])
 
     
-    for i in listOfFiles:
-        jcampDict=JCampSG.JCAMP_reader(i)
-        individual_spectrum=createArray(jcampDict, i)
-        AllSpectra=combineArray(AllSpectra, individual_spectrum)
+    AllSpectra = getSpectrumDataFromLocalJDX(listOfFiles)
 
     exportToCSV("%s\\ConvertedSpectra.csv" %outputDirectory, AllSpectra,  MoleculeNames, ENumbers, MWeights, knownMoleculeIonizationTypes, knownIonizationFactorsRelativeToN2, SourceOfFragmentationPatterns, SourceOfIonizationData)
 
