@@ -526,9 +526,9 @@ def startCommandLine():
                 knownIonizationFactorsRelativeToN2.append(list_holder[i][5])
                 SourceOfFragmentationPatterns.append(list_holder[i][6])
                 SourceOfIonizationData.append(list_holder[i][7])
-
-    
-    AllSpectra = getSpectrumDataFromLocalJDX(listOfFiles)
+                
+        #This outer If block handles the manual file selection logic from Local path, so adding this spectrumData Fetching at the end of this IF block.        
+        AllSpectra = getSpectrumDataFromLocalJDX(listOfFiles)
 
     exportToCSV("%s\\ConvertedSpectra.csv" %outputDirectory, AllSpectra,  MoleculeNames, ENumbers, MWeights, knownMoleculeIonizationTypes, knownIonizationFactorsRelativeToN2, SourceOfFragmentationPatterns, SourceOfIonizationData)
 
