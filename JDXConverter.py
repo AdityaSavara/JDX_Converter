@@ -150,7 +150,7 @@ def getOverAllArray(listOfFiles):
     OverallArray=combineArray(OverallArray, holderArray)
     return OverallArray
 
-def createArray(jcampDict, filename):
+def createArray(jcampDict):
     DataArray =[]
 
     counterY=0
