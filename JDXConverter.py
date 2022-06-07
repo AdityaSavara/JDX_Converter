@@ -191,6 +191,23 @@ def combineArray(Array1, Array2):
     
     return Array1
 
+def getSpectrumDataFromLocalJDX(JDXFilesList):
+    """
+    This function will take in a JDX file and extract the spectrum data into a python Array
+    INPUT: JDXFilesList(This must be a list of path+filename . Example : ['JDXFiles\\Ethanol.jdx','JDXFiles\\Methanol.jdx'])
+    OUTPUT: AllSpectraData(Python list of spectrum data retrieved from the JDX)
+    """
+    
+    import JCampSG
+
+    AllSpectraData=[]
+    individual_spectrum=[]
+    for file in JDXFilesList:
+        jcampDict=JCampSG.JCAMP_reader(file)
+        individual_spectrum=createArray(jcampDict)
+        AllSpectraData=combineArray(AllSpectraData, individual_spectrum)
+    return AllSpectraData
+
 def exportToCSV(filename, OverallArray, MoleculeNames, ENumbers, MWeights, knownMoleculeIonizationTypes, knownIonizationFactorsRelativeToN2, SourceOfFragmentationPatterns, SourceOfIonizationData):
     """
     This function basically takes in all the metadata of molecules and write them into csv file/files
