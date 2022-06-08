@@ -428,9 +428,7 @@ def startCommandLine(dataBaseFileName='MoleculesInfo.csv'):
     individual_spectrum=[]
     DataBase_data_holder=[]
     
-    spamReader = csv.reader(open('%s' %dataBaseFileName), delimiter=',')
-    for row in spamReader:
-        DataBase_data_holder.append(row)
+    DataBase_data_holder = readFromLocalCSVDatabaseFile(dataBaseFileName)
 
 
     fileYorN=''
