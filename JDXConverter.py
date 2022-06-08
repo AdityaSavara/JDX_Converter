@@ -386,7 +386,7 @@ def getMultipleSpectrumFromNIST():      #Keeping the function name as "getMultip
         print("[INFO] ",name, "DOWNLOADED...")
     print("FINISHED!")
       
-def startCommandLine():
+def startCommandLine(dataBaseFileName='MoleculesInfo.csv'):
     """
     Driver function for this application... #TODO: Functionalize this function more, Add more information to the comment section.
     """
@@ -411,6 +411,11 @@ def startCommandLine():
     listOfFiles=list()
     AllSpectra=[]
     individual_spectrum=[]
+    DataBase_data_holder=[]
+    
+    spamReader = csv.reader(open('%s' %dataBaseFileName), delimiter=',')
+    for row in spamReader:
+        DataBase_data_holder.append(row)
 
 
     fileYorN=''
