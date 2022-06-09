@@ -146,11 +146,11 @@ def getOverAllArray(listOfFiles):
     holderArray=[]
     # for i in listOfFiles:
     jcampDict=JCampSG.JCAMP_reader(listOfFiles)
-    holderArray=createArray(jcampDict, listOfFiles)
+    holderArray=createArray(jcampDict)
     OverallArray=combineArray(OverallArray, holderArray)
     return OverallArray
 
-def createArray(jcampDict, filename):
+def createArray(jcampDict):
     DataArray =[]
 
     counterY=0
@@ -190,6 +190,23 @@ def combineArray(Array1, Array2):
     
     
     return Array1
+
+def getSpectrumDataFromLocalJDX(JDXFilesList):
+    """
+    This function will take in a JDX file and extract the spectrum data into a python Array
+    INPUT: JDXFilesList(This must be a list of path+filename . Example : ['JDXFiles\\Ethanol.jdx','JDXFiles\\Methanol.jdx'])
+    OUTPUT: AllSpectraData(Python list of spectrum data retrieved from the JDX)
+    """
+    
+    import JCampSG
+
+    AllSpectraData=[]
+    individual_spectrum=[]
+    for file in JDXFilesList:
+        jcampDict=JCampSG.JCAMP_reader(file)
+        individual_spectrum=createArray(jcampDict)
+        AllSpectraData=combineArray(AllSpectraData, individual_spectrum)
+    return AllSpectraData
 
 def exportToCSV(filename, OverallArray, MoleculeNames, ENumbers, MWeights, knownMoleculeIonizationTypes, knownIonizationFactorsRelativeToN2, SourceOfFragmentationPatterns, SourceOfIonizationData):
     """
@@ -368,12 +385,26 @@ def getMultipleSpectrumFromNIST():      #Keeping the function name as "getMultip
         getSpectrumFromNIST(name)
         print("[INFO] ",name, "DOWNLOADED...")
     print("FINISHED!")
+
+def readFromLocalCSVDatabaseFile(localDatabaseFileName):
+    """
+    This function will take the local database csv file name and return its content in a python list type variable.
+    INPUT: localDatabaseFileName( Full path and name of the database file . Example: MoleculesInfo.csv. Example : Database//MoleculesInfo.csv)
+    OUTPUT: 
+    """
+    import csv
+
+    data_list = []
+    spamReader = csv.reader(open('%s' %localDatabaseFileName), delimiter=',')
+    for row in spamReader:
+        data_list.append(row)
+    
+    return data_list
       
-def startCommandLine():
+def startCommandLine(dataBaseFileName='MoleculesInfo.csv'):
     """
     Driver function for this application... #TODO: Functionalize this function more, Add more information to the comment section.
     """
-    import JCampSG
     import os.path
     import csv
       
@@ -393,6 +424,11 @@ def startCommandLine():
     knownIonizationFactorsRelativeToN2 = list()
     filenames=''
     listOfFiles=list()
+    AllSpectra=[]
+    individual_spectrum=[]
+    DataBase_data_holder=[]
+    
+    DataBase_data_holder = readFromLocalCSVDatabaseFile(dataBaseFileName)
 
 
     fileYorN=''
@@ -415,13 +451,17 @@ def startCommandLine():
             print("Retrieve info from NIST webbook? Y/N")
             WebbookChoice = input()
             if WebbookChoice.lower() == 'Y'.lower():
-                overAllArray,molecular_formula,molecular_weight,electron_numbers,knownMoleculeIonizationType, knownIonizationFactorRelativeToN2, SourceOfFragmentationPattern, SourceOfIonizationDatum = getMetaDataForMolecule(moleculeName)
+                spectrum_data,molecular_formula,molecular_weight,electron_numbers,knownMoleculeIonizationType, knownIonizationFactorRelativeToN2, SourceOfFragmentationPattern, SourceOfIonizationDatum = getMetaDataForMolecule(moleculeName)
                 knownMoleculeIonizationTypes.append(knownMoleculeIonizationType)
                 knownIonizationFactorsRelativeToN2.append(knownIonizationFactorRelativeToN2)
                 SourceOfFragmentationPatterns.append(SourceOfFragmentationPattern)
                 SourceOfIonizationData.append(SourceOfIonizationDatum)
                 MWeights.append(molecular_weight)   
                 ENumbers.append(electron_numbers)
+
+                individual_spectrum.extend(spectrum_data)
+                AllSpectra = combineArray(AllSpectra , individual_spectrum)
+
                 print(f"RETRIEVED {moleculeName} from NIST WebBook")
  
             else:
@@ -448,6 +488,9 @@ def startCommandLine():
                 print("If the file is in a separate directory, \ninclude the path(EX: JDXFiles\oxygen.jdx):")
                 filename=input()
                 listOfFiles.append(filename)
+
+                AllSpectra = getSpectrumDataFromLocalJDX(listOfFiles)
+
                 print("Enter the name of the next molecule or type EXIT to finish entering molecules")
                 moleculeName=input()
 
@@ -509,14 +552,10 @@ def startCommandLine():
                 SourceOfFragmentationPatterns.append(list_holder[i][6])
                 SourceOfIonizationData.append(list_holder[i][7])
 
-    OverallArray=[]
-    holderArray=[]
-    for i in listOfFiles:
-        jcampDict=JCampSG.JCAMP_reader(i)
-        holderArray=createArray(jcampDict, i)
-        OverallArray=combineArray(OverallArray, holderArray)
+        #This outer If block handles the manual file selection logic from Local path, so adding this spectrumData Fetching at the end of this IF block.        
+        AllSpectra = getSpectrumDataFromLocalJDX(listOfFiles)
 
-    exportToCSV("%s\\ConvertedSpectra.csv" %outputDirectory, OverallArray,  MoleculeNames, ENumbers, MWeights, knownMoleculeIonizationTypes, knownIonizationFactorsRelativeToN2, SourceOfFragmentationPatterns, SourceOfIonizationData)
+    exportToCSV("%s\\ConvertedSpectra.csv" %outputDirectory, AllSpectra,  MoleculeNames, ENumbers, MWeights, knownMoleculeIonizationTypes, knownIonizationFactorsRelativeToN2, SourceOfFragmentationPatterns, SourceOfIonizationData)
 
 if __name__ == "__main__":
     # getMultipleSpectrumFromNIST()
