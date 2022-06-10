@@ -405,12 +405,12 @@ def checkIfMoleculeExists(databaseDataHolderList, molecule_name):
     """
     This function will search inside the databaseDataHolderList if a certain molecule_name exists or not
     INPUT: databaseDataHolderList(contents in list format from MoleculesInfo.csv(default database csv file)) | molecule_name(user provided specific molecule's name)
-    OUTPUT: True/False ( if the molecule_name exists, it will return True, otherwise False)
+    OUTPUT: datum ( the data list of the specific molecule name. If not found then empty list will be returned)
     """
     for datum in databaseDataHolderList:
         if(datum[0] == molecule_name): #The very first entry of each 1D list contains the Molecule Name inside the database file
-            return True
-    return False
+            return datum
+    return []
       
 def startCommandLine(dataBaseFileName='MoleculesInfo.csv'):
     """
