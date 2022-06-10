@@ -400,6 +400,17 @@ def readFromLocalCSVDatabaseFile(localDatabaseFileName):
         data_list.append(row)
     
     return data_list
+
+def checkIfMoleculeExists(databaseDataHolderList, molecule_name):
+    """
+    This function will search inside the databaseDataHolderList if a certain molecule_name exists or not
+    INPUT: databaseDataHolderList(contents in list format from MoleculesInfo.csv(default database csv file)) | molecule_name(user provided specific molecule's name)
+    OUTPUT: True/False ( if the molecule_name exists, it will return True, otherwise False)
+    """
+    for datum in databaseDataHolderList:
+        if(datum[0] == molecule_name): #The very first entry of each 1D list contains the Molecule Name inside the database file
+            return True
+    return False
       
 def startCommandLine(dataBaseFileName='MoleculesInfo.csv'):
     """
@@ -570,6 +581,7 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv'):
     print(f"LOADING Information from {dataBaseFileName}")
     DataBase_data_holder = readFromLocalCSVDatabaseFile(dataBaseFileName)
 
+    print(DataBase_data_holder[1][0])
     print("WELCOME!")
     print("If a molecule name has a comma in it (e.g. 1,3-pentadiene) or any other input has a comma in it, we recommend using an _ (e.g. 1_3-pentadiene) since this information is stored in a comma separated value file.")
 
@@ -582,9 +594,10 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv'):
         #Check if the Molecule is inside the database data holder. IF YES, then the bottom block #TODO: Need to create a function to check inside the database for the specific molecule
         #ELSE IF: check if the jdx file exists in the local directory ( default: JDXFiles//{moleculeName}.jdx )
         #ELSE: retrieve the spectrum data from online. #TODO: Change the getMetaDataForMolecule function's body so that it can check for IonizationFactorrelativetoN2 and KnownIonizationType variable's value inside the database.
-        
+
 
 if __name__ == "__main__":
     # getMultipleSpectrumFromNIST()
     
-    startCommandLine()
+    # startCommandLine()
+    newStartCommandLine()
