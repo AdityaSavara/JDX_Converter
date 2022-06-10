@@ -579,6 +579,10 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv'):
         if(moleculeName == 'END'): break
 
         MoleculeNames.append(moleculeName)
+        #Check if the Molecule is inside the database data holder. IF YES, then the bottom block #TODO: Need to create a function to check inside the database for the specific molecule
+        #ELSE IF: check if the jdx file exists in the local directory ( default: JDXFiles//{moleculeName}.jdx )
+        #ELSE: retrieve the spectrum data from online. #TODO: Change the getMetaDataForMolecule function's body so that it can check for IonizationFactorrelativetoN2 and KnownIonizationType variable's value inside the database.
+        
 
 if __name__ == "__main__":
     # getMultipleSpectrumFromNIST()
