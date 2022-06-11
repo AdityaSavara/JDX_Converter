@@ -568,7 +568,7 @@ def startCommandLine(dataBaseFileName='MoleculesInfo.csv'):
 
     exportToCSV("%s\\ConvertedSpectra.csv" %outputDirectory, AllSpectra,  MoleculeNames, ENumbers, MWeights, knownMoleculeIonizationTypes, knownIonizationFactorsRelativeToN2, SourceOfFragmentationPatterns, SourceOfIonizationData)
 
-def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv'):
+def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLocation='JDXFiles//'):
     """
     This function will start the JDX Converter application and handle the user/app flow. #TODO: The function name will be renamed later accordingly.
     """
@@ -591,6 +591,10 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv'):
 
         MoleculeNames.append(moleculeName)
         #Check if the Molecule is inside the database data holder. IF YES, then the bottom block #TODO: Need to create a function to check inside the database for the specific molecule
+        molecule_meta_data_from_database = checkIfMoleculeExists(DataBase_data_holder , moleculeName)
+        if (len(molecule_meta_data_from_database) != 0):
+            print("MOLECULE FOUND") #This is for pseudocode purpose
+        # else if(checkInLocalJDXDirectory())
         #ELSE IF: check if the jdx file exists in the local directory ( default: JDXFiles//{moleculeName}.jdx )
         #ELSE: retrieve the spectrum data from online. #TODO: Change the getMetaDataForMolecule function's body so that it can check for IonizationFactorrelativetoN2 and KnownIonizationType variable's value inside the database.
 
