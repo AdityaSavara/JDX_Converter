@@ -604,8 +604,11 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
         print("ENTER A MOLECULE NAME, OR MULTIPLE MOLECULE NAMES. Separate multiple names using ';'.")
         moleculeName = input()
         if(moleculeName == 'END'): break
-
-        MoleculeNames.append(moleculeName)
+        if(';' in moleculeName):
+            MoleculeNames = takeInputAsList(moleculeName)
+        else:
+            MoleculeNames.append(moleculeName)
+        
         #Check if the Molecule is inside the database data holder. IF YES, then the bottom block #TODO: Need to create a function to check inside the database for the specific molecule
         molecule_meta_data_from_database = checkIfMoleculeExists(DataBase_data_holder , moleculeName)
         if (len(molecule_meta_data_from_database) != 0):
@@ -620,5 +623,5 @@ if __name__ == "__main__":
     # getMultipleSpectrumFromNIST()
     
     # startCommandLine()
-    checkInLocalJDXDirectory('JDXFiles//','Ethanol')
-    # newStartCommandLine()
+    # checkInLocalJDXDirectory('JDXFiles//','Ethanol')
+    newStartCommandLine()
