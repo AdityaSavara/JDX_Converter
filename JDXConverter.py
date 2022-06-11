@@ -581,7 +581,6 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv'):
     print(f"LOADING Information from {dataBaseFileName}")
     DataBase_data_holder = readFromLocalCSVDatabaseFile(dataBaseFileName)
 
-    print(DataBase_data_holder[1][0])
     print("WELCOME!")
     print("If a molecule name has a comma in it (e.g. 1,3-pentadiene) or any other input has a comma in it, we recommend using an _ (e.g. 1_3-pentadiene) since this information is stored in a comma separated value file.")
 
