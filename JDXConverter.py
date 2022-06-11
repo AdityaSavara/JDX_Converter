@@ -591,6 +591,23 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
     import os.path
     import csv
 
+    SourceOfFragmentationPattern = ''
+    SourcesOfFragmentationPattern = list()
+    SourceOfIonizationDatum = ''
+    SourceOfIonizationData = list()
+    ENumber = 0
+    ENumbers =list()
+    MWeight =0.0 
+    MWeights=list()
+    knownMoleculeIonizationType = ''
+    knownMoleculeIonizationTypes = list()
+    knownIonizationFactorRelativeToN2 = 0.0
+    knownIonizationFactorsRelativeToN2 = list()
+    JDXfilename=''
+    listOfJDXFileNames=list()
+    AllSpectra=[]
+    individual_spectrum=[]
+
     MoleculeNames=list()
     DataBase_data_holder=[]
 
@@ -609,15 +626,30 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
         else:
             MoleculeNames.append(moleculeName)
         
-        #Check if the Molecule is inside the database data holder. IF YES, then the bottom block #TODO: Need to create a function to check inside the database for the specific molecule
         molecule_meta_data_from_database = checkIfMoleculeExists(DataBase_data_holder , moleculeName)
         if (len(molecule_meta_data_from_database) != 0):
-            print("MOLECULE FOUND") #This is for pseudocode purpose
+            #Molecule FOUND inside the DATABASE FILE
+            #TODO: Populating these variables can be a function itself
+            ENumber = int(molecule_meta_data_from_database[1])
+            MWeight = float(molecule_meta_data_from_database[2])
+            JDXfilename = molecule_meta_data_from_database[3]
+            knownMoleculeIonizationType = molecule_meta_data_from_database[4]
+            knownIonizationFactorRelativeToN2 = molecule_meta_data_from_database[5]
+            SourceOfFragmentationPattern = molecule_meta_data_from_database[6]
+            SourceOfIonizationDatum = molecule_meta_data_from_database[7]
+
         # elif(checkInLocalJDXDirectory(defaultJDXFilesLocation, moleculeName)):
             # print("HERE")
         #ELSE IF: check if the jdx file exists in the local directory ( default: JDXFiles//{moleculeName}.jdx )
         #ELSE: retrieve the spectrum data from online. #TODO: Change the getMetaDataForMolecule function's body so that it can check for IonizationFactorrelativetoN2 and KnownIonizationType variable's value inside the database.
 
+        ENumbers.append(ENumber)
+        MWeights.append(MWeight)
+        listOfJDXFileNames.append(JDXfilename)
+        knownMoleculeIonizationTypes.append(knownMoleculeIonizationType)
+        knownIonizationFactorsRelativeToN2.append(knownIonizationFactorRelativeToN2)
+        SourcesOfFragmentationPattern.append(SourceOfFragmentationPattern)
+        SourceOfIonizationData.append(SourceOfIonizationDatum)
 
 if __name__ == "__main__":
     # getMultipleSpectrumFromNIST()
