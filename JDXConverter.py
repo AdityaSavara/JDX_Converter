@@ -411,6 +411,22 @@ def checkIfMoleculeExists(databaseDataHolderList, molecule_name):
         if(datum[0] == molecule_name): #The very first entry of each 1D list contains the Molecule Name inside the database file
             return datum
     return []
+
+def checkInLocalJDXDirectory(localJDXFileDirectory, molecule_name):
+    """
+    This function will check inside the local directory where the JDX files are being kept if a particular molecule's JDX data exists there or not.
+    INPUT: localJDXFileDirectory ( local JDX directory relative path according to this file. Example: 'JDXFiles//')
+    OUTPUT: True/False (Depending on whether the molecule's jdx file exist inside that directory)
+    """
+    import os
+
+    if(os.path.isdir(localJDXFileDirectory)):
+        filesListInsideDirectory = os.listdir(localJDXFileDirectory)
+        for filename in filesListInsideDirectory:
+            corresponding_molecule_name_from_filename = filename.split('.')[0]
+            if(corresponding_molecule_name_from_filename == molecule_name.lower()):
+                return True
+    return False
       
 def startCommandLine(dataBaseFileName='MoleculesInfo.csv'):
     """
@@ -594,7 +610,8 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
         molecule_meta_data_from_database = checkIfMoleculeExists(DataBase_data_holder , moleculeName)
         if (len(molecule_meta_data_from_database) != 0):
             print("MOLECULE FOUND") #This is for pseudocode purpose
-        # else if(checkInLocalJDXDirectory())
+        # elif(checkInLocalJDXDirectory(defaultJDXFilesLocation, moleculeName)):
+            # print("HERE")
         #ELSE IF: check if the jdx file exists in the local directory ( default: JDXFiles//{moleculeName}.jdx )
         #ELSE: retrieve the spectrum data from online. #TODO: Change the getMetaDataForMolecule function's body so that it can check for IonizationFactorrelativetoN2 and KnownIonizationType variable's value inside the database.
 
@@ -603,4 +620,5 @@ if __name__ == "__main__":
     # getMultipleSpectrumFromNIST()
     
     # startCommandLine()
-    newStartCommandLine()
+    checkInLocalJDXDirectory('JDXFiles//','Ethanol')
+    # newStartCommandLine()
