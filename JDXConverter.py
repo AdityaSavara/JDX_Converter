@@ -627,6 +627,7 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
             MoleculeNames.append(moleculeName)
         
         molecule_meta_data_from_database = checkIfMoleculeExists(DataBase_data_holder , moleculeName)
+
         if (len(molecule_meta_data_from_database) != 0):
             #Molecule FOUND inside the DATABASE FILE
             #TODO: Populating these variables can be a function itself
@@ -638,11 +639,23 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
             SourceOfFragmentationPattern = molecule_meta_data_from_database[6]
             SourceOfIonizationDatum = molecule_meta_data_from_database[7]
 
-        # elif(checkInLocalJDXDirectory(defaultJDXFilesLocation, moleculeName)):
-            # print("HERE")
-        #ELSE IF: check if the jdx file exists in the local directory ( default: JDXFiles//{moleculeName}.jdx )
-        #ELSE: retrieve the spectrum data from online. #TODO: Change the getMetaDataForMolecule function's body so that it can check for IonizationFactorrelativetoN2 and KnownIonizationType variable's value inside the database.
+            individual_spectrum.extend(getSpectrumDataFromLocalJDX([JDXfilename]))
 
+        elif(checkInLocalJDXDirectory(defaultJDXFilesLocation, moleculeName)):
+            print("HERE")
+            #Have some questions about the logic in this block for metadata retrieval
+        #ELSE: retrieve the spectrum data from online. #TODO: Change the getMetaDataForMolecule function's body so that it can check for IonizationFactorrelativetoN2 and KnownIonizationType variable's value inside the database.
+        else:
+            spectrum_data,molecular_formula,molecular_weight,electron_number,knownMoleculeIonizationTypeOnline, knownIonizationFactorRelativeToN2Online, SourceOfFragmentationPatternOnline, SourceOfIonizationDatumOnline = getMetaDataForMolecule(moleculeName)
+            ENumber = int(electron_number)
+            MWeight = float(molecular_weight)
+            knownMoleculeIonizationType = knownMoleculeIonizationTypeOnline
+            knownIonizationFactorRelativeToN2 = knownIonizationFactorRelativeToN2Online
+            SourceOfFragmentationPattern = SourceOfFragmentationPatternOnline
+            SourceOfIonizationDatum = SourceOfIonizationDatumOnline
+
+            individual_spectrum.extend(spectrum_data)
+        
         ENumbers.append(ENumber)
         MWeights.append(MWeight)
         listOfJDXFileNames.append(JDXfilename)
@@ -650,6 +663,8 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
         knownIonizationFactorsRelativeToN2.append(knownIonizationFactorRelativeToN2)
         SourcesOfFragmentationPattern.append(SourceOfFragmentationPattern)
         SourceOfIonizationData.append(SourceOfIonizationDatum)
+
+        AllSpectra = combineArray(AllSpectra,individual_spectrum)
 
         print("ENTER a MOLECULE NAME or type END to stop entering molecule name")
 
