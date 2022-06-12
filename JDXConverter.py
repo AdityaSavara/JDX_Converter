@@ -652,9 +652,16 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
         if (len(molecule_meta_data_from_database) != 0):
             #Molecule FOUND inside the DATABASE FILE
             #TODO: Populating these variables can be a function itself
+            
+            filename = molecule_meta_data_from_database[3].strip(' ')
+            if(filename != ''):
+                if(filename in os.listdir(defaultJDXFilesLocation)):
+                    individual_spectrum.extend(getSpectrumDataFromLocalJDX([JDXfilename]))
+                else:
+                    print("RETRIEVE FROM ONLINE")
+
             ENumber = int(molecule_meta_data_from_database[1])
             MWeight = float(molecule_meta_data_from_database[2])
-            JDXfilename = molecule_meta_data_from_database[3]
             knownMoleculeIonizationType = molecule_meta_data_from_database[4]
             knownIonizationFactorRelativeToN2 = molecule_meta_data_from_database[5]
             SourceOfFragmentationPattern = molecule_meta_data_from_database[6]
