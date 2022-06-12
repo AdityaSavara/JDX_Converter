@@ -302,7 +302,7 @@ def takeInputAsList(molecule_name):
         molecule_names.append(name)
     return molecule_names
 
-def getMetaDataForMolecule(molecule_name):
+def getMetaDataForMoleculeFromOnline(molecule_name):
     """
     This function takes in a specific molecule's name and return its meta data
     INPUT: molecule_name ( name of the molecule which meta data will be returned )
@@ -320,7 +320,7 @@ def getMetaDataForMolecule(molecule_name):
     electron_numbers = getElectronNumbers(molecular_formula)
     knownMoleculeIonizationType = 'unknown'
     knownIonizationFactorRelativeToN2 = 'unknown'
-    SourceOfFragmentationPattern = 'unknown'
+    SourceOfFragmentationPattern = 'NIST Webbook'
     SourceOfIonizationData = 'unknown'
 
     return overAllArray,molecular_formula,molecular_weight,electron_numbers,knownMoleculeIonizationType, knownIonizationFactorRelativeToN2, SourceOfFragmentationPattern, SourceOfIonizationData
