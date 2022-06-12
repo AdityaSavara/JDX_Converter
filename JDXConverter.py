@@ -305,7 +305,7 @@ def takeInputAsList(molecule_name):
 def getMetaDataForMoleculeFromOnline(dataBase_data_holder_for_specific_molecule, molecule_name):
     """
     This function takes in a specific molecule's name and return its meta data
-    INPUT: molecule_name ( name of the molecule which meta data will be returned )
+    INPUT: dataBase_data_holder_for_specific_molecule (Python list of metadata that we get from the database CSV File) | molecule_name ( name of the molecule which meta data will be returned )
     OUTPUT: returns the molecular information of the specific molecule
     """
     url = f'https://webbook.nist.gov/cgi/cbook.cgi?Name={molecule_name}&Units=SI'
