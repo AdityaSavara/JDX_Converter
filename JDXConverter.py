@@ -601,6 +601,7 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
     import os.path
     import csv
 
+    #Initialized some variable variable
     SourceOfFragmentationPattern = ''
     SourcesOfFragmentationPattern = list()
     SourceOfIonizationDatum = ''
@@ -621,14 +622,16 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
     MoleculeNames=list()
     DataBase_data_holder=[]
 
+    #Reading the CSV file for database
     print(f"LOADING Information from {dataBaseFileName}")
     DataBase_data_holder = readFromLocalCSVDatabaseFile(dataBaseFileName)
 
+    #Starting text for the application , also instructions for the User to start
     print("WELCOME!")
     print("If a molecule name has a comma in it (e.g. 1,3-pentadiene) or any other input has a comma in it, we recommend using an _ (e.g. 1_3-pentadiene) since this information is stored in a comma separated value file.")
     print("ENTER A MOLECULE NAME, OR MULTIPLE MOLECULE NAMES. Separate multiple names using ';'.")
     while True:
-        
+        #Taking continuous input of molecules from the user
         moleculeName = input()
         if(moleculeName == 'END'): break
         if(';' in moleculeName):
@@ -636,8 +639,10 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
         else:
             MoleculeNames.append(moleculeName)
         
-        molecule_meta_data_from_database = checkIfMoleculeExists(DataBase_data_holder , moleculeName)
+        #Getting the Data list if the Molecule name exists inside the database CSV file
+        molecule_meta_data_from_database = checkIfMoleculeExists(DataBase_data_holder , moleculeName) #getDataIfMoleculeExists
 
+        #Now We will check if the molecule's data exist inside the database file
         if (len(molecule_meta_data_from_database) != 0):
             #Molecule FOUND inside the DATABASE FILE
             #TODO: Populating these variables can be a function itself
