@@ -302,7 +302,7 @@ def takeInputAsList(molecule_name):
         molecule_names.append(name)
     return molecule_names
 
-def getMetaDataForMoleculeFromOnline(molecule_name):
+def getMetaDataForMoleculeFromOnline(dataBase_data_holder_for_specific_molecule, molecule_name):
     """
     This function takes in a specific molecule's name and return its meta data
     INPUT: molecule_name ( name of the molecule which meta data will be returned )
@@ -318,6 +318,14 @@ def getMetaDataForMoleculeFromOnline(molecule_name):
     molecular_formula = getMolecularFormula(url)
     molecular_weight = getMolecularWeight(url)
     electron_numbers = getElectronNumbers(molecular_formula)
+    if(dataBase_data_holder_for_specific_molecule[4] != ''):
+        knownMoleculeIonizationType = dataBase_data_holder_for_specific_molecule[4]
+    else:
+        knownMoleculeIonizationType = 'unknown'
+    
+    if(dataBase_data_holder_for_specific_molecule[5] != ''):
+        knownIonizationFactorRelativeToN2 = dataBase_data_holder_for_specific_molecule[5]
+
     knownMoleculeIonizationType = 'unknown'
     knownIonizationFactorRelativeToN2 = 'unknown'
     SourceOfFragmentationPattern = 'NIST Webbook'
@@ -645,13 +653,11 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
             print("HERE")
             #Have some questions about the logic in this block for metadata retrieval
         else:
-            spectrum_data,molecular_formula,molecular_weight,electron_number,knownMoleculeIonizationTypeOnline, knownIonizationFactorRelativeToN2Online, SourceOfFragmentationPatternOnline, SourceOfIonizationDatumOnline = getMetaDataForMoleculeFromOnline(moleculeName)
+            spectrum_data,molecular_formula,molecular_weight,electron_number,knownMoleculeIonizationTypeOnline, knownIonizationFactorRelativeToN2Online, SourceOfFragmentationPatternOnline, SourceOfIonizationDatumOnline = getMetaDataForMoleculeFromOnline(molecule_meta_data_from_database,moleculeName)
             ENumber = int(electron_number)
             MWeight = float(molecular_weight)
-            if (molecule_meta_data_from_database[4] != ''):
-                knownMoleculeIonizationType = molecule_meta_data_from_database[4]
-            if (molecule_meta_data_from_database[5] != ''):
-                knownIonizationFactorRelativeToN2 = molecule_meta_data_from_database[5]
+            knownMoleculeIonizationType = knownMoleculeIonizationTypeOnline
+            knownIonizationFactorRelativeToN2 = knownIonizationFactorRelativeToN2Online
     
             SourceOfFragmentationPattern = SourceOfFragmentationPatternOnline
             SourceOfIonizationDatum = SourceOfIonizationDatumOnline
