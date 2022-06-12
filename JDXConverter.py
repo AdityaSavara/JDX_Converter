@@ -203,7 +203,13 @@ def getSpectrumDataFromLocalJDX(JDXFilesList):
     AllSpectraData=[]
     individual_spectrum=[]
     for file in JDXFilesList:
-        jcampDict=JCampSG.JCAMP_reader(file)
+        stripped_fileName = file.strip(' ')
+        if('.jdx' not in stripped_fileName):
+            filename = stripped_fileName+'.jdx'
+        else:
+            filename = stripped_fileName
+
+        jcampDict=JCampSG.JCAMP_reader(filename)
         individual_spectrum=createArray(jcampDict)
         AllSpectraData=combineArray(AllSpectraData, individual_spectrum)
     return AllSpectraData
