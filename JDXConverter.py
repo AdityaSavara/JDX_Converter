@@ -411,7 +411,7 @@ def readFromLocalCSVDatabaseFile(localDatabaseFileName):
     
     return data_list
 
-def checkIfMoleculeExists(databaseDataHolderList, molecule_name):
+def getDataIfMoleculeExists(databaseDataHolderList, molecule_name):
     """
     This function will search inside the databaseDataHolderList if a certain molecule_name exists or not
     INPUT: databaseDataHolderList(contents in list format from MoleculesInfo.csv(default database csv file)) | molecule_name(user provided specific molecule's name)
@@ -640,7 +640,7 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
             MoleculeNames.append(moleculeName)
         
         #Getting the Data list if the Molecule name exists inside the database CSV file
-        molecule_meta_data_from_database = checkIfMoleculeExists(DataBase_data_holder , moleculeName) #getDataIfMoleculeExists
+        molecule_meta_data_from_database = getDataIfMoleculeExists(DataBase_data_holder , moleculeName) #getDataIfMoleculeExists
 
         #Now We will check if the molecule's data exist inside the database file
         if (len(molecule_meta_data_from_database) != 0):
