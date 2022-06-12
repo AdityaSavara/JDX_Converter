@@ -670,8 +670,16 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
             SourceOfIonizationDatum = molecule_meta_data_from_database[7]
 
         elif(checkInLocalJDXDirectory(defaultJDXFilesLocation, moleculeName)):
-            print("HERE")
-            #Have some questions about the logic in this block for metadata retrieval
+            individual_spectrum.extend(getSpectrumDataFromLocalJDX([moleculeName]))
+            spectrum_data,molecular_formula,molecular_weight,electron_number,knownMoleculeIonizationTypeOnline, knownIonizationFactorRelativeToN2Online, SourceOfFragmentationPatternOnline, SourceOfIonizationDatumOnline = getMetaDataForMoleculeFromOnline(molecule_meta_data_from_database,moleculeName)
+
+            ENumber = int(electron_number)
+            MWeight = float(molecular_weight)
+            knownMoleculeIonizationType = knownMoleculeIonizationTypeOnline
+            knownIonizationFactorRelativeToN2 = knownIonizationFactorRelativeToN2Online
+    
+            SourceOfFragmentationPattern = SourceOfFragmentationPatternOnline
+            SourceOfIonizationDatum = SourceOfIonizationDatumOnline
         else:
             spectrum_data,molecular_formula,molecular_weight,electron_number,knownMoleculeIonizationTypeOnline, knownIonizationFactorRelativeToN2Online, SourceOfFragmentationPatternOnline, SourceOfIonizationDatumOnline = getMetaDataForMoleculeFromOnline(molecule_meta_data_from_database,moleculeName)
             ENumber = int(electron_number)
