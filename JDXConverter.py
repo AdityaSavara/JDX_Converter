@@ -325,6 +325,8 @@ def getMetaDataForMoleculeFromOnline(dataBase_data_holder_for_specific_molecule,
     
     if(dataBase_data_holder_for_specific_molecule[5] != ''):
         knownIonizationFactorRelativeToN2 = dataBase_data_holder_for_specific_molecule[5]
+    else:
+        knownIonizationFactorRelativeToN2 = 'unknown'
 
     knownMoleculeIonizationType = 'unknown'
     knownIonizationFactorRelativeToN2 = 'unknown'
