@@ -658,8 +658,10 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
                 if(filename in os.listdir(defaultJDXFilesLocation)):
                     individual_spectrum.extend(getSpectrumDataFromLocalJDX([JDXfilename]))
                 else:
-                    print("RETRIEVE FROM ONLINE")
-
+                    #This line will get all the data from online along with the individual spectrum data for the molecule. However we will only use the Spectrum data in this case
+                    spectrum_data,molecular_formula,molecular_weight,electron_number,knownMoleculeIonizationTypeOnline, knownIonizationFactorRelativeToN2Online, SourceOfFragmentationPatternOnline, SourceOfIonizationDatumOnline = getMetaDataForMoleculeFromOnline(molecule_meta_data_from_database,moleculeName)
+                    individual_spectrum.extend(spectrum_data)
+            
             ENumber = int(molecule_meta_data_from_database[1])
             MWeight = float(molecule_meta_data_from_database[2])
             knownMoleculeIonizationType = molecule_meta_data_from_database[4]
