@@ -669,8 +669,6 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
             SourceOfFragmentationPattern = molecule_meta_data_from_database[6]
             SourceOfIonizationDatum = molecule_meta_data_from_database[7]
 
-            individual_spectrum.extend(getSpectrumDataFromLocalJDX([JDXfilename]))
-
         elif(checkInLocalJDXDirectory(defaultJDXFilesLocation, moleculeName)):
             print("HERE")
             #Have some questions about the logic in this block for metadata retrieval
