@@ -662,6 +662,7 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
                     spectrum_data,molecular_formula,molecular_weight,electron_number,knownMoleculeIonizationTypeOnline, knownIonizationFactorRelativeToN2Online, SourceOfFragmentationPatternOnline, SourceOfIonizationDatumOnline = getMetaDataForMoleculeFromOnline(molecule_meta_data_from_database,moleculeName)
                     individual_spectrum.extend(spectrum_data)
             
+            #This block will populate the necessary variables with the metadata from the database CSV file
             ENumber = int(molecule_meta_data_from_database[1])
             MWeight = float(molecule_meta_data_from_database[2])
             knownMoleculeIonizationType = molecule_meta_data_from_database[4]
@@ -669,29 +670,33 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
             SourceOfFragmentationPattern = molecule_meta_data_from_database[6]
             SourceOfIonizationDatum = molecule_meta_data_from_database[7]
 
+        #Now we will check if the corresponding JDX file for the molecule exists in the local directory or not
         elif(checkInLocalJDXDirectory(defaultJDXFilesLocation, moleculeName)):
+            #Now we will retrieve the spectrum information from the local JDX file
             individual_spectrum.extend(getSpectrumDataFromLocalJDX([moleculeName]))
+            
+            #As the metadata for the molecule is not present inside the database csv file, we will now retrieve them from online
             spectrum_data,molecular_formula,molecular_weight,electron_number,knownMoleculeIonizationTypeOnline, knownIonizationFactorRelativeToN2Online, SourceOfFragmentationPatternOnline, SourceOfIonizationDatumOnline = getMetaDataForMoleculeFromOnline(molecule_meta_data_from_database,moleculeName)
-
             ENumber = int(electron_number)
             MWeight = float(molecular_weight)
             knownMoleculeIonizationType = knownMoleculeIonizationTypeOnline
             knownIonizationFactorRelativeToN2 = knownIonizationFactorRelativeToN2Online
-    
             SourceOfFragmentationPattern = SourceOfFragmentationPatternOnline
             SourceOfIonizationDatum = SourceOfIonizationDatumOnline
+
+        #Otherwise we will get all the metadata + spectrum data from online
         else:
             spectrum_data,molecular_formula,molecular_weight,electron_number,knownMoleculeIonizationTypeOnline, knownIonizationFactorRelativeToN2Online, SourceOfFragmentationPatternOnline, SourceOfIonizationDatumOnline = getMetaDataForMoleculeFromOnline(molecule_meta_data_from_database,moleculeName)
             ENumber = int(electron_number)
             MWeight = float(molecular_weight)
             knownMoleculeIonizationType = knownMoleculeIonizationTypeOnline
             knownIonizationFactorRelativeToN2 = knownIonizationFactorRelativeToN2Online
-    
             SourceOfFragmentationPattern = SourceOfFragmentationPatternOnline
             SourceOfIonizationDatum = SourceOfIonizationDatumOnline
 
             individual_spectrum.extend(spectrum_data)
         
+        #Now we will add all the spectrum data and metadata into list like variables which will be passed into the exportToCSV function
         ENumbers.append(ENumber)
         MWeights.append(MWeight)
         listOfJDXFileNames.append(JDXfilename)
