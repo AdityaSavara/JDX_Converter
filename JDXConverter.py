@@ -651,6 +651,8 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
         SourcesOfFragmentationPattern.append(SourceOfFragmentationPattern)
         SourceOfIonizationData.append(SourceOfIonizationDatum)
 
+        print("ENTER a MOLECULE NAME or type END to stop entering molecule name")
+
 if __name__ == "__main__":
     # getMultipleSpectrumFromNIST()
     
