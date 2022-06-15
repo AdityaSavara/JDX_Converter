@@ -659,7 +659,8 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
             filename = molecule_meta_data_from_database[3].strip()
             if(filename != ''):
                 if(filename in os.listdir(defaultJDXFilesLocation)):
-                    individual_spectrum.extend(getSpectrumDataFromLocalJDX([JDXfilename]))
+                    JDXFilePathWithName = defaultJDXFilesLocation + filename
+                    individual_spectrum.extend(getSpectrumDataFromLocalJDX([JDXFilePathWithName]))
                 else:
                     #This line will get all the data from online along with the individual spectrum data for the molecule. However we will only use the Spectrum data in this case
                     spectrum_data,molecular_formula,molecular_weight,electron_number,knownMoleculeIonizationTypeOnline, knownIonizationFactorRelativeToN2Online, SourceOfFragmentationPatternOnline, SourceOfIonizationDatumOnline = getMetaDataForMoleculeFromOnline(molecule_meta_data_from_database,moleculeName)
@@ -676,7 +677,8 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
         #Now we will check if the corresponding JDX file for the molecule exists in the local directory or not
         elif(checkInLocalJDXDirectory(defaultJDXFilesLocation, moleculeName)):
             #Now we will retrieve the spectrum information from the local JDX file
-            individual_spectrum.extend(getSpectrumDataFromLocalJDX([moleculeName]))
+            JDXFilePathWithName = defaultJDXFilesLocation + JDXfilename
+            individual_spectrum.extend(getSpectrumDataFromLocalJDX([JDXFilePathWithName]))
             
             #As the metadata for the molecule is not present inside the database csv file, we will now retrieve them from online
             spectrum_data,molecular_formula,molecular_weight,electron_number,knownMoleculeIonizationTypeOnline, knownIonizationFactorRelativeToN2Online, SourceOfFragmentationPatternOnline, SourceOfIonizationDatumOnline = getMetaDataForMoleculeFromOnline(molecule_meta_data_from_database,moleculeName)
@@ -711,6 +713,7 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
         AllSpectra = combineArray(AllSpectra,individual_spectrum)
 
         print("ENTER a MOLECULE NAME or type END to stop entering molecule name")
+        #The loop ends here and goes to the starting line of the loop where there is an Input statement
     
     #Now we will prompt the user to specify the output file name or directory if they want to.
     print('Press Enter to export the converted spectra to the default location (which is /OutputFiles/ConvertedSpectra.csv, otherwise provide a FILENAME to export the converted spectra to, or provide a PATH+FILENAME)')
@@ -721,7 +724,9 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
         outputDirectoryUserInput = outputFileDirectoryDefaultPath
     
     #Now we have all the implied returns of this function and now we will call the exportToCSV function to write all the metadata and spectrum data to the csv file
-       
+    OutputfilePathAndName = f"{outputDirectoryUserInput}/{defaultOutputFileName}"
+    exportToCSV(OutputfilePathAndName , AllSpectra, MoleculeNames , ENumbers , MWeights , knownMoleculeIonizationTypes , knownIonizationFactorsRelativeToN2 , SourcesOfFragmentationPattern , SourceOfIonizationData)
+
 if __name__ == "__main__":
     # getMultipleSpectrumFromNIST()
     
