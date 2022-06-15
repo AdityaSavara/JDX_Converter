@@ -324,12 +324,12 @@ def getMetaDataForMoleculeFromOnline(dataBase_data_holder_for_specific_molecule,
     molecular_formula = getMolecularFormula(url)
     molecular_weight = getMolecularWeight(url)
     electron_numbers = getElectronNumbers(molecular_formula)
-    if(dataBase_data_holder_for_specific_molecule[4] != ''):
+    if(dataBase_data_holder_for_specific_molecule != [] and dataBase_data_holder_for_specific_molecule[4] != ''):
         knownMoleculeIonizationType = dataBase_data_holder_for_specific_molecule[4]
     else:
         knownMoleculeIonizationType = 'unknown'
     
-    if(dataBase_data_holder_for_specific_molecule[5] != ''):
+    if(dataBase_data_holder_for_specific_molecule != [] and dataBase_data_holder_for_specific_molecule[5] != ''):
         knownIonizationFactorRelativeToN2 = dataBase_data_holder_for_specific_molecule[5]
     else:
         knownIonizationFactorRelativeToN2 = 'unknown'
@@ -677,7 +677,7 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
         #Now we will check if the corresponding JDX file for the molecule exists in the local directory or not
         elif(checkInLocalJDXDirectory(defaultJDXFilesLocation, moleculeName)):
             #Now we will retrieve the spectrum information from the local JDX file
-            JDXFilePathWithName = defaultJDXFilesLocation + JDXfilename
+            JDXFilePathWithName = defaultJDXFilesLocation + moleculeName
             individual_spectrum.extend(getSpectrumDataFromLocalJDX([JDXFilePathWithName]))
             
             #As the metadata for the molecule is not present inside the database csv file, we will now retrieve them from online
