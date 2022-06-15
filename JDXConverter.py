@@ -203,7 +203,7 @@ def getSpectrumDataFromLocalJDX(JDXFilesList):
     AllSpectraData=[]
     individual_spectrum=[]
     for file in JDXFilesList:
-        stripped_fileName = file.strip(' ')
+        stripped_fileName = file.strip()
         if('.jdx' not in stripped_fileName):
             filename = stripped_fileName+'.jdx'
         else:
@@ -656,7 +656,7 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
             #Molecule FOUND inside the DATABASE FILE
             #TODO: Populating these variables can be a function itself
             
-            filename = molecule_meta_data_from_database[3].strip(' ')
+            filename = molecule_meta_data_from_database[3].strip()
             if(filename != ''):
                 if(filename in os.listdir(defaultJDXFilesLocation)):
                     individual_spectrum.extend(getSpectrumDataFromLocalJDX([JDXfilename]))
