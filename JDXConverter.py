@@ -628,7 +628,7 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
     MoleculeNames=list()
     DataBase_data_holder=[]
 
-    outputFileDirectoryDefaultPath = ''
+    outputFileDirectoryDefaultPath = 'OutputFiles'
     defaultOutputFileName = 'ConvertedSpectra.csv'
 
     #Reading the CSV file for database
@@ -714,7 +714,14 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
     
     #Now we will prompt the user to specify the output file name or directory if they want to.
     print('Press Enter to export the converted spectra to the default location (which is /OutputFiles/ConvertedSpectra.csv, otherwise provide a FILENAME to export the converted spectra to, or provide a PATH+FILENAME)')
+    outputDirectoryUserInput = input()
+
+    #Now we will check if the user has provided any specification about the output directory or not. If not , we will use the DefaultPath as initialized in the top portion of this function
+    if (outputDirectoryUserInput == ""):
+        outputDirectoryUserInput = outputFileDirectoryDefaultPath
     
+    #Now we have all the implied returns of this function and now we will call the exportToCSV function to write all the metadata and spectrum data to the csv file
+       
 if __name__ == "__main__":
     # getMultipleSpectrumFromNIST()
     
