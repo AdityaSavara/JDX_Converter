@@ -648,6 +648,7 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
         else:
             MoleculeNames.append(moleculeName)
         
+        JDXfilename = moleculeName #Default value for JDXFilename will be the molecule name, if the database has a filename specified inside it, we will replace it later.
         #Getting the Data list if the Molecule name exists inside the database CSV file
         molecule_meta_data_from_database = getDataIfMoleculeExists(DataBase_data_holder , moleculeName) #getDataIfMoleculeExists
 
@@ -656,15 +657,16 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
             #Molecule FOUND inside the DATABASE FILE
             #TODO: Populating these variables can be a function itself
             
-            filename = molecule_meta_data_from_database[3].strip()
-            if(filename != ''):
-                if(filename in os.listdir(defaultJDXFilesLocation)):
-                    JDXFilePathWithName = defaultJDXFilesLocation + filename
-                    individual_spectrum.extend(getSpectrumDataFromLocalJDX([JDXFilePathWithName]))
+            #Now we will check if there's a filename specified inside the database CSV file for the molecule
+            filenameFromDatabase = molecule_meta_data_from_database[3].strip()
+            if(filenameFromDatabase != ''):
+                if(filenameFromDatabase in os.listdir(defaultJDXFilesLocation)):
+                    JDXfilename = defaultJDXFilesLocation + filenameFromDatabase
+                    individual_spectrum = getSpectrumDataFromLocalJDX([JDXfilename])
                 else:
                     #This line will get all the data from online along with the individual spectrum data for the molecule. However we will only use the Spectrum data in this case
                     spectrum_data,molecular_formula,molecular_weight,electron_number,knownMoleculeIonizationTypeOnline, knownIonizationFactorRelativeToN2Online, SourceOfFragmentationPatternOnline, SourceOfIonizationDatumOnline = getMetaDataForMoleculeFromOnline(molecule_meta_data_from_database,moleculeName)
-                    individual_spectrum.extend(spectrum_data)
+                    individual_spectrum = spectrum_data
             
             #This block will populate the necessary variables with the metadata from the database CSV file
             ENumber = int(molecule_meta_data_from_database[1])
@@ -675,10 +677,10 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
             SourceOfIonizationDatum = molecule_meta_data_from_database[7]
 
         #Now we will check if the corresponding JDX file for the molecule exists in the local directory or not
-        elif(checkInLocalJDXDirectory(defaultJDXFilesLocation, moleculeName)):
+        elif(checkInLocalJDXDirectory(defaultJDXFilesLocation, JDXfilename)):
             #Now we will retrieve the spectrum information from the local JDX file
-            JDXFilePathWithName = defaultJDXFilesLocation + moleculeName
-            individual_spectrum.extend(getSpectrumDataFromLocalJDX([JDXFilePathWithName]))
+            JDXFilePathWithName = defaultJDXFilesLocation + JDXfilename
+            individual_spectrum = getSpectrumDataFromLocalJDX([JDXFilePathWithName])
             
             #As the metadata for the molecule is not present inside the database csv file, we will now retrieve them from online
             spectrum_data,molecular_formula,molecular_weight,electron_number,knownMoleculeIonizationTypeOnline, knownIonizationFactorRelativeToN2Online, SourceOfFragmentationPatternOnline, SourceOfIonizationDatumOnline = getMetaDataForMoleculeFromOnline(molecule_meta_data_from_database,moleculeName)
@@ -699,7 +701,7 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
             SourceOfFragmentationPattern = SourceOfFragmentationPatternOnline
             SourceOfIonizationDatum = SourceOfIonizationDatumOnline
 
-            individual_spectrum.extend(spectrum_data)
+            individual_spectrum = spectrum_data
         
         #Now we will add all the spectrum data and metadata into list like variables which will be passed into the exportToCSV function
         ENumbers.append(ENumber)
