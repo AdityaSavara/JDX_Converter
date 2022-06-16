@@ -659,18 +659,9 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
     DataBase_data_holder = readFromLocalCSVDatabaseFile(dataBaseFileName)
 
     #Starting text for the application , also instructions for the User to start
-    print("WELCOME!")
-    print("If a molecule name has a comma in it (e.g. 1,3-pentadiene) or any other input has a comma in it, we recommend using an _ (e.g. 1_3-pentadiene) since this information is stored in a comma separated value file.")
-    print("ENTER A MOLECULE NAME, OR MULTIPLE MOLECULE NAMES. Separate multiple names using ';'.")
-    while True:
-        #Taking continuous input of molecules from the user
-        moleculeName = input()
-        if(moleculeName == 'END'): break
-        if(';' in moleculeName):
-            MoleculeNames = takeInputAsList(moleculeName)
-        else:
-            MoleculeNames.append(moleculeName)
-        
+    MoleculeNames = takeMoleculeNamesInputFromUser()
+    
+    for moleculeName in MoleculeNames:    
         JDXfilename = moleculeName #Default value for JDXFilename will be the molecule name, if the database has a filename specified inside it, we will replace it later.
         #Getting the Data list if the Molecule name exists inside the database CSV file
         molecule_meta_data_from_database = getDataIfMoleculeExists(DataBase_data_holder , moleculeName) #getDataIfMoleculeExists
@@ -738,10 +729,7 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
         SourceOfIonizationData.append(SourceOfIonizationDatum)
 
         AllSpectra = combineArray(AllSpectra,individual_spectrum)
-
-        print("ENTER a MOLECULE NAME or type END to stop entering molecule name")
-        #The loop ends here and goes to the starting line of the loop where there is an Input statement
-    
+   
     #Now we will prompt the user to specify the output file name or directory if they want to.
     print('Press Enter to export the converted spectra to the default location (which is /OutputFiles/ConvertedSpectra.csv, otherwise provide a FILENAME to export the converted spectra to, or provide a PATH+FILENAME)')
     outputDirectoryUserInput = input()
@@ -759,5 +747,5 @@ if __name__ == "__main__":
     
     # startCommandLine()
     # checkInLocalJDXDirectory('JDXFiles//','Ethanol')
-    print(takeMoleculeNamesInputFromUser())
-    # newStartCommandLine()
+    # print(takeMoleculeNamesInputFromUser())
+    newStartCommandLine()
