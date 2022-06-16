@@ -455,15 +455,18 @@ def takeMoleculeNamesInputFromUser ():
     print("WELCOME!")
     print("If a molecule name has a comma in it (e.g. 1,3-pentadiene) or any other input has a comma in it, we recommend using an _ (e.g. 1_3-pentadiene) since this information is stored in a comma separated value file.")
     print("ENTER A MOLECULE NAME, OR MULTIPLE MOLECULE NAMES. Separate multiple names using ';'.")
+    moleculeName = input()
     while True:
         #Taking continuous input of molecules from the user
-        moleculeName = input()
+        
         if(moleculeName == 'END'): break
         if(';' in moleculeName):
             MoleculeNames.extend(takeInputAsList(moleculeName))
         else:
             MoleculeNames.append(moleculeName)
-        print("ENTER a MOLECULE NAME or type END to stop entering molecule name")
+
+        print("ENTER A MOLECULE NAME, OR MULTIPLE MOLECULE NAMES. Separate multiple names using ';'. or Type END to stope entering molecule name")
+        moleculeName = input()
     
     return MoleculeNames
       
