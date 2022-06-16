@@ -324,12 +324,12 @@ def getMetaDataForMoleculeFromOnline(dataBase_data_holder_for_specific_molecule,
     molecular_formula = getMolecularFormula(url)
     molecular_weight = getMolecularWeight(url)
     electron_numbers = getElectronNumbers(molecular_formula)
-    if(dataBase_data_holder_for_specific_molecule != [] and dataBase_data_holder_for_specific_molecule[4] != ''):
+    if((len(dataBase_data_holder_for_specific_molecule) > 0) and (dataBase_data_holder_for_specific_molecule[4] != '')):
         knownMoleculeIonizationType = dataBase_data_holder_for_specific_molecule[4]
     else:
         knownMoleculeIonizationType = 'unknown'
     
-    if(dataBase_data_holder_for_specific_molecule != [] and dataBase_data_holder_for_specific_molecule[5] != ''):
+    if((len(dataBase_data_holder_for_specific_molecule) > 0) and (dataBase_data_holder_for_specific_molecule[5] != '')):
         knownIonizationFactorRelativeToN2 = dataBase_data_holder_for_specific_molecule[5]
     else:
         knownIonizationFactorRelativeToN2 = 'unknown'
@@ -724,7 +724,7 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
         outputDirectoryUserInput = outputFileDirectoryDefaultPath
     
     #Now we have all the implied returns of this function and now we will call the exportToCSV function to write all the metadata and spectrum data to the csv file
-    OutputfilePathAndName = f"{outputDirectoryUserInput}/{defaultOutputFileName}"
+    OutputfilePathAndName = f"{outputDirectoryUserInput}\\{defaultOutputFileName}"
     exportToCSV(OutputfilePathAndName , AllSpectra, MoleculeNames , ENumbers , MWeights , knownMoleculeIonizationTypes , knownIonizationFactorsRelativeToN2 , SourcesOfFragmentationPattern , SourceOfIonizationData)
 
 if __name__ == "__main__":
