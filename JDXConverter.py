@@ -443,6 +443,29 @@ def checkInLocalJDXDirectory(localJDXFileDirectory, molecule_name):
             if(corresponding_molecule_name_from_filename == molecule_name.lower()):
                 return True
     return False
+
+def takeMoleculeNamesInputFromUser ():
+    """
+    This function will prompt the user to continuosly input molecule names and later it will process the inputs and return the total list of molecule names
+    INPUT: this function does not require any argument for now
+    OUTPUT: MoleculeNames ( list of molecule names given by the user, it can be a list of single element. Example: ['Methanol', 'Propanol', 'Hexane'] )
+    """
+    MoleculeNames = []
+
+    print("WELCOME!")
+    print("If a molecule name has a comma in it (e.g. 1,3-pentadiene) or any other input has a comma in it, we recommend using an _ (e.g. 1_3-pentadiene) since this information is stored in a comma separated value file.")
+    print("ENTER A MOLECULE NAME, OR MULTIPLE MOLECULE NAMES. Separate multiple names using ';'.")
+    while True:
+        #Taking continuous input of molecules from the user
+        moleculeName = input()
+        if(moleculeName == 'END'): break
+        if(';' in moleculeName):
+            MoleculeNames.extend(takeInputAsList(moleculeName))
+        else:
+            MoleculeNames.append(moleculeName)
+        print("ENTER a MOLECULE NAME or type END to stop entering molecule name")
+    
+    return MoleculeNames
       
 def startCommandLine(dataBaseFileName='MoleculesInfo.csv'):
     """
@@ -736,4 +759,5 @@ if __name__ == "__main__":
     
     # startCommandLine()
     # checkInLocalJDXDirectory('JDXFiles//','Ethanol')
-    newStartCommandLine()
+    print(takeMoleculeNamesInputFromUser())
+    # newStartCommandLine()
