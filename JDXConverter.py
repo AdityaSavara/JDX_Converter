@@ -704,6 +704,8 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
             individual_spectrum = spectrum_data
         
         #Now we will add all the spectrum data and metadata into list like variables which will be passed into the exportToCSV function
+        #These variables are the implied returns of this functions and we will keep populating them as long as the user keeps giving molecule names. 
+        #These variables will hold all the metadata and spectrum data all together for all the molecules and pass them into the exportTOCSV function
         ENumbers.append(ENumber)
         MWeights.append(MWeight)
         listOfJDXFileNames.append(JDXfilename)
