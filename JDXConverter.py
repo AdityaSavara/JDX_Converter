@@ -470,22 +470,22 @@ def takeMoleculeNamesInputFromUser ():
     
     return MoleculeNames
 
-def getOutputFileName(outputDirectory):
+def getOutputFileName(outputDirectory, expectedFileName = 'ConvertedSpectra.csv', fileExtension='.csv'):
     """
     This function will check inside the outputDirectory and according to the output filename that exists inside the directory, it will generate the next file name
-    INPUT: outputDirectory ( The directory where it will check for the output file. Example: 'OutputFiles//')
+    INPUT: outputDirectory ( The directory where it will check for the output file. Example: 'OutputFiles//') | expectedFileName (this is an optional argument, the current function will search the directory based on its value ) | fileExtension ( Another optional argument, it will make the function modular for other file extensions.)
     OUTPUT: outputFileName ( Depending on the existing output filename, it will generate the next filename. Example: ConvertedSpectraX.csv )
     """
     import os
 
     filesInsideOutputDirectory = os.listdir(outputDirectory)
-    expectedFileName = 'ConvertedSpectra.csv'
+    
     counter = 1 #This is the X in ConvertedSpectraX.csv
 
     for file in filesInsideOutputDirectory:
         if(file == expectedFileName):
             filename_without_extension = expectedFileName.split('.')[0]
-            expectedFileName = f"{filename_without_extension}{counter}.csv"
+            expectedFileName = f"{filename_without_extension}{counter}{fileExtension}"
 
     return expectedFileName
 
