@@ -469,7 +469,26 @@ def takeMoleculeNamesInputFromUser ():
         moleculeName = input()
     
     return MoleculeNames
-      
+
+def getOutputFileName(outputDirectory):
+    """
+    This function will check inside the outputDirectory and according to the output filename that exists inside the directory, it will generate the next file name
+    INPUT: outputDirectory ( The directory where it will check for the output file. Example: 'OutputFiles//')
+    OUTPUT: outputFileName ( Depending on the existing output filename, it will generate the next filename. Example: ConvertedSpectraX.csv )
+    """
+    import os
+
+    filesInsideOutputDirectory = os.listdir(outputDirectory)
+    expectedFileName = 'ConvertedSpectra.csv'
+    counter = 1 #This is the X in ConvertedSpectraX.csv
+
+    for file in filesInsideOutputDirectory:
+        if(file == expectedFileName):
+            filename_without_extension = expectedFileName.split('.')[0]
+            expectedFileName = f"{filename_without_extension}{counter}.csv"
+
+    return expectedFileName
+
 def startCommandLine(dataBaseFileName='MoleculesInfo.csv'):
     """
     Driver function for this application... #TODO: Functionalize this function more, Add more information to the comment section.
