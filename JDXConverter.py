@@ -481,13 +481,19 @@ def getOutputFileName(outputDirectory, expectedFileName = 'ConvertedSpectra.csv'
     filesInsideOutputDirectory = os.listdir(outputDirectory)
     
     counter = 1 #This is the X in ConvertedSpectraX.csv
+    
+    if expectedFileName in filesInsideOutputDirectory:
+        #Now we will check if the filename has any number in it
+        existing_number_in_filename = [int(char) for char in expectedFileName.split('.')[0] if char.isdigit()]
+        if(len(existing_number_in_filename) != 0):
+            counter = existing_number_in_filename[0]
+            counter = counter + 1
+            
+        expectedFileName = f"ConvertedSpectra{counter}{fileExtension}"
 
-    for file in filesInsideOutputDirectory:
-        if(file == expectedFileName):
-            filename_without_extension = expectedFileName.split('.')[0]
-            expectedFileName = f"{filename_without_extension}{counter}{fileExtension}"
-
-    return expectedFileName
+        return getOutputFileName(outputDirectory, expectedFileName)
+    else:
+        return expectedFileName
 
 def startCommandLine(dataBaseFileName='MoleculesInfo.csv'):
     """
@@ -752,16 +758,11 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
 
         AllSpectra = combineArray(AllSpectra,individual_spectrum)
    
-    #Now we will prompt the user to specify the output file name or directory if they want to.
-    print('Press Enter to export the converted spectra to the default location (which is /OutputFiles/ConvertedSpectra.csv, otherwise provide a FILENAME to export the converted spectra to, or provide a PATH+FILENAME)')
-    outputDirectoryUserInput = input()
+    #Now we will get the appropriate file name for the output
+    outputFileName = getOutputFileName(outputFileDirectoryDefaultPath)
 
-    #Now we will check if the user has provided any specification about the output directory or not. If not , we will use the DefaultPath as initialized in the top portion of this function
-    if (outputDirectoryUserInput == ""):
-        outputDirectoryUserInput = outputFileDirectoryDefaultPath
-    
     #Now we have all the implied returns of this function and now we will call the exportToCSV function to write all the metadata and spectrum data to the csv file
-    OutputfilePathAndName = f"{outputDirectoryUserInput}\\{defaultOutputFileName}"
+    OutputfilePathAndName = f"{outputFileDirectoryDefaultPath}\\{outputFileName}"
     exportToCSV(OutputfilePathAndName , AllSpectra, MoleculeNames , ENumbers , MWeights , knownMoleculeIonizationTypes , knownIonizationFactorsRelativeToN2 , SourcesOfFragmentationPattern , SourceOfIonizationData)
 
 if __name__ == "__main__":
