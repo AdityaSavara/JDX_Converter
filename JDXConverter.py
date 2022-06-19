@@ -481,14 +481,17 @@ def getOutputFileName(outputDirectory, expectedFileName = 'ConvertedSpectra.csv'
     filesInsideOutputDirectory = os.listdir(outputDirectory)
     
     counter = 1 #This is the X in ConvertedSpectraX.csv
-    
+
+    #Now we will check if our expectedFilename is in the outputDirectory or not
     if expectedFileName in filesInsideOutputDirectory:
-        #Now we will check if the filename has any number in it
+        #As we have our expected filename in the output directory, Now we will check if the filename has any number in it
         existing_number_in_filename = [int(char) for char in expectedFileName.split('.')[0] if char.isdigit()]
         if(len(existing_number_in_filename) != 0):
+            #As the filename has a number in it, we will simply increase the number by 1 and append it with the filename
             counter = existing_number_in_filename[0]
             counter = counter + 1
-            
+
+        #Otherwise, we will just append 1 by default with the filename if it already exists in the directory.    
         expectedFileName = f"ConvertedSpectra{counter}{fileExtension}"
 
         return getOutputFileName(outputDirectory, expectedFileName)
