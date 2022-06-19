@@ -765,6 +765,9 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
     OutputfilePathAndName = f"{outputFileDirectoryDefaultPath}\\{outputFileName}"
     exportToCSV(OutputfilePathAndName , AllSpectra, MoleculeNames , ENumbers , MWeights , knownMoleculeIonizationTypes , knownIonizationFactorsRelativeToN2 , SourcesOfFragmentationPattern , SourceOfIonizationData)
 
+    #Now this function will terminate showing the user where the output has been written
+    print(f"Conversion COMPLETE!! Outputs written in ./{outputFileDirectoryDefaultPath}/{outputFileName}")
+
 if __name__ == "__main__":
     # getMultipleSpectrumFromNIST()
     
