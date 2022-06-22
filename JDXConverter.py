@@ -481,18 +481,19 @@ def getOutputFileName(outputDirectory, expectedFileName = 'ConvertedSpectra.csv'
     import os
 
     filesInsideOutputDirectory = os.listdir(outputDirectory) #All the Files list inside the output directory
-    
-    baseFileCounter = 1 #This is the X in ConvertedSpectraX.csv
+    baseFileName = expectedFileName.split('.')[0]
+    baseFileCounter = 0 #This is the X in ConvertedSpectraX.csv
     fileCountersList = list() #Initiated a list to store all the numbers appened in the files inside output directory
 
     #Now we will iterate through all the files and populate the fileCountersList. This will be used to get the max value of numbers in the files.
     for file in filesInsideOutputDirectory:
+        #First we will check if the baseFilename is a part of the current file's name.
+        if baseFileName not in file:
+            continue
         #Now we will remove the file extension
         fileName_without_extension = file.split('.')[0]
 
-        #Now we will check if the filename contains 'ConvertedSpectra' , otherwise it will fail to split and get the number from the list ( list index out of range )
-        if('ConvertedSpectra' in fileName_without_extension):
-            existing_number_in_filename = fileName_without_extension.split('ConvertedSpectra')[1] #We can change this later on if we agree on the point where the OutputFiles directory won't contain anything but the ConvertedSpectra Files
+        existing_number_in_filename = fileName_without_extension.split(baseFileName)[1]
         
         if (existing_number_in_filename.isnumeric()):
             fileCountersList.append(int(existing_number_in_filename))
