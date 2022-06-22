@@ -402,7 +402,7 @@ def getMultipleSpectrumFromNIST():      #Keeping the function name as "getMultip
         print("[INFO] ",name, "DOWNLOADED...")
     print("FINISHED!")
 
-def readFromLocalCSVDatabaseFile(localDatabaseFileName):
+def readFromLocalDatabaseFile(localDatabaseFileName):
     """
     This function will take the local database csv file name and return its content in a python list type variable.
     INPUT: localDatabaseFileName( Full path and name of the database file . Example: MoleculesInfo.csv. Example : Database//MoleculesInfo.csv)
@@ -536,7 +536,7 @@ def startCommandLine(dataBaseFileName='MoleculesInfo.csv'):
     individual_spectrum=[]
     DataBase_data_holder=[]
     
-    DataBase_data_holder = readFromLocalCSVDatabaseFile(dataBaseFileName)
+    DataBase_data_holder = readFromLocalDatabaseFile(dataBaseFileName)
 
 
     fileYorN=''
@@ -698,7 +698,7 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
 
     #Reading the CSV file for database
     print(f"LOADING Information from {dataBaseFileName}")
-    DataBase_data_holder = readFromLocalCSVDatabaseFile(dataBaseFileName)
+    DataBase_data_holder = readFromLocalDatabaseFile(dataBaseFileName)
 
     #Starting text for the application , also instructions for the User to start
     MoleculeNames = takeMoleculeNamesInputFromUser()
