@@ -773,14 +773,18 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
         AllSpectra = combineArray(AllSpectra,individual_spectrum)
    
     #Now we will get the appropriate file name for the output
-    outputFileName = getOutputFileName(outputFileDirectoryDefaultPath)
+    outputFileNameCSV = getOutputFileName(outputFileDirectoryDefaultPath)
+    outputFileNameTXT = getOutputFileName(outputFileDirectoryDefaultPath, expectedFileName='ConvertedSpectraTable.txt', fileExtension='.txt')
 
     #Now we have all the implied returns of this function and now we will call the exportToCSV function to write all the metadata and spectrum data to the csv file
-    OutputfilePathAndName = f"{outputFileDirectoryDefaultPath}\\{outputFileName}"
+    OutputfilePathAndName = f"{outputFileDirectoryDefaultPath}\\{outputFileNameCSV}"
     exportToCSV(OutputfilePathAndName , AllSpectra, MoleculeNames , ENumbers , MWeights , knownMoleculeIonizationTypes , knownIonizationFactorsRelativeToN2 , SourcesOfFragmentationPattern , SourceOfIonizationData)
 
+    OutputfilePathAndName = f"{outputFileDirectoryDefaultPath}\\{outputFileNameTXT}"
+    exportToCSV(OutputfilePathAndName , AllSpectra, MoleculeNames , ENumbers , MWeights , knownMoleculeIonizationTypes , knownIonizationFactorsRelativeToN2 , SourcesOfFragmentationPattern , SourceOfIonizationData, delimeter='\t')
+
     #Now this function will terminate showing the user where the output has been written
-    print(f"Conversion COMPLETE!! Outputs written in ./{outputFileDirectoryDefaultPath}/{outputFileName}")
+    print(f"Conversion COMPLETE!! Outputs written in ./{outputFileDirectoryDefaultPath}/{outputFileNameCSV} and ./{outputFileDirectoryDefaultPath}/{outputFileNameTXT}")
 
 if __name__ == "__main__":
     # getMultipleSpectrumFromNIST()
