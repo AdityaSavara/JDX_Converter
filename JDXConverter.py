@@ -402,7 +402,7 @@ def getMultipleSpectrumFromNIST():      #Keeping the function name as "getMultip
         print("[INFO] ",name, "DOWNLOADED...")
     print("FINISHED!")
 
-def readFromLocalDatabaseFile(localDatabaseFileName):
+def readFromLocalDatabaseFile(localDatabaseFileName, delimeter=','):
     """
     This function will take the local database csv file name and return its content in a python list type variable.
     INPUT: localDatabaseFileName( Full path and name of the database file . Example: MoleculesInfo.csv. Example : Database//MoleculesInfo.csv)
@@ -411,7 +411,7 @@ def readFromLocalDatabaseFile(localDatabaseFileName):
     import csv
 
     data_list = []
-    spamReader = csv.reader(open('%s' %localDatabaseFileName), delimiter=',')
+    spamReader = csv.reader(open('%s' %localDatabaseFileName), delimiter=delimeter)
     for row in spamReader:
         data_list.append(row)
     
