@@ -291,7 +291,7 @@ def exportToCSV(filename, OverallArray, MoleculeNames, ENumbers, MWeights, known
         if zeros == False:
             f5.write('%d'%(i))    
             for y in range(printRow):    
-                f5.write(f'{delimeter}{Array1[MaximumAtomicUnit*y +i-1]}') #The -1 is for array indexing
+                f5.write(f'{delimeter}{int(Array1[MaximumAtomicUnit*y +i-1])}') #The -1 is for array indexing
             f5.write('\n')
             
     f5.close()
@@ -409,9 +409,11 @@ def readFromLocalDatabaseFile(localDatabaseFileName, delimeter=','):
     OUTPUT: 
     """
     import csv
+    import codecs
 
     data_list = []
-    spamReader = csv.reader(open('%s' %localDatabaseFileName), delimiter=delimeter)
+    file = codecs.open(localDatabaseFileName,'rU', 'utf-16-le')
+    spamReader = csv.reader(file, delimiter=delimeter)
     for row in spamReader:
         data_list.append(row)
     
@@ -665,12 +667,11 @@ def startCommandLine(dataBaseFileName='MoleculesInfo.csv'):
 
     exportToCSV("%s\\ConvertedSpectra.csv" %outputDirectory, AllSpectra,  MoleculeNames, ENumbers, MWeights, knownMoleculeIonizationTypes, knownIonizationFactorsRelativeToN2, SourceOfFragmentationPatterns, SourceOfIonizationData)
 
-def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLocation='JDXFiles//'):
+def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLocation='JDXFiles//', delimeter=","):
     """
     This function will start the JDX Converter application and handle the user/app flow. #TODO: The function name will be renamed later accordingly.
     """
-    import os.path
-    import csv
+    from os import listdir
 
     #Initialized some variable variable
     SourceOfFragmentationPattern = ''
@@ -696,9 +697,17 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
     outputFileDirectoryDefaultPath = 'OutputFiles'
     defaultOutputFileName = 'ConvertedSpectra.csv'
 
-    #Reading the CSV file for database
+    #Prompting the user to choose the database file
+    print('Which Database file should be used? Press Enter to Use Default, or choose between "csv" and "txt". The Default is csv (MoleculesInfo.csv), and the alternative is txt (MoleculesInfoTable.txt)?')
+    databaseFileChoice = input()
+
+    if(databaseFileChoice == "txt"):
+        dataBaseFileName = "MoleculesInfoTable.txt"
+        delimeter = '\t'
+    
+    #Reading the information from database file
     print(f"LOADING Information from {dataBaseFileName}")
-    DataBase_data_holder = readFromLocalDatabaseFile(dataBaseFileName)
+    DataBase_data_holder = readFromLocalDatabaseFile(dataBaseFileName, delimeter=delimeter)
 
     #Starting text for the application , also instructions for the User to start
     MoleculeNames = takeMoleculeNamesInputFromUser()
@@ -716,7 +725,7 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
             #Now we will check if there's a filename specified inside the database CSV file for the molecule
             filenameFromDatabase = molecule_meta_data_from_database[3].strip()
             if(filenameFromDatabase != ''):
-                if(filenameFromDatabase in os.listdir(defaultJDXFilesLocation)):
+                if(filenameFromDatabase in listdir(defaultJDXFilesLocation)):
                     JDXfilename = defaultJDXFilesLocation + filenameFromDatabase
                     individual_spectrum = getSpectrumDataFromLocalJDX([JDXfilename])
                 else:
