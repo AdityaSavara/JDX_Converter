@@ -214,7 +214,7 @@ def getSpectrumDataFromLocalJDX(JDXFilesList):
         AllSpectraData=combineArray(AllSpectraData, individual_spectrum)
     return AllSpectraData
 
-def exportToCSV(filename, OverallArray, MoleculeNames, ENumbers, MWeights, knownMoleculeIonizationTypes, knownIonizationFactorsRelativeToN2, SourceOfFragmentationPatterns, SourceOfIonizationData):
+def exportToCSV(filename, OverallArray, MoleculeNames, ENumbers, MWeights, knownMoleculeIonizationTypes, knownIonizationFactorsRelativeToN2, SourceOfFragmentationPatterns, SourceOfIonizationData, delimeter=','):
     """
     This function basically takes in all the metadata of molecules and write them into csv file/files
     """
@@ -230,38 +230,38 @@ def exportToCSV(filename, OverallArray, MoleculeNames, ENumbers, MWeights, known
 
     f5.write('#CommentsLine:')
     for i in range(len(MoleculeNames)):
-        f5.write(',')
+        f5.write(delimeter)
     f5.write('\n')
     
     #write the molecules
     f5.write('Molecules')
     for i in MoleculeNames:
-        f5.write(',%s' %i)
+        f5.write(f'{delimeter}{i}')
     f5.write('\n')
 
     #write the Electron Numbers
     f5.write('Electron Numbers')
     for i in ENumbers:
-        f5.write(',%f'%(int(i)))
+        f5.write(f"{delimeter}{float(i)}")
     # f5.write(str(ENumbers))
     f5.write('\n')
     
     #write the ionization type
     f5.write('knownMoleculesIonizationTypes')
     for i in knownMoleculeIonizationTypes:
-        f5.write(',%s'%i)
+        f5.write(f'{delimeter}{i}')
     f5.write('\n')
     
     #write the ionization factor
     f5.write('knownIonizationFactorsRelativeToN2')
     for i in knownIonizationFactorsRelativeToN2:
-        f5.write(',%s'%i)
+        f5.write(f'{delimeter}{i}')
     f5.write('\n')
     
     #write the header
     f5.write('SourceOfFragmentationPatterns')
     for i in SourceOfFragmentationPatterns:
-        f5.write(',%s' %i)
+        f5.write(f'{delimeter}{i}')
     f5.write('\n')
     
     #write the ionization data source
@@ -273,7 +273,7 @@ def exportToCSV(filename, OverallArray, MoleculeNames, ENumbers, MWeights, known
     #write the molecular weights
     f5.write('Molecular Mass')
     for i in MWeights:
-        f5.write(',%f' %(float(i)))
+        f5.write(f'{delimeter}{float(i)}')
     # f5.write(str(MWeights))
     f5.write('\n')
     
@@ -291,7 +291,7 @@ def exportToCSV(filename, OverallArray, MoleculeNames, ENumbers, MWeights, known
         if zeros == False:
             f5.write('%d'%(i))    
             for y in range(printRow):    
-                f5.write(',%d'%(Array1[MaximumAtomicUnit*y +i-1])) #The -1 is for array indexing
+                f5.write(f'{delimeter}{Array1[MaximumAtomicUnit*y +i-1]}') #The -1 is for array indexing
             f5.write('\n')
             
     f5.close()
@@ -788,5 +788,5 @@ if __name__ == "__main__":
     # startCommandLine()
     # checkInLocalJDXDirectory('JDXFiles//','Ethanol')
     # print(takeMoleculeNamesInputFromUser())
-    print(getOutputFileName('OutputFiles//'))
-    # newStartCommandLine()
+    # print(getOutputFileName('OutputFiles//'))
+    newStartCommandLine()
