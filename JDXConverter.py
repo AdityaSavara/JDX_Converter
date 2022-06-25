@@ -479,7 +479,11 @@ def getOutputFileName(outputDirectory, expectedFileName = 'ConvertedSpectra.csv'
     OUTPUT: outputFileName ( Depending on the existing output filename, it will generate the next filename. Example: ConvertedSpectraX.csv )
     """
     import os
-
+    
+    #We will first check if the outputDirectory exists or not
+    if not os.path.exists(outputDirectory):
+        os.makedirs(outputDirectory)
+        
     filesInsideOutputDirectory = os.listdir(outputDirectory) #All the Files list inside the output directory
     baseFileName = expectedFileName.split('.')[0]
     baseFileCounter = 0 #This is the X in ConvertedSpectraX.csv
