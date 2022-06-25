@@ -672,7 +672,7 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
     """
     This function will start the JDX Converter application and handle the user/app flow. #TODO: The function name will be renamed later accordingly.
     """
-    from os import listdir
+    import os
 
     #Initialized some variable variable
     SourceOfFragmentationPattern = ''
@@ -726,7 +726,7 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
             #Now we will check if there's a filename specified inside the database CSV file for the molecule
             filenameFromDatabase = molecule_meta_data_from_database[3].strip()
             if(filenameFromDatabase != ''):
-                if(filenameFromDatabase in listdir(defaultJDXFilesLocation)):
+                if(filenameFromDatabase in os.listdir(defaultJDXFilesLocation)):
                     JDXfilename = defaultJDXFilesLocation + filenameFromDatabase
                     individual_spectrum = getSpectrumDataFromLocalJDX([JDXfilename])
                 else:
@@ -781,6 +781,10 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
         SourceOfIonizationData.append(SourceOfIonizationDatum)
 
         AllSpectra = combineArray(AllSpectra,individual_spectrum)
+
+    #mkaing the directory for exported files, if it isn't already there
+    if not os.path.exists(outputFileDirectoryDefaultPath):
+        os.makedirs(outputFileDirectoryDefaultPath)
    
     #Now we will get the appropriate file name for the output
     outputFileNameCSV = getOutputFileName(outputFileDirectoryDefaultPath)
