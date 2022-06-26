@@ -412,11 +412,16 @@ def readFromLocalDatabaseFile(localDatabaseFileName, delimeter=','):
     import codecs
 
     data_list = []
-    file = codecs.open(localDatabaseFileName,'rU', 'utf-16-le')
-    spamReader = csv.reader(file, delimiter=delimeter)
+    if('.csv' in localDatabaseFileName):
+        spamReader = csv.reader(open(localDatabaseFileName), delimiter=delimeter)
+    elif('.txt' in localDatabaseFileName):
+        spamReader = csv.reader(open(localDatabaseFileName,encoding='utf-16'), delimiter=delimeter)
+    # file = codecs.open(localDatabaseFileName,'rU', 'utf-16-le')
+    # spamReader = csv.reader(file, delimiter=delimeter)
     for row in spamReader:
         data_list.append(row)
     
+    #the 'data_list' variable will contain all the rows in a list of the provided localDatabaseFileName
     return data_list
 
 def getDataIfMoleculeExists(databaseDataHolderList, molecule_name):
@@ -446,29 +451,37 @@ def checkInLocalJDXDirectory(localJDXFileDirectory, molecule_name):
                 return True
     return False
 
-def takeMoleculeNamesInputFromUser ():
+def takeMoleculeNamesInputFromUser (DataBase_data_holder):
     """
     This function will prompt the user to continuosly input molecule names and later it will process the inputs and return the total list of molecule names
-    INPUT: this function does not require any argument for now
+    INPUT: DataBase_data_holder ( this will contain all the rows of the database file in case the user wants to convert all the molecules inside it )
     OUTPUT: MoleculeNames ( list of molecule names given by the user, it can be a list of single element. Example: ['Methanol', 'Propanol', 'Hexane'] )
     """
     MoleculeNames = []
 
     print("WELCOME!")
     print("If a molecule name has a comma in it (e.g. 1,3-pentadiene) or any other input has a comma in it, we recommend using an _ (e.g. 1_3-pentadiene) since this information is stored in a comma separated value file.")
-    print("ENTER A MOLECULE NAME, OR MULTIPLE MOLECULE NAMES. Separate multiple names using ';'.")
+    print("PRESS ENTER TO CREATE CONVERTED SPECTRA FOR ALL MOLECULES IN THE DATABASE. OTHERWISE, ENTER ONE OR MORE MOLECULE NAMES, WITH MULTIPLE MOLECULE NAMES SEPARATED BY ';'")
     moleculeName = input()
-    while True:
-        #Taking continuous input of molecules from the user
-        
-        if(moleculeName == 'END'): break
-        if(';' in moleculeName):
-            MoleculeNames.extend(takeInputAsList(moleculeName))
-        else:
-            MoleculeNames.append(moleculeName)
 
-        print("ENTER A MOLECULE NAME, OR MULTIPLE MOLECULE NAMES. Separate multiple names using ';'. or Type END to stope entering molecule name")
-        moleculeName = input()
+    #If the User press Enter, then we will retrieve all the molecule names from the database file
+    if(moleculeName == ""):
+        # RETRIEVE MOLECULE NAMES FROM DATABASE FILE
+        for row in range(1,len(DataBase_data_holder)):
+            MoleculeNames.append(DataBase_data_holder[row][0])
+    #Else we will continuously prompt the user to input molecule names until they input END
+    else:
+        while True:
+            #Taking continuous input of molecules from the user
+            
+            if(moleculeName == 'END'): break
+            if(';' in moleculeName):
+                MoleculeNames.extend(takeInputAsList(moleculeName))
+            else:
+                MoleculeNames.append(moleculeName)
+
+            print("ENTER A MOLECULE NAME, OR MULTIPLE MOLECULE NAMES. Separate multiple names using ';'. or Type END to stope entering molecule name")
+            moleculeName = input()
     
     return MoleculeNames
 
@@ -672,7 +685,7 @@ def startCommandLine(dataBaseFileName='MoleculesInfo.csv'):
 
     exportToCSV("%s\\ConvertedSpectra.csv" %outputDirectory, AllSpectra,  MoleculeNames, ENumbers, MWeights, knownMoleculeIonizationTypes, knownIonizationFactorsRelativeToN2, SourceOfFragmentationPatterns, SourceOfIonizationData)
 
-def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLocation='JDXFiles//', delimeter=","):
+def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', JDXFilesLocation='JDXFiles//', delimeter=","):
     """
     This function will start the JDX Converter application and handle the user/app flow. #TODO: The function name will be renamed later accordingly.
     """
@@ -699,39 +712,41 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
     MoleculeNames=list()
     DataBase_data_holder=[]
 
-    outputFileDirectoryDefaultPath = 'OutputFiles'
+    outputFileDirectoryPath = 'OutputFiles' #This is by default the output file directory path
     defaultOutputFileName = 'ConvertedSpectra.csv'
 
     #Prompting the user to choose the database file
     print('Which Database file should be used? Press Enter to Use Default, or choose between "csv" and "txt". The Default is csv (MoleculesInfo.csv), and the alternative is txt (MoleculesInfoTable.txt)?')
     databaseFileChoice = input()
 
+    #If the user inputs txt, then we will take the MoleculesInfoTable.txt file as our database file
     if(databaseFileChoice == "txt"):
         dataBaseFileName = "MoleculesInfoTable.txt"
         delimeter = '\t'
-    
+    #Else it will be remain as MoleculesInfo.csv file as the default database file
+
     #Reading the information from database file
     print(f"LOADING Information from {dataBaseFileName}")
-    DataBase_data_holder = readFromLocalDatabaseFile(dataBaseFileName, delimeter=delimeter)
+    DataBase_data_holder = readFromLocalDatabaseFile(dataBaseFileName, delimeter=delimeter) #This variable will contain the full list or data of the CSV file in the link : https://github.com/AdityaSavara/JDX_Converter/blob/master/MoleculesInfo.csv
 
     #Starting text for the application , also instructions for the User to start
-    MoleculeNames = takeMoleculeNamesInputFromUser()
+    MoleculeNames = takeMoleculeNamesInputFromUser(DataBase_data_holder) #MoleculeNames is a list of molecule names, provided by the user. The DataBase_data_holder is passed into this function in case the user wants to convert all the molecules from the database.
     
     for moleculeName in MoleculeNames:    
         JDXfilename = moleculeName #Default value for JDXFilename will be the molecule name, if the database has a filename specified inside it, we will replace it later.
         #Getting the Data list if the Molecule name exists inside the database CSV file
-        molecule_meta_data_from_database = getDataIfMoleculeExists(DataBase_data_holder , moleculeName) #getDataIfMoleculeExists
+        molecule_meta_data_from_database = getDataIfMoleculeExists(DataBase_data_holder , moleculeName) #getDataIfMoleculeExists will return the existing metadata inside the database_data_holder
 
         #Now We will check if the molecule's data exist inside the database file
         if (len(molecule_meta_data_from_database) != 0):
             #Molecule FOUND inside the DATABASE FILE
             #TODO: Populating these variables can be a function itself
             
-            #Now we will check if there's a filename specified inside the database CSV file for the molecule
+            #Now we will check if there's a jdx filename specified inside the database CSV file for the molecule
             filenameFromDatabase = molecule_meta_data_from_database[3].strip()
             if(filenameFromDatabase != ''):
-                if(filenameFromDatabase in os.listdir(defaultJDXFilesLocation)):
-                    JDXfilename = defaultJDXFilesLocation + filenameFromDatabase
+                if(filenameFromDatabase in os.listdir(JDXFilesLocation)):
+                    JDXfilename = JDXFilesLocation + filenameFromDatabase
                     individual_spectrum = getSpectrumDataFromLocalJDX([JDXfilename])
                 else:
                     #This line will get all the data from online along with the individual spectrum data for the molecule. However we will only use the Spectrum data in this case
@@ -747,9 +762,9 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
             SourceOfIonizationDatum = molecule_meta_data_from_database[7]
 
         #Now we will check if the corresponding JDX file for the molecule exists in the local directory or not
-        elif(checkInLocalJDXDirectory(defaultJDXFilesLocation, JDXfilename)):
+        elif(checkInLocalJDXDirectory(JDXFilesLocation, JDXfilename)):
             #Now we will retrieve the spectrum information from the local JDX file
-            JDXFilePathWithName = defaultJDXFilesLocation + JDXfilename
+            JDXFilePathWithName = JDXFilesLocation + JDXfilename
             individual_spectrum = getSpectrumDataFromLocalJDX([JDXFilePathWithName])
             
             #As the metadata for the molecule is not present inside the database csv file, we will now retrieve them from online
@@ -787,22 +802,22 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', defaultJDXFilesLoc
         AllSpectra = combineArray(AllSpectra,individual_spectrum)
 
     #mkaing the directory for exported files, if it isn't already there
-    if not os.path.exists(outputFileDirectoryDefaultPath):
-        os.makedirs(outputFileDirectoryDefaultPath)
+    if not os.path.exists(outputFileDirectoryPath):
+        os.makedirs(outputFileDirectoryPath)
    
-    #Now we will get the appropriate file name for the output
-    outputFileNameCSV = getOutputFileName(outputFileDirectoryDefaultPath)
-    outputFileNameTXT = getOutputFileName(outputFileDirectoryDefaultPath, expectedFileName='ConvertedSpectraTable.txt', fileExtension='.txt')
+    #Now we will get the appropriate file name for the output. The OutputFiles will have a number at the end which is 1 or higher and the lowest number will be used.
+    outputFileNameCSV = getOutputFileName(outputFileDirectoryPath)
+    outputFileNameTXT = getOutputFileName(outputFileDirectoryPath, expectedFileName='ConvertedSpectraTable.txt', fileExtension='.txt')
 
     #Now we have all the implied returns of this function and now we will call the exportToCSV function to write all the metadata and spectrum data to the csv file
-    OutputfilePathAndName = f"{outputFileDirectoryDefaultPath}\\{outputFileNameCSV}"
+    OutputfilePathAndName = f"{outputFileDirectoryPath}\\{outputFileNameCSV}"
     exportToCSV(OutputfilePathAndName , AllSpectra, MoleculeNames , ENumbers , MWeights , knownMoleculeIonizationTypes , knownIonizationFactorsRelativeToN2 , SourcesOfFragmentationPattern , SourceOfIonizationData)
 
-    OutputfilePathAndName = f"{outputFileDirectoryDefaultPath}\\{outputFileNameTXT}"
+    OutputfilePathAndName = f"{outputFileDirectoryPath}\\{outputFileNameTXT}"
     exportToCSV(OutputfilePathAndName , AllSpectra, MoleculeNames , ENumbers , MWeights , knownMoleculeIonizationTypes , knownIonizationFactorsRelativeToN2 , SourcesOfFragmentationPattern , SourceOfIonizationData, delimeter='\t')
 
     #Now this function will terminate showing the user where the output has been written
-    print(f"Conversion COMPLETE!! Outputs written in ./{outputFileDirectoryDefaultPath}/{outputFileNameCSV} and ./{outputFileDirectoryDefaultPath}/{outputFileNameTXT}")
+    print(f"Conversion COMPLETE!! Outputs written in ./{outputFileDirectoryPath}/{outputFileNameCSV} and ./{outputFileDirectoryPath}/{outputFileNameTXT}")
 
 if __name__ == "__main__":
     # getMultipleSpectrumFromNIST()
