@@ -278,12 +278,11 @@ def exportToCSV(filename, OverallArray, MoleculeNames, ENumbers, MWeights, known
     f5.write('\n')
     
     Array1=OverallArray
-    printRow= len(Array1)//MaximumAtomicUnit
+    printRow= len(Array1)//MaximumAtomicUnit #TODO: printRow is not a good variable name, this should be changed.
     printArray =[]
     zeros = True
 
     for i in range(1,MaximumAtomicUnit+1):
-        print(i)
         zeros = True
         for k in range(printRow):
             if Array1[MaximumAtomicUnit*k +i-1] != 0: #The -1 is for array indexing
@@ -382,7 +381,7 @@ def getMultipleSpectrumFromNIST():      #Keeping the function name as "getMultip
     """
     # print("WELCOME")
 
-    print("ENTER A MOLECULE NAME, OR MULTIPLE MOLECULE NAMES. Separate multiple names using ';'.")
+    print("Enter a molecule name or multiple molecule names. Separate multiple molecule names using ';'.")
 
     molecule_names = []
 
@@ -460,9 +459,8 @@ def takeMoleculeNamesInputFromUser (DataBase_data_holder):
     """
     MoleculeNames = []
 
-    print("WELCOME!")
-    print("If a molecule name has a comma in it (e.g. 1,3-pentadiene) or any other input has a comma in it, we recommend using an _ (e.g. 1_3-pentadiene) since this information is stored in a comma separated value file.")
-    print("PRESS ENTER TO CREATE CONVERTED SPECTRA FOR ALL MOLECULES IN THE DATABASE. OTHERWISE, ENTER ONE OR MORE MOLECULE NAMES, WITH MULTIPLE MOLECULE NAMES SEPARATED BY ';'")
+    #print("If a molecule name has a comma in it (e.g. 1,3-pentadiene) or any other input has a comma in it, we recommend using an _ (e.g. 1_3-pentadiene) since this information is stored in a comma separated value file.")
+    print("Press ENTER to automatically create converted spectra for all molecules inside the datbase specified. Otherwise, enter one or more molecule names, with multiple molecule names separated by ';'")
     moleculeName = input()
 
     #If the User press Enter, then we will retrieve all the molecule names from the database file
@@ -475,7 +473,7 @@ def takeMoleculeNamesInputFromUser (DataBase_data_holder):
         while True:
             #Taking continuous input of molecules from the user
             
-            if(moleculeName == 'END'): break
+            if(moleculeName.lower() == 'end'): break
             if(';' in moleculeName):
                 MoleculeNames.extend(takeInputAsList(moleculeName))
             else:
@@ -567,10 +565,7 @@ def startCommandLine(dataBaseFileName='MoleculesInfo.csv'):
 
 
     if (fileYorN =='no'):
-        # print("Welcome! Enter the name of the molecule, its mass, its ionization factor relative to nitrogen (put unknown if you don't know), its ionization type (put unknown if you don't know), its number of electrons (or the number -1 if you don't need that), and the associated JDX file in order to generate a csv spectrum file")
-
-        print("WELCOME!")
-        print("If a molecule name has a comma in it (e.g. 1,3-pentadiene) or any other input has a comma in it, we recommend using an _ (e.g. 1_3-pentadiene) since this information is stored in a comma separated value file.")
+        # print("If a molecule name has a comma in it (e.g. 1,3-pentadiene) or any other input has a comma in it, we recommend using an _ (e.g. 1_3-pentadiene) since this information is stored in a comma separated value file.")
         
         while True:
             print("Enter the molecule's Name(Type EXIT if you want to quit): ")
@@ -715,9 +710,9 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', JDXFilesLocation='
 
     outputFileDirectoryPath = 'OutputFiles' #This is by default the output file directory path
     defaultOutputFileName = 'ConvertedSpectra.csv'
-
+    print("****JDXConverter Started:****")
     #Prompting the user to choose the database file
-    print('Which Database file should be used? Press Enter to Use Default, or choose between "csv" and "txt". The Default is csv (MoleculesInfo.csv), and the alternative is txt (MoleculesInfoTable.txt)?')
+    print('Press ENTER to use default database file (MoleculesInfo.csv). Otherwise, input "csv" for MoleculesInfo.csv or "txt" for (MoleculesInfoTable.txt).')
     databaseFileChoice = input()
 
     #If the user inputs txt, then we will take the MoleculesInfoTable.txt file as our database file
@@ -727,7 +722,7 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', JDXFilesLocation='
     #Else it will be remain as MoleculesInfo.csv file as the default database file
 
     #Reading the information from database file
-    print(f"LOADING Information from {dataBaseFileName}")
+    #print(f"LOADING Information from {dataBaseFileName}")
     DataBase_data_holder = readFromLocalDatabaseFile(dataBaseFileName, delimeter=delimeter) #This variable will contain the full list or data of the CSV file in the link : https://github.com/AdityaSavara/JDX_Converter/blob/master/MoleculesInfo.csv
 
     #Starting text for the application , also instructions for the User to start
@@ -818,7 +813,7 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', JDXFilesLocation='
     exportToCSV(OutputfilePathAndName , AllSpectra, MoleculeNames , ENumbers , MWeights , knownMoleculeIonizationTypes , knownIonizationFactorsRelativeToN2 , SourcesOfFragmentationPattern , SourceOfIonizationData, delimeter='\t')
 
     #Now this function will terminate showing the user where the output has been written
-    print(f"Conversion COMPLETE!! Outputs written in ./{outputFileDirectoryPath}/{outputFileNameCSV} and ./{outputFileDirectoryPath}/{outputFileNameTXT}")
+    print(f"Conversion complete: outputs written in ./{outputFileDirectoryPath}/{outputFileNameCSV} and ./{outputFileDirectoryPath}/{outputFileNameTXT}")
 
 if __name__ == "__main__":
     # getMultipleSpectrumFromNIST()
