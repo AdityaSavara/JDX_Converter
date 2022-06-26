@@ -409,15 +409,16 @@ def readFromLocalDatabaseFile(localDatabaseFileName, delimeter=','):
     OUTPUT: 
     """
     import csv
-    import codecs
 
     data_list = []
+    #If the provided database file is a CSV formatted file, then it will open with the default encoding
     if('.csv' in localDatabaseFileName):
         spamReader = csv.reader(open(localDatabaseFileName), delimiter=delimeter)
+
+    #Else if the provided database file is a TXT formatted file ( most likely tab delimeted ), then it will open with UTF-16 encoding.
     elif('.txt' in localDatabaseFileName):
         spamReader = csv.reader(open(localDatabaseFileName,encoding='utf-16'), delimiter=delimeter)
-    # file = codecs.open(localDatabaseFileName,'rU', 'utf-16-le')
-    # spamReader = csv.reader(file, delimiter=delimeter)
+    
     for row in spamReader:
         data_list.append(row)
     
