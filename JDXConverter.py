@@ -340,6 +340,23 @@ def getMetaDataForMoleculeFromOnline(dataBase_data_holder_for_specific_molecule,
 
     return overAllArray,molecular_formula,molecular_weight,electron_numbers,knownMoleculeIonizationType, knownIonizationFactorRelativeToN2, SourceOfFragmentationPattern, SourceOfIonizationData
 
+def getSpectrumForMoleculeFromOnline(molecule_name):
+    """
+    This function will get the Spectrum data from Online source.
+    INPUT: molecule_name ( Specific Molecule's Name which spectrum data the user want from online )
+    OUTPUT: spectrum_data ( Data array containing the spectrum data from online ) | SourceOfFragmentationPattern ( As we are retrieving the data from online, it will be NIST Webbook in this case)
+    """
+    url = f'https://webbook.nist.gov/cgi/cbook.cgi?Name={molecule_name}&Units=SI'
+
+    mass_spectrum_url = getMassSpectrumURL(url)
+    jdx_download_url = getJDXDownloadURL(mass_spectrum_url)
+    jdx_filename = getJDX(jdx_download_url,molecule_name)
+    spectrum_data = getOverAllArray(jdx_filename)
+
+    SourceOfFragmentationPattern = 'NIST Webbook'
+    
+    return spectrum_data, SourceOfFragmentationPattern
+
 def getSpectrumFromNIST(molecule_name, outputDirectory='OutputSingleCSVFiles'):
     """
     This function takes in a specific molecule's name and extract its spectrum data to a csv file
