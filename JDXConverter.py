@@ -307,38 +307,27 @@ def takeInputAsList(molecule_name):
         molecule_names.append(name)
     return molecule_names
 
-def getMetaDataForMoleculeFromOnline(dataBase_data_holder_for_specific_molecule, molecule_name):
+def getMetaDataForMoleculeFromOnline(molecule_name):
     """
     This function takes in a specific molecule's name and return its meta data
     INPUT: dataBase_data_holder_for_specific_molecule (Python list of metadata that we get from the database CSV File) | molecule_name ( name of the molecule which meta data will be returned )
     OUTPUT: returns the molecular information of the specific molecule
     """
-    url = f'https://webbook.nist.gov/cgi/cbook.cgi?Name={molecule_name}&Units=SI'
+    try:
+        url = f'https://webbook.nist.gov/cgi/cbook.cgi?Name={molecule_name}&Units=SI'
 
-    mass_spectrum_url = getMassSpectrumURL(url)
-    jdx_download_url = getJDXDownloadURL(mass_spectrum_url)
-    jdx_filename = getJDX(jdx_download_url,molecule_name)
-    overAllArray = getOverAllArray(jdx_filename)
+        molecular_formula = getMolecularFormula(url)
+        molecular_weight = getMolecularWeight(url)
+        electron_numbers = getElectronNumbers(molecular_formula)
+    except:
+        molecular_formula = 'unknown'
+        molecular_weight = 'unknown'
+        electron_numbers = 'unknown'
 
-    molecular_formula = getMolecularFormula(url)
-    molecular_weight = getMolecularWeight(url)
-    electron_numbers = getElectronNumbers(molecular_formula)
-    if((len(dataBase_data_holder_for_specific_molecule) > 0) and (dataBase_data_holder_for_specific_molecule[4] != '')):
-        knownMoleculeIonizationType = dataBase_data_holder_for_specific_molecule[4]
-    else:
-        knownMoleculeIonizationType = 'unknown'
-    
-    if((len(dataBase_data_holder_for_specific_molecule) > 0) and (dataBase_data_holder_for_specific_molecule[5] != '')):
-        knownIonizationFactorRelativeToN2 = dataBase_data_holder_for_specific_molecule[5]
-    else:
-        knownIonizationFactorRelativeToN2 = 'unknown'
+        print(f'Metadata for {molecule_name} NOT FOUND. They are set to Unknown')
+        
 
-    knownMoleculeIonizationType = 'unknown'
-    knownIonizationFactorRelativeToN2 = 'unknown'
-    SourceOfFragmentationPattern = 'NIST Webbook'
-    SourceOfIonizationData = 'unknown'
-
-    return overAllArray,molecular_formula,molecular_weight,electron_numbers,knownMoleculeIonizationType, knownIonizationFactorRelativeToN2, SourceOfFragmentationPattern, SourceOfIonizationData
+    return molecular_formula,molecular_weight,electron_numbers
 
 def getSpectrumForMoleculeFromOnline(molecule_name):
     """
@@ -720,7 +709,7 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', JDXFilesLocation='
             individual_spectrum = getSpectrumDataFromLocalJDX([JDXFilePathWithName])
             
             #As the metadata for the molecule is not present inside the database csv file, we will now retrieve them from online
-            spectrum_data,molecular_formula,molecular_weight,electron_number,knownMoleculeIonizationTypeOnline, knownIonizationFactorRelativeToN2Online, SourceOfFragmentationPatternOnline, SourceOfIonizationDatumOnline = getMetaDataForMoleculeFromOnline(molecule_meta_data_from_database,moleculeName)
+            spectrum_data,molecular_formula,molecular_weight,electron_number,knownMoleculeIonizationTypeOnline, knownIonizationFactorRelativeToN2Online, SourceOfFragmentationPatternOnline, SourceOfIonizationDatumOnline = getMetaDataForMoleculeFromOnline(moleculeName)
             ENumber = int(electron_number)
             MWeight = float(molecular_weight)
             knownMoleculeIonizationType = knownMoleculeIonizationTypeOnline
@@ -730,7 +719,7 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', JDXFilesLocation='
 
         #Otherwise we will get all the metadata + spectrum data from online
         else:
-            spectrum_data,molecular_formula,molecular_weight,electron_number,knownMoleculeIonizationTypeOnline, knownIonizationFactorRelativeToN2Online, SourceOfFragmentationPatternOnline, SourceOfIonizationDatumOnline = getMetaDataForMoleculeFromOnline(molecule_meta_data_from_database,moleculeName)
+            spectrum_data,molecular_formula,molecular_weight,electron_number,knownMoleculeIonizationTypeOnline, knownIonizationFactorRelativeToN2Online, SourceOfFragmentationPatternOnline, SourceOfIonizationDatumOnline = getMetaDataForMoleculeFromOnline(moleculeName)
             ENumber = int(electron_number)
             MWeight = float(molecular_weight)
             knownMoleculeIonizationType = knownMoleculeIonizationTypeOnline
