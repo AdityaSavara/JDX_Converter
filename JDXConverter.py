@@ -354,69 +354,8 @@ def getSpectrumForMoleculeFromOnline(molecule_name):
     spectrum_data = getOverAllArray(jdx_filename)
 
     SourceOfFragmentationPattern = 'NIST Webbook'
-    
+
     return spectrum_data, SourceOfFragmentationPattern
-
-def getSpectrumFromNIST(molecule_name, outputDirectory='OutputSingleCSVFiles'):
-    """
-    This function takes in a specific molecule's name and extract its spectrum data to a csv file
-    INPUT: molecule_name ( name of the molecule which spectrum data will be extracted )
-    OUTPUT: exports the molecular information and spectrum data to a csv file
-    """
-    overAllArray,molecular_formula,molecular_weight,electron_number,knownMoleculeIonizationType, knownIonizationFactorRelativeToN2, SourceOfFragmentationPattern, SourceOfIonizationDatum = getMetaDataForMolecule(molecule_name)
-
-    filename = molecule_name+".csv"
-
-    Molecules = []
-    Molecules.append(molecule_name)
-
-    SourceOfFragmentationPatterns = list()
-    SourceOfFragmentationPatterns.append(SourceOfFragmentationPattern)
-
-    SourceOfIonizationData = list()
-    SourceOfIonizationData.append(SourceOfIonizationDatum)
-
-    ENumbers =list() 
-    ENumbers.append(electron_number)
-
-    MWeights=list()
-    MWeights.append(molecular_weight)
-
-    knownMoleculeIonizationTypes = list()
-    knownMoleculeIonizationTypes.append(knownMoleculeIonizationType)
-
-    knownIonizationFactorsRelativeToN2 = list()
-    knownIonizationFactorsRelativeToN2.append(knownIonizationFactorRelativeToN2)
-
-    exportToCSV("%s\\%s" %(outputDirectory,filename), overAllArray, Molecules, ENumbers, MWeights, knownMoleculeIonizationTypes, knownIonizationFactorsRelativeToN2, SourceOfFragmentationPatterns, SourceOfIonizationData)
-
-def getMultipleSpectrumFromNIST():      #Keeping the function name as "getMultipleSpectrumFromNIST, will ask for appropriate name"
-    """
-    This function prompts the user to enter the specific molecule names and call 'getSpectrumFromNIST' function for each molecule
-    INPUT: this function does not have any parameter
-    OUTPUT: Exports the corresponding csv files for the entered molecules' spectra
-    """
-    # print("WELCOME")
-
-    print("Enter a molecule name or multiple molecule names. Separate multiple molecule names using ';'.")
-
-    molecule_names = []
-
-    while(1):
-        molecule_name = input()
-
-        if(molecule_name == "EXIT"):
-            break
-        if(';' in molecule_name):
-            molecule_names = takeInputAsList(molecule_name)
-        else:
-            molecule_names.append(molecule_name)
-   
-    print("[INFO] DOWNLOADING...PLEASE WAIT...")
-    for name in molecule_names:
-        getSpectrumFromNIST(name)
-        print("[INFO] ",name, "DOWNLOADED...")
-    print("FINISHED!")
 
 def readFromLocalDatabaseFile(localDatabaseFileName, delimeter=','):
     """
