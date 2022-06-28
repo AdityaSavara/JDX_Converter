@@ -340,12 +340,18 @@ def getSpectrumForMoleculeFromOnline(molecule_name):
     """
     url = f'https://webbook.nist.gov/cgi/cbook.cgi?Name={molecule_name}&Units=SI'
 
-    mass_spectrum_url = getMassSpectrumURL(url)
-    jdx_download_url = getJDXDownloadURL(mass_spectrum_url)
-    jdx_filename = getJDX(jdx_download_url,molecule_name)
-    spectrum_data = getOverAllArray(jdx_filename)
+    try:
+        mass_spectrum_url = getMassSpectrumURL(url)
+        jdx_download_url = getJDXDownloadURL(mass_spectrum_url)
+        jdx_filename = getJDX(jdx_download_url,molecule_name)
+        spectrum_data = getOverAllArray(jdx_filename)
 
-    SourceOfFragmentationPattern = 'NIST Webbook'
+        SourceOfFragmentationPattern = 'NIST Webbook'
+    except:
+        spectrum_data = []
+        SourceOfFragmentationPattern = 'unknown'
+
+        print(f'Spectrum data for {molecule_name} NOT FOUND in NIST Webbook. It is set to a blank list and SourceOfFragmentationPattern is set to unknown')
 
     return spectrum_data, SourceOfFragmentationPattern
 
