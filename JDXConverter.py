@@ -1,7 +1,4 @@
 #This variable determines the largest fragment size that the program can handle
-from importlib_metadata import metadata
-
-
 MaximumAtomicUnit = 300
 
 def getMassSpectrumURL(URL):
