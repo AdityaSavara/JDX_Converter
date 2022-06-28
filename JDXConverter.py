@@ -348,7 +348,7 @@ def getSpectrumForMoleculeFromOnline(molecule_name):
 
         SourceOfFragmentationPattern = 'NIST Webbook'
     except:
-        spectrum_data = []
+        spectrum_data = [0] * MaximumAtomicUnit
         SourceOfFragmentationPattern = 'unknown'
 
         print(f'Spectrum data for {molecule_name} NOT FOUND in NIST Webbook. It is set to a blank list and SourceOfFragmentationPattern is set to unknown')
@@ -751,19 +751,27 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', JDXFilesLocation='
             knownMoleculeIonizationType = 'unknown'
             knownIonizationFactorRelativeToN2 = 'unknown'
             SourceOfFragmentationPattern = SourceOfFragmentationPatternOnline
-            SourceOfIonizationDatum = SourceOfIonizationDatumOnline
+            SourceOfIonizationDatum = 'unknown'
 
         #Otherwise we will get all the metadata + spectrum data from online
         else:
             molecular_formula,molecular_weight,electron_number = getMetaDataForMoleculeFromOnline(moleculeName)
-            spectrum_data, SourceOfIonizationDatumOnline = getSpectrumForMoleculeFromOnline(moleculeName)
+            spectrum_data, SourceOfFragmentationPatternOnline = getSpectrumForMoleculeFromOnline(moleculeName)
+            
+            if electron_number is not 'unknown':
+                ENumber = int(electron_number)
+            else:
+                ENumber = 0
+            
+            if molecular_weight is not 'unknown':
+                MWeight = float(molecular_weight)
+            else:
+                MWeight = 0
 
-            ENumber = int(electron_number)
-            MWeight = float(molecular_weight)
             knownMoleculeIonizationType = 'unknown'
             knownIonizationFactorRelativeToN2 = 'unknown'
             SourceOfFragmentationPattern = SourceOfFragmentationPatternOnline
-            SourceOfIonizationDatum = SourceOfIonizationDatumOnline
+            SourceOfIonizationDatum = 'unknown'
 
             individual_spectrum = spectrum_data
         
