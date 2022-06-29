@@ -1,3 +1,4 @@
+
 #This variable determines the largest fragment size that the program can handle
 MaximumAtomicUnit = 300
 
@@ -214,7 +215,7 @@ def getSpectrumDataFromLocalJDX(JDXFilesList):
         AllSpectraData=combineArray(AllSpectraData, individual_spectrum)
     return AllSpectraData
 
-def exportToCSV(filename, OverallArray, MoleculeNames, ENumbers, MWeights, knownMoleculeIonizationTypes, knownIonizationFactorsRelativeToN2, SourceOfFragmentationPatterns, SourceOfIonizationData, delimeter=','):
+def exportToCSV(filename, OverallArray, MoleculeNames, ENumbers, MWeights, knownMoleculeIonizationTypes, knownIonizationFactorsRelativeToN2, SourceOfFragmentationPatterns, SourceOfIonizationData, delimeter=';'):
     """
     This function basically takes in all the metadata of molecules and write them into csv file/files
     """
@@ -267,7 +268,7 @@ def exportToCSV(filename, OverallArray, MoleculeNames, ENumbers, MWeights, known
     #write the ionization data source
     f5.write("SourceOfIonizationData")
     for i in SourceOfIonizationData:
-        f5.write(',%s' %i)
+        f5.write(f'{delimeter}{i}')
     f5.write('\n')
     
     #write the molecular weights
@@ -324,7 +325,7 @@ def getMetaDataForMoleculeFromOnline(molecule_name):
         molecular_weight = 'unknown'
         electron_numbers = 'unknown'
 
-        print(f'Metadata for {molecule_name} NOT FOUND in NIST Webbook. Molecular Formula, Molecular Weight & Electron Number are set to Unknown')
+        #print(f'Metadata for {molecule_name} NOT FOUND in NIST Webbook. Molecular Formula, Molecular Weight & Electron Number are set to Unknown') #commenting this out because it can cause confusion to the user.
         
 
     return molecular_formula,molecular_weight,electron_numbers
@@ -352,7 +353,7 @@ def getSpectrumForMoleculeFromOnline(molecule_name):
 
     return spectrum_data, SourceOfFragmentationPattern
 
-def readFromLocalDatabaseFile(localDatabaseFileName, delimeter=','):
+def readFromLocalDatabaseFile(localDatabaseFileName, delimeter=';'):
     """
     This function will take the local database csv file name and return its content in a python list type variable.
     INPUT: localDatabaseFileName( Full path and name of the database file . Example: MoleculesInfo.csv. Example : Database//MoleculesInfo.csv)
@@ -366,7 +367,7 @@ def readFromLocalDatabaseFile(localDatabaseFileName, delimeter=','):
         spamReader = csv.reader(open(localDatabaseFileName), delimiter=delimeter)
 
     #Else if the provided database file is a TXT formatted file ( most likely tab delimeted ), then it will open with UTF-16 encoding.
-    elif('.txt' in localDatabaseFileName):
+    elif ('.txt' in localDatabaseFileName) or ('.tab' in localDatabaseFileName):
         spamReader = csv.reader(open(localDatabaseFileName,encoding='utf-16'), delimiter=delimeter)
     
     for row in spamReader:
@@ -662,20 +663,25 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', JDXFilesLocation='
     defaultOutputFileName = 'ConvertedSpectra.csv'
     print("****JDXConverter Started:****")
     #Prompting the user to choose the database file
-    print('Press ENTER to use default database file (MoleculesInfo.csv). Otherwise, input "csv" for MoleculesInfo.csv or "txt" for (MoleculesInfoTable.txt).')
+    print('Press ENTER to use default database file (MoleculesInfo.csv). Otherwise, input "csv" for MoleculesInfo.csv or "txt" for (MoleculesInfoTable.txt) or "tab" for (MoleculesInfoTable.tab).')
     databaseFileChoice = input()
 
     #If the user inputs txt, then we will take the MoleculesInfoTable.txt file as our database file
     if(databaseFileChoice == "txt"):
         dataBaseFileName = "MoleculesInfoTable.txt"
         delimeter = '\t'
+    elif(databaseFileChoice == "tab"):
+        dataBaseFileName = "MoleculesInfoTable.tab"
+        delimeter = '\t'
+    else:
+        dataBaseFileName = "MoleculesInfo.csv"
+        delimeter = ';' 
     #Else it will be remain as MoleculesInfo.csv file as the default database file
 
     #Reading the information from database file
     #print(f"LOADING Information from {dataBaseFileName}")
     DataBase_data_holder = readFromLocalDatabaseFile(dataBaseFileName, delimeter=delimeter) #This variable will contain the full list or data of the CSV file in the link : https://github.com/AdityaSavara/JDX_Converter/blob/master/MoleculesInfo.csv
    
-
     #Starting text for the application , also instructions for the User to start
     MoleculeNames = takeMoleculeNamesInputFromUser(DataBase_data_holder) #MoleculeNames is a list of molecule names, provided by the user. The DataBase_data_holder is passed into this function in case the user wants to convert all the molecules from the database.
     
@@ -792,16 +798,20 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', JDXFilesLocation='
     #Now we will get the appropriate file name for the output. The OutputFiles will have a number at the end which is 1 or higher and the lowest number will be used.
     outputFileNameCSV = getOutputFileName(outputFileDirectoryPath)
     outputFileNameTXT = getOutputFileName(outputFileDirectoryPath, expectedFileName='ConvertedSpectraTable.txt', fileExtension='.txt')
+    outputFileNameTAB = getOutputFileName(outputFileDirectoryPath, expectedFileName='ConvertedSpectraTable.tab', fileExtension='.tab')
 
     #Now we have all the implied returns of this function and now we will call the exportToCSV function to write all the metadata and spectrum data to the csv file
     OutputfilePathAndName = f"{outputFileDirectoryPath}\\{outputFileNameCSV}"
-    exportToCSV(OutputfilePathAndName , AllSpectra, MoleculeNames , ENumbers , MWeights , knownMoleculeIonizationTypes , knownIonizationFactorsRelativeToN2 , SourcesOfFragmentationPattern , SourceOfIonizationData)
+    exportToCSV(OutputfilePathAndName , AllSpectra, MoleculeNames , ENumbers , MWeights , knownMoleculeIonizationTypes , knownIonizationFactorsRelativeToN2 , SourcesOfFragmentationPattern , SourceOfIonizationData, delimeter=';')
 
     OutputfilePathAndName = f"{outputFileDirectoryPath}\\{outputFileNameTXT}"
     exportToCSV(OutputfilePathAndName , AllSpectra, MoleculeNames , ENumbers , MWeights , knownMoleculeIonizationTypes , knownIonizationFactorsRelativeToN2 , SourcesOfFragmentationPattern , SourceOfIonizationData, delimeter='\t')
 
+    OutputfilePathAndName = f"{outputFileDirectoryPath}\\{outputFileNameTAB}"
+    exportToCSV(OutputfilePathAndName , AllSpectra, MoleculeNames , ENumbers , MWeights , knownMoleculeIonizationTypes , knownIonizationFactorsRelativeToN2 , SourcesOfFragmentationPattern , SourceOfIonizationData, delimeter='\t')
+
     #Now this function will terminate showing the user where the output has been written
-    print(f"Conversion complete: outputs written in ./{outputFileDirectoryPath}/{outputFileNameCSV} and ./{outputFileDirectoryPath}/{outputFileNameTXT}")
+    print(f"Conversion complete: outputs written in ./{outputFileDirectoryPath}/{outputFileNameCSV}, ./{outputFileDirectoryPath}/{outputFileNameTXT}, and /{outputFileDirectoryPath}/{outputFileNameTAB}")
 
 if __name__ == "__main__":
     # getMultipleSpectrumFromNIST()
