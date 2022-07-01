@@ -1,3 +1,4 @@
+
 #This variable determines the largest fragment size that the program can handle
 MaximumAtomicUnit = 300
 
@@ -214,7 +215,7 @@ def getSpectrumDataFromLocalJDX(JDXFilesList):
         AllSpectraData=combineArray(AllSpectraData, individual_spectrum)
     return AllSpectraData
 
-def exportToCSV(filename, OverallArray, MoleculeNames, ENumbers, MWeights, knownMoleculeIonizationTypes, knownIonizationFactorsRelativeToN2, SourceOfFragmentationPatterns, SourceOfIonizationData, delimeter=','):
+def exportToCSV(filename, OverallArray, MoleculeNames, ENumbers, MWeights, knownMoleculeIonizationTypes, knownIonizationFactorsRelativeToN2, SourceOfFragmentationPatterns, SourceOfIonizationData, delimeter=';'):
     """
     This function basically takes in all the metadata of molecules and write them into csv file/files
     """
@@ -267,7 +268,7 @@ def exportToCSV(filename, OverallArray, MoleculeNames, ENumbers, MWeights, known
     #write the ionization data source
     f5.write("SourceOfIonizationData")
     for i in SourceOfIonizationData:
-        f5.write(',%s' %i)
+        f5.write(f'{delimeter}{i}')
     f5.write('\n')
     
     #write the molecular weights
@@ -307,101 +308,52 @@ def takeInputAsList(molecule_name):
         molecule_names.append(name)
     return molecule_names
 
-def getMetaDataForMoleculeFromOnline(dataBase_data_holder_for_specific_molecule, molecule_name):
+def getMetaDataForMoleculeFromOnline(molecule_name):
     """
     This function takes in a specific molecule's name and return its meta data
     INPUT: dataBase_data_holder_for_specific_molecule (Python list of metadata that we get from the database CSV File) | molecule_name ( name of the molecule which meta data will be returned )
     OUTPUT: returns the molecular information of the specific molecule
     """
+    try:
+        url = f'https://webbook.nist.gov/cgi/cbook.cgi?Name={molecule_name}&Units=SI'
+
+        molecular_formula = getMolecularFormula(url)
+        molecular_weight = getMolecularWeight(url)
+        electron_numbers = getElectronNumbers(molecular_formula)
+    except:
+        molecular_formula = 'unknown'
+        molecular_weight = 'unknown'
+        electron_numbers = 'unknown'
+
+        #print(f'Metadata for {molecule_name} NOT FOUND in NIST Webbook. Molecular Formula, Molecular Weight & Electron Number are set to Unknown') #commenting this out because it can cause confusion to the user.
+        
+
+    return molecular_formula,molecular_weight,electron_numbers
+
+def getSpectrumForMoleculeFromOnline(molecule_name):
+    """
+    This function will get the Spectrum data from Online source.
+    INPUT: molecule_name ( Specific Molecule's Name which spectrum data the user want from online )
+    OUTPUT: spectrum_data ( Data array containing the spectrum data from online ) | SourceOfFragmentationPattern ( As we are retrieving the data from online, it will be NIST Webbook in this case)
+    """
     url = f'https://webbook.nist.gov/cgi/cbook.cgi?Name={molecule_name}&Units=SI'
 
-    mass_spectrum_url = getMassSpectrumURL(url)
-    jdx_download_url = getJDXDownloadURL(mass_spectrum_url)
-    jdx_filename = getJDX(jdx_download_url,molecule_name)
-    overAllArray = getOverAllArray(jdx_filename)
+    try:
+        mass_spectrum_url = getMassSpectrumURL(url)
+        jdx_download_url = getJDXDownloadURL(mass_spectrum_url)
+        jdx_filename = getJDX(jdx_download_url,molecule_name)
+        spectrum_data = getOverAllArray(jdx_filename)
 
-    molecular_formula = getMolecularFormula(url)
-    molecular_weight = getMolecularWeight(url)
-    electron_numbers = getElectronNumbers(molecular_formula)
-    if((len(dataBase_data_holder_for_specific_molecule) > 0) and (dataBase_data_holder_for_specific_molecule[4] != '')):
-        knownMoleculeIonizationType = dataBase_data_holder_for_specific_molecule[4]
-    else:
-        knownMoleculeIonizationType = 'unknown'
-    
-    if((len(dataBase_data_holder_for_specific_molecule) > 0) and (dataBase_data_holder_for_specific_molecule[5] != '')):
-        knownIonizationFactorRelativeToN2 = dataBase_data_holder_for_specific_molecule[5]
-    else:
-        knownIonizationFactorRelativeToN2 = 'unknown'
+        SourceOfFragmentationPattern = 'NIST Webbook'
+    except:
+        spectrum_data = [0] * MaximumAtomicUnit
+        SourceOfFragmentationPattern = 'unknown'
 
-    knownMoleculeIonizationType = 'unknown'
-    knownIonizationFactorRelativeToN2 = 'unknown'
-    SourceOfFragmentationPattern = 'NIST Webbook'
-    SourceOfIonizationData = 'unknown'
+        print(f'Spectrum data for {molecule_name} NOT FOUND in NIST Webbook. It is set to a blank list and SourceOfFragmentationPattern is set to unknown')
 
-    return overAllArray,molecular_formula,molecular_weight,electron_numbers,knownMoleculeIonizationType, knownIonizationFactorRelativeToN2, SourceOfFragmentationPattern, SourceOfIonizationData
+    return spectrum_data, SourceOfFragmentationPattern
 
-def getSpectrumFromNIST(molecule_name, outputDirectory='OutputSingleCSVFiles'):
-    """
-    This function takes in a specific molecule's name and extract its spectrum data to a csv file
-    INPUT: molecule_name ( name of the molecule which spectrum data will be extracted )
-    OUTPUT: exports the molecular information and spectrum data to a csv file
-    """
-    overAllArray,molecular_formula,molecular_weight,electron_number,knownMoleculeIonizationType, knownIonizationFactorRelativeToN2, SourceOfFragmentationPattern, SourceOfIonizationDatum = getMetaDataForMolecule(molecule_name)
-
-    filename = molecule_name+".csv"
-
-    Molecules = []
-    Molecules.append(molecule_name)
-
-    SourceOfFragmentationPatterns = list()
-    SourceOfFragmentationPatterns.append(SourceOfFragmentationPattern)
-
-    SourceOfIonizationData = list()
-    SourceOfIonizationData.append(SourceOfIonizationDatum)
-
-    ENumbers =list() 
-    ENumbers.append(electron_number)
-
-    MWeights=list()
-    MWeights.append(molecular_weight)
-
-    knownMoleculeIonizationTypes = list()
-    knownMoleculeIonizationTypes.append(knownMoleculeIonizationType)
-
-    knownIonizationFactorsRelativeToN2 = list()
-    knownIonizationFactorsRelativeToN2.append(knownIonizationFactorRelativeToN2)
-
-    exportToCSV("%s\\%s" %(outputDirectory,filename), overAllArray, Molecules, ENumbers, MWeights, knownMoleculeIonizationTypes, knownIonizationFactorsRelativeToN2, SourceOfFragmentationPatterns, SourceOfIonizationData)
-
-def getMultipleSpectrumFromNIST():      #Keeping the function name as "getMultipleSpectrumFromNIST, will ask for appropriate name"
-    """
-    This function prompts the user to enter the specific molecule names and call 'getSpectrumFromNIST' function for each molecule
-    INPUT: this function does not have any parameter
-    OUTPUT: Exports the corresponding csv files for the entered molecules' spectra
-    """
-    # print("WELCOME")
-
-    print("Enter a molecule name or multiple molecule names. Separate multiple molecule names using ';'.")
-
-    molecule_names = []
-
-    while(1):
-        molecule_name = input()
-
-        if(molecule_name == "EXIT"):
-            break
-        if(';' in molecule_name):
-            molecule_names = takeInputAsList(molecule_name)
-        else:
-            molecule_names.append(molecule_name)
-   
-    print("[INFO] DOWNLOADING...PLEASE WAIT...")
-    for name in molecule_names:
-        getSpectrumFromNIST(name)
-        print("[INFO] ",name, "DOWNLOADED...")
-    print("FINISHED!")
-
-def readFromLocalDatabaseFile(localDatabaseFileName, delimeter=','):
+def readFromLocalDatabaseFile(localDatabaseFileName, delimeter=';'):
     """
     This function will take the local database csv file name and return its content in a python list type variable.
     INPUT: localDatabaseFileName( Full path and name of the database file . Example: MoleculesInfo.csv. Example : Database//MoleculesInfo.csv)
@@ -415,7 +367,7 @@ def readFromLocalDatabaseFile(localDatabaseFileName, delimeter=','):
         spamReader = csv.reader(open(localDatabaseFileName), delimiter=delimeter)
 
     #Else if the provided database file is a TXT formatted file ( most likely tab delimeted ), then it will open with UTF-16 encoding.
-    elif('.txt' in localDatabaseFileName):
+    elif ('.txt' in localDatabaseFileName) or ('.tab' in localDatabaseFileName):
         spamReader = csv.reader(open(localDatabaseFileName,encoding='utf-16'), delimiter=delimeter)
     
     for row in spamReader:
@@ -460,7 +412,7 @@ def takeMoleculeNamesInputFromUser (DataBase_data_holder):
     MoleculeNames = []
 
     #print("If a molecule name has a comma in it (e.g. 1,3-pentadiene) or any other input has a comma in it, we recommend using an _ (e.g. 1_3-pentadiene) since this information is stored in a comma separated value file.")
-    print("Press ENTER to automatically create converted spectra for all molecules inside the datbase specified. Otherwise, enter one or more molecule names, with multiple molecule names separated by ';'")
+    print("Press ENTER to automatically create converted spectra for all molecules inside the database specified. Otherwise, enter one or more molecule names, with multiple molecule names separated by ';'")
     moleculeName = input()
 
     #If the User press Enter, then we will retrieve all the molecule names from the database file
@@ -526,7 +478,6 @@ def getOutputFileName(outputDirectory, expectedFileName = 'ConvertedSpectra.csv'
 
     expectedFileName = f"{expectedFileName.split('.')[0]}{maxFileCounter}{fileExtension}"
     return expectedFileName
-
 
 def startCommandLine(dataBaseFileName='MoleculesInfo.csv'):
     """
@@ -681,7 +632,7 @@ def startCommandLine(dataBaseFileName='MoleculesInfo.csv'):
 
     exportToCSV("%s\\ConvertedSpectra.csv" %outputDirectory, AllSpectra,  MoleculeNames, ENumbers, MWeights, knownMoleculeIonizationTypes, knownIonizationFactorsRelativeToN2, SourceOfFragmentationPatterns, SourceOfIonizationData)
 
-def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', JDXFilesLocation='JDXFiles//', delimeter=","):
+def startCommandLineInterface(dataBaseFileName='MoleculesInfo.csv', JDXFilesLocation='JDXFiles//', delimeter=","):
     """
     This function will start the JDX Converter application and handle the user/app flow. #TODO: The function name will be renamed later accordingly.
     """
@@ -712,19 +663,25 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', JDXFilesLocation='
     defaultOutputFileName = 'ConvertedSpectra.csv'
     print("****JDXConverter Started:****")
     #Prompting the user to choose the database file
-    print('Press ENTER to use default database file (MoleculesInfo.csv). Otherwise, input "csv" for MoleculesInfo.csv or "txt" for (MoleculesInfoTable.txt).')
+    print('Press ENTER to use default database file (MoleculesInfo.csv). Otherwise, input "csv" for MoleculesInfo.csv or "txt" for (MoleculesInfoTable.txt) or "tab" for (MoleculesInfoTable.tab).')
     databaseFileChoice = input()
 
     #If the user inputs txt, then we will take the MoleculesInfoTable.txt file as our database file
     if(databaseFileChoice == "txt"):
         dataBaseFileName = "MoleculesInfoTable.txt"
         delimeter = '\t'
+    elif(databaseFileChoice == "tab"):
+        dataBaseFileName = "MoleculesInfoTable.tab"
+        delimeter = '\t'
+    else:
+        dataBaseFileName = "MoleculesInfo.csv"
+        delimeter = ';' 
     #Else it will be remain as MoleculesInfo.csv file as the default database file
 
     #Reading the information from database file
     #print(f"LOADING Information from {dataBaseFileName}")
     DataBase_data_holder = readFromLocalDatabaseFile(dataBaseFileName, delimeter=delimeter) #This variable will contain the full list or data of the CSV file in the link : https://github.com/AdityaSavara/JDX_Converter/blob/master/MoleculesInfo.csv
-
+   
     #Starting text for the application , also instructions for the User to start
     MoleculeNames = takeMoleculeNamesInputFromUser(DataBase_data_holder) #MoleculeNames is a list of molecule names, provided by the user. The DataBase_data_holder is passed into this function in case the user wants to convert all the molecules from the database.
     
@@ -732,6 +689,9 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', JDXFilesLocation='
         JDXfilename = moleculeName #Default value for JDXFilename will be the molecule name, if the database has a filename specified inside it, we will replace it later.
         #Getting the Data list if the Molecule name exists inside the database CSV file
         molecule_meta_data_from_database = getDataIfMoleculeExists(DataBase_data_holder , moleculeName) #getDataIfMoleculeExists will return the existing metadata inside the database_data_holder
+
+        molecule_final_meta_data = [''] * 8 # Indices will contain , 0: moleculeName, 1: ENumber, 2: MWeight, 3: JDXFileName , 4: knownMoleculesIonizationTypes, 5: knownIonizationFactorsRelativeToN2, 6: SourceOfFragmentationPatterns, 7: SourceOfIonizationData
+        molecule_final_meta_data_status = [False] * 8
 
         #Now We will check if the molecule's data exist inside the database file
         if (len(molecule_meta_data_from_database) != 0):
@@ -744,18 +704,41 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', JDXFilesLocation='
                 if(filenameFromDatabase in os.listdir(JDXFilesLocation)):
                     JDXfilename = JDXFilesLocation + filenameFromDatabase
                     individual_spectrum = getSpectrumDataFromLocalJDX([JDXfilename])
+                    SourceOfFragmentationPattern = molecule_meta_data_from_database[6]
                 else:
                     #This line will get all the data from online along with the individual spectrum data for the molecule. However we will only use the Spectrum data in this case
-                    spectrum_data,molecular_formula,molecular_weight,electron_number,knownMoleculeIonizationTypeOnline, knownIonizationFactorRelativeToN2Online, SourceOfFragmentationPatternOnline, SourceOfIonizationDatumOnline = getMetaDataForMoleculeFromOnline(molecule_meta_data_from_database,moleculeName)
+                    spectrum_data, SourceOfFragmentationPatternOnline = getSpectrumForMoleculeFromOnline(moleculeName)
                     individual_spectrum = spectrum_data
-            
+                    SourceOfFragmentationPattern = SourceOfFragmentationPatternOnline
+
+            #Now we will check if any of the values inside the database is blank or unknown
+            for datum in molecule_meta_data_from_database:
+                metadata_index = molecule_meta_data_from_database.index(datum)
+                if(datum == '' or datum == 'unknown'):
+                    molecule_final_meta_data_status[metadata_index] = False
+                else:
+                    molecule_final_meta_data[metadata_index] = datum
+                    molecule_final_meta_data_status[metadata_index] = True
+
+            #Now we will check if the Unknown values are retrievable from online or not
+            if False in molecule_final_meta_data_status:
+                #We will only try to retrieve the data from online only if they are retrievable from online. Such data exist inside the first 3 indices.
+                #We will consider the data after index three is not retrievable from online.
+                molecular_formula_online , Mass_online, Electrons_online = getMetaDataForMoleculeFromOnline(moleculeName)
+                for index in range(1,8): #looping over the indices of the data/metadata, index 0 is skipped because that is the molecule name
+                    if((index == 1) and (molecule_final_meta_data_status[index] == False)):
+                        molecule_final_meta_data[index] = Electrons_online
+                    elif(index == 2 and (molecule_final_meta_data_status[index] == False)):
+                        molecule_final_meta_data[index] = Mass_online
+                    elif(molecule_final_meta_data_status[index] == False):
+                        molecule_final_meta_data[index] = 'unknown'
+
             #This block will populate the necessary variables with the metadata from the database CSV file
-            ENumber = int(molecule_meta_data_from_database[1])
-            MWeight = float(molecule_meta_data_from_database[2])
-            knownMoleculeIonizationType = molecule_meta_data_from_database[4]
-            knownIonizationFactorRelativeToN2 = molecule_meta_data_from_database[5]
-            SourceOfFragmentationPattern = molecule_meta_data_from_database[6]
-            SourceOfIonizationDatum = molecule_meta_data_from_database[7]
+            ENumber = int(molecule_final_meta_data[1])
+            MWeight = float(molecule_final_meta_data[2])
+            knownMoleculeIonizationType = molecule_final_meta_data[4]
+            knownIonizationFactorRelativeToN2 = molecule_final_meta_data[5]
+            SourceOfIonizationDatum = molecule_final_meta_data[7]
 
         #Now we will check if the corresponding JDX file for the molecule exists in the local directory or not
         elif(checkInLocalJDXDirectory(JDXFilesLocation, JDXfilename)):
@@ -764,23 +747,33 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', JDXFilesLocation='
             individual_spectrum = getSpectrumDataFromLocalJDX([JDXFilePathWithName])
             
             #As the metadata for the molecule is not present inside the database csv file, we will now retrieve them from online
-            spectrum_data,molecular_formula,molecular_weight,electron_number,knownMoleculeIonizationTypeOnline, knownIonizationFactorRelativeToN2Online, SourceOfFragmentationPatternOnline, SourceOfIonizationDatumOnline = getMetaDataForMoleculeFromOnline(molecule_meta_data_from_database,moleculeName)
+            molecular_formula,molecular_weight,electron_number = getMetaDataForMoleculeFromOnline(moleculeName)
             ENumber = int(electron_number)
             MWeight = float(molecular_weight)
-            knownMoleculeIonizationType = knownMoleculeIonizationTypeOnline
-            knownIonizationFactorRelativeToN2 = knownIonizationFactorRelativeToN2Online
+            knownMoleculeIonizationType = 'unknown'
+            knownIonizationFactorRelativeToN2 = 'unknown'
             SourceOfFragmentationPattern = SourceOfFragmentationPatternOnline
-            SourceOfIonizationDatum = SourceOfIonizationDatumOnline
+            SourceOfIonizationDatum = 'unknown'
 
         #Otherwise we will get all the metadata + spectrum data from online
         else:
-            spectrum_data,molecular_formula,molecular_weight,electron_number,knownMoleculeIonizationTypeOnline, knownIonizationFactorRelativeToN2Online, SourceOfFragmentationPatternOnline, SourceOfIonizationDatumOnline = getMetaDataForMoleculeFromOnline(molecule_meta_data_from_database,moleculeName)
-            ENumber = int(electron_number)
-            MWeight = float(molecular_weight)
-            knownMoleculeIonizationType = knownMoleculeIonizationTypeOnline
-            knownIonizationFactorRelativeToN2 = knownIonizationFactorRelativeToN2Online
+            molecular_formula,molecular_weight,electron_number = getMetaDataForMoleculeFromOnline(moleculeName)
+            spectrum_data, SourceOfFragmentationPatternOnline = getSpectrumForMoleculeFromOnline(moleculeName)
+            
+            if electron_number is not 'unknown':
+                ENumber = int(electron_number)
+            else:
+                ENumber = 0
+            
+            if molecular_weight is not 'unknown':
+                MWeight = float(molecular_weight)
+            else:
+                MWeight = 0
+
+            knownMoleculeIonizationType = 'unknown'
+            knownIonizationFactorRelativeToN2 = 'unknown'
             SourceOfFragmentationPattern = SourceOfFragmentationPatternOnline
-            SourceOfIonizationDatum = SourceOfIonizationDatumOnline
+            SourceOfIonizationDatum = 'unknown'
 
             individual_spectrum = spectrum_data
         
@@ -804,16 +797,20 @@ def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', JDXFilesLocation='
     #Now we will get the appropriate file name for the output. The OutputFiles will have a number at the end which is 1 or higher and the lowest number will be used.
     outputFileNameCSV = getOutputFileName(outputFileDirectoryPath)
     outputFileNameTXT = getOutputFileName(outputFileDirectoryPath, expectedFileName='ConvertedSpectraTable.txt', fileExtension='.txt')
+    outputFileNameTAB = getOutputFileName(outputFileDirectoryPath, expectedFileName='ConvertedSpectraTable.tab', fileExtension='.tab')
 
     #Now we have all the implied returns of this function and now we will call the exportToCSV function to write all the metadata and spectrum data to the csv file
     OutputfilePathAndName = f"{outputFileDirectoryPath}\\{outputFileNameCSV}"
-    exportToCSV(OutputfilePathAndName , AllSpectra, MoleculeNames , ENumbers , MWeights , knownMoleculeIonizationTypes , knownIonizationFactorsRelativeToN2 , SourcesOfFragmentationPattern , SourceOfIonizationData)
+    exportToCSV(OutputfilePathAndName , AllSpectra, MoleculeNames , ENumbers , MWeights , knownMoleculeIonizationTypes , knownIonizationFactorsRelativeToN2 , SourcesOfFragmentationPattern , SourceOfIonizationData, delimeter=';')
 
     OutputfilePathAndName = f"{outputFileDirectoryPath}\\{outputFileNameTXT}"
     exportToCSV(OutputfilePathAndName , AllSpectra, MoleculeNames , ENumbers , MWeights , knownMoleculeIonizationTypes , knownIonizationFactorsRelativeToN2 , SourcesOfFragmentationPattern , SourceOfIonizationData, delimeter='\t')
 
+    OutputfilePathAndName = f"{outputFileDirectoryPath}\\{outputFileNameTAB}"
+    exportToCSV(OutputfilePathAndName , AllSpectra, MoleculeNames , ENumbers , MWeights , knownMoleculeIonizationTypes , knownIonizationFactorsRelativeToN2 , SourcesOfFragmentationPattern , SourceOfIonizationData, delimeter='\t')
+
     #Now this function will terminate showing the user where the output has been written
-    print(f"Conversion complete: outputs written in ./{outputFileDirectoryPath}/{outputFileNameCSV} and ./{outputFileDirectoryPath}/{outputFileNameTXT}")
+    print(f"Conversion complete: outputs written in ./{outputFileDirectoryPath}/{outputFileNameCSV}, ./{outputFileDirectoryPath}/{outputFileNameTXT}, and /{outputFileDirectoryPath}/{outputFileNameTAB}")
 
 if __name__ == "__main__":
     # getMultipleSpectrumFromNIST()
@@ -822,4 +819,4 @@ if __name__ == "__main__":
     # checkInLocalJDXDirectory('JDXFiles//','Ethanol')
     # print(takeMoleculeNamesInputFromUser())
     # print(getOutputFileName('OutputFiles//'))
-    newStartCommandLine()
+    startCommandLineInterface()
