@@ -725,7 +725,7 @@ def startCommandLineInterface(dataBaseFileName='MoleculesInfo.csv', JDXFilesLoca
                 #We will only try to retrieve the data from online only if they are retrievable from online. Such data exist inside the first 3 indices.
                 #We will consider the data after index three is not retrievable from online.
                 molecular_formula_online , Mass_online, Electrons_online = getMetaDataForMoleculeFromOnline(moleculeName)
-                for index in range(1,8):
+                for index in range(1,8): #looping over the indices of the data/metadata, index 0 is skipped because that is the molecule name
                     if((index == 1) and (molecule_final_meta_data_status[index] == False)):
                         molecule_final_meta_data[index] = Electrons_online
                     elif(index == 2 and (molecule_final_meta_data_status[index] == False)):
