@@ -243,7 +243,10 @@ def exportToCSV(filename, OverallArray, MoleculeNames, ENumbers, MWeights, known
     #write the Electron Numbers
     f5.write('Electron Numbers')
     for i in ENumbers:
-        f5.write(f"{delimeter}{float(i)}")
+        try:
+            f5.write(f"{delimeter}{int(i)}")
+        except:
+            f5.write(f"{delimeter}{'unknown'}")
     # f5.write(str(ENumbers))
     f5.write('\n')
     
@@ -274,7 +277,10 @@ def exportToCSV(filename, OverallArray, MoleculeNames, ENumbers, MWeights, known
     #write the molecular weights
     f5.write('Molecular Mass')
     for i in MWeights:
-        f5.write(f'{delimeter}{float(i)}')
+        try:
+            f5.write(f"{delimeter}{float(i)}")
+        except:
+            f5.write(f"{delimeter}{'unknown'}")
     # f5.write(str(MWeights))
     f5.write('\n')
     
@@ -314,10 +320,17 @@ def getMetaDataForMoleculeFromOnline(molecule_name):
     INPUT: dataBase_data_holder_for_specific_molecule (Python list of metadata that we get from the database CSV File) | molecule_name ( name of the molecule which meta data will be returned )
     OUTPUT: returns the molecular information of the specific molecule
     """
+    try: #check if the dependencies are available. If not, print a warning message.
+        import httplib2
+        from bs4 import BeautifulSoup, SoupStrainer
+    except:
+        print("Warning: The web retrieval dependencies are not present, httplib2 and bs4 are needed. Molecule metadata cannot be obtained from online.")
+
     try:
         url = f'https://webbook.nist.gov/cgi/cbook.cgi?Name={molecule_name}&Units=SI'
-
+        print("line 331", url)
         molecular_formula = getMolecularFormula(url)
+        print("line 333", molecular_formula)
         molecular_weight = getMolecularWeight(url)
         electron_numbers = getElectronNumbers(molecular_formula)
     except:
@@ -338,6 +351,12 @@ def getSpectrumForMoleculeFromOnline(molecule_name):
     """
     url = f'https://webbook.nist.gov/cgi/cbook.cgi?Name={molecule_name}&Units=SI'
 
+    try: #check if the dependencies are available. If not, print a warning message.
+        import httplib2
+        from bs4 import BeautifulSoup, SoupStrainer
+    except:
+        print("Warning: The web retrieval dependencies are not present, httplib2 and bs4 are needed. JDX spectra cannot be obtained from online.")
+
     try:
         mass_spectrum_url = getMassSpectrumURL(url)
         jdx_download_url = getJDXDownloadURL(mass_spectrum_url)
@@ -349,7 +368,7 @@ def getSpectrumForMoleculeFromOnline(molecule_name):
         spectrum_data = [0] * MaximumAtomicUnit
         SourceOfFragmentationPattern = 'unknown'
 
-        print(f'Spectrum data for {molecule_name} NOT FOUND in NIST Webbook. It is set to a blank list and SourceOfFragmentationPattern is set to unknown')
+        print(f'Warning: Spectrum data for {molecule_name} was not successfully retrieved from online. It is set to a list of 0 and SourceOfFragmentationPattern is set to unknown')
 
     return spectrum_data, SourceOfFragmentationPattern
 
@@ -700,16 +719,15 @@ def startCommandLineInterface(dataBaseFileName='MoleculesInfo.csv', JDXFilesLoca
             
             #Now we will check if there's a jdx filename specified inside the database CSV file for the molecule
             filenameFromDatabase = molecule_meta_data_from_database[3].strip()
-            if(filenameFromDatabase != ''):
-                if(filenameFromDatabase in os.listdir(JDXFilesLocation)):
+            if(filenameFromDatabase != '') and (filenameFromDatabase in os.listdir(JDXFilesLocation)):
                     JDXfilename = JDXFilesLocation + filenameFromDatabase
                     individual_spectrum = getSpectrumDataFromLocalJDX([JDXfilename])
                     SourceOfFragmentationPattern = molecule_meta_data_from_database[6]
-                else:
-                    #This line will get all the data from online along with the individual spectrum data for the molecule. However we will only use the Spectrum data in this case
-                    spectrum_data, SourceOfFragmentationPatternOnline = getSpectrumForMoleculeFromOnline(moleculeName)
-                    individual_spectrum = spectrum_data
-                    SourceOfFragmentationPattern = SourceOfFragmentationPatternOnline
+            else:
+                #This line will get all the data from online along with the individual spectrum data for the molecule. However we will only use the Spectrum data in this case
+                spectrum_data, SourceOfFragmentationPatternOnline = getSpectrumForMoleculeFromOnline(moleculeName)
+                individual_spectrum = spectrum_data
+                SourceOfFragmentationPattern = SourceOfFragmentationPatternOnline
 
             #Now we will check if any of the values inside the database is blank or unknown
             for datum in molecule_meta_data_from_database:
@@ -724,18 +742,28 @@ def startCommandLineInterface(dataBaseFileName='MoleculesInfo.csv', JDXFilesLoca
             if False in molecule_final_meta_data_status:
                 #We will only try to retrieve the data from online only if they are retrievable from online. Such data exist inside the first 3 indices.
                 #We will consider the data after index three is not retrievable from online.
-                molecular_formula_online , Mass_online, Electrons_online = getMetaDataForMoleculeFromOnline(moleculeName)
                 for index in range(1,8): #looping over the indices of the data/metadata, index 0 is skipped because that is the molecule name
                     if((index == 1) and (molecule_final_meta_data_status[index] == False)):
+                        print("line 746", moleculeName)
+                        molecular_formula_online , Mass_online, Electrons_online = getMetaDataForMoleculeFromOnline(moleculeName)
                         molecule_final_meta_data[index] = Electrons_online
+                        print("line 746", moleculeName, Electrons_online)
                     elif(index == 2 and (molecule_final_meta_data_status[index] == False)):
+                        molecular_formula_online , Mass_online, Electrons_online = getMetaDataForMoleculeFromOnline(moleculeName)
                         molecule_final_meta_data[index] = Mass_online
                     elif(molecule_final_meta_data_status[index] == False):
                         molecule_final_meta_data[index] = 'unknown'
 
             #This block will populate the necessary variables with the metadata from the database CSV file
-            ENumber = int(molecule_final_meta_data[1])
-            MWeight = float(molecule_final_meta_data[2])
+            #For the cases that are supposed to be numbers, will change them to 'unknown' if the casting fails.
+            try:
+                ENumber = int(molecule_final_meta_data[1])
+            except:
+                ENumber = 'unknown'
+            try:
+                MWeight = float(molecule_final_meta_data[2])
+            except:
+                MWeight = 'unknown'
             knownMoleculeIonizationType = molecule_final_meta_data[4]
             knownIonizationFactorRelativeToN2 = molecule_final_meta_data[5]
             SourceOfIonizationDatum = molecule_final_meta_data[7]
