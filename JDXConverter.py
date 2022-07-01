@@ -412,7 +412,7 @@ def takeMoleculeNamesInputFromUser (DataBase_data_holder):
     MoleculeNames = []
 
     #print("If a molecule name has a comma in it (e.g. 1,3-pentadiene) or any other input has a comma in it, we recommend using an _ (e.g. 1_3-pentadiene) since this information is stored in a comma separated value file.")
-    print("Press ENTER to automatically create converted spectra for all molecules inside the datbase specified. Otherwise, enter one or more molecule names, with multiple molecule names separated by ';'")
+    print("Press ENTER to automatically create converted spectra for all molecules inside the database specified. Otherwise, enter one or more molecule names, with multiple molecule names separated by ';'")
     moleculeName = input()
 
     #If the User press Enter, then we will retrieve all the molecule names from the database file
@@ -632,7 +632,7 @@ def startCommandLine(dataBaseFileName='MoleculesInfo.csv'):
 
     exportToCSV("%s\\ConvertedSpectra.csv" %outputDirectory, AllSpectra,  MoleculeNames, ENumbers, MWeights, knownMoleculeIonizationTypes, knownIonizationFactorsRelativeToN2, SourceOfFragmentationPatterns, SourceOfIonizationData)
 
-def newStartCommandLine(dataBaseFileName='MoleculesInfo.csv', JDXFilesLocation='JDXFiles//', delimeter=","):
+def startCommandLineInterface(dataBaseFileName='MoleculesInfo.csv', JDXFilesLocation='JDXFiles//', delimeter=","):
     """
     This function will start the JDX Converter application and handle the user/app flow. #TODO: The function name will be renamed later accordingly.
     """
@@ -820,4 +820,4 @@ if __name__ == "__main__":
     # checkInLocalJDXDirectory('JDXFiles//','Ethanol')
     # print(takeMoleculeNamesInputFromUser())
     # print(getOutputFileName('OutputFiles//'))
-    newStartCommandLine()
+    startCommandLineInterface()
