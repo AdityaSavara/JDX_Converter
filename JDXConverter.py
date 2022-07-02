@@ -378,17 +378,22 @@ def readFromLocalDatabaseFile(localDatabaseFileName, delimeter=';'):
     OUTPUT: 
     """
     import csv
-
     data_list = []
     #If the provided database file is a CSV formatted file, then it will open with the default encoding
-    if('.csv' in localDatabaseFileName):
-        spamReader = csv.reader(open(localDatabaseFileName), delimiter=delimeter)
+    if delimeter == 'tab': #The csv reader uses 't' instead of '\t'
+        delimeter = '\t'
+    try:
+        if('.csv' in localDatabaseFileName) or ('.skv' in localDatabaseFileName):
+            csvData = csv.reader(open(localDatabaseFileName), delimiter=delimeter)
+        #Else if the provided database file is a TXT formatted file ( most likely tab delimeted ), then it will open with UTF-16 encoding.
+        elif ('.txt' in localDatabaseFileName) or ('.tab' in localDatabaseFileName) or ('.tsv' in localDatabaseFileName):
+            csvData = csv.reader(open(localDatabaseFileName,encoding='utf-16'), delimiter=delimeter)
+        csvData #This line is just to force the program into the except statement if the csvData was not created correctly.
+    except:
+        print("ERROR: JDXConverter was unable to open or parse the database file (such as MoleculesInfo.csv). Please run the program again and ensure the database file and delimiter are specified correctly. Tab delimiters are specified as 'tab'"); import sys; sys.exit()
 
-    #Else if the provided database file is a TXT formatted file ( most likely tab delimeted ), then it will open with UTF-16 encoding.
-    elif ('.txt' in localDatabaseFileName) or ('.tab' in localDatabaseFileName):
-        spamReader = csv.reader(open(localDatabaseFileName,encoding='utf-16'), delimiter=delimeter)
-    
-    for row in spamReader:
+
+    for row in csvData:
         data_list.append(row)
     
     #the 'data_list' variable will contain all the rows in a list of the provided localDatabaseFileName
@@ -430,7 +435,7 @@ def takeMoleculeNamesInputFromUser (DataBase_data_holder):
     MoleculeNames = []
 
     #print("If a molecule name has a comma in it (e.g. 1,3-pentadiene) or any other input has a comma in it, we recommend using an _ (e.g. 1_3-pentadiene) since this information is stored in a comma separated value file.")
-    print("Press ENTER to automatically create converted spectra for all molecules inside the database specified. Otherwise, enter one or more molecule names, with multiple molecule names separated by ';'")
+    print("Press ENTER to automatically create converted spectra for all molecules inside the database specified. Otherwise, enter one or more additional molecule names, with multiple molecule names separated by ';'")
     moleculeName = input()
 
     #If the User press Enter, then we will retrieve all the molecule names from the database file
@@ -449,7 +454,7 @@ def takeMoleculeNamesInputFromUser (DataBase_data_holder):
             else:
                 MoleculeNames.append(moleculeName)
 
-            print("ENTER A MOLECULE NAME, OR MULTIPLE MOLECULE NAMES. Separate multiple names using ';'. or Type END to stope entering molecule name")
+            print("To add more molecules, enter one or more additional molecules names. Separate multiple names using ';'. Type END if you do not wish to add more molecules.")
             moleculeName = input()
     
     return MoleculeNames
@@ -593,8 +598,8 @@ def startCommandLine(dataBaseFileName='MoleculesInfo.csv'):
         fileInputName=input()
         #input_file ='attempt.csv'
         list_holder=[]
-        spamReader = csv.reader(open('%s' %fileInputName), delimiter=',')
-        for row in spamReader:
+        csvData = csv.reader(open('%s' %fileInputName), delimiter=',')
+        for row in csvData:
             list_holder.append(row)
             
             
@@ -678,24 +683,30 @@ def startCommandLineInterface(dataBaseFileName='MoleculesInfo.csv', JDXFilesLoca
     DataBase_data_holder=[]
 
     outputFileDirectoryPath = 'OutputFiles' #This is by default the output file directory path
-    defaultOutputFileName = 'ConvertedSpectra.csv'
+    defaultOutputFileName = 'ConvertedSpectra.skv'
     print("****JDXConverter Started:****")
     #Prompting the user to choose the database file
-    print('Press ENTER to use default database file (MoleculesInfo.csv). Otherwise, input "csv" for MoleculesInfo.csv or "txt" for (MoleculesInfoTable.txt) or "tab" for (MoleculesInfoTable.tab).')
+    print('Press ENTER to use default database file (MoleculesInfo.tsv). Otherwise, input "skv" for MoleculesInfo.skv or "tsv" for (MoleculesInfo.tsv), or the full filename followed by a space and the delimiter.')
     databaseFileChoice = input()
 
-    #If the user inputs txt, then we will take the MoleculesInfoTable.txt file as our database file
-    if(databaseFileChoice == "txt"):
-        dataBaseFileName = "MoleculesInfoTable.txt"
-        delimeter = '\t'
-    elif(databaseFileChoice == "tab"):
-        dataBaseFileName = "MoleculesInfoTable.tab"
-        delimeter = '\t'
-    else:
-        dataBaseFileName = "MoleculesInfo.csv"
+    #If the user inputs tsv, then we will take the MoleculesInfo.txt file as our database file
+    if( (databaseFileChoice.lower() == "") or (databaseFileChoice.lower()=='tsv')):
+        dataBaseFileName = "MoleculesInfo.tsv"
+        delimeter = 'tab'
+    elif(databaseFileChoice.lower() == "tab"):
+        dataBaseFileName = "MoleculesInfo.tab"
+        delimeter = 'tab'
+    elif(databaseFileChoice.lower() == "txt"):
+        dataBaseFileName = "MoleculesInfo.txt"
+        delimeter = 'tab'
+    elif(databaseFileChoice.lower() == "skv"):
+        dataBaseFileName = "MoleculesInfo.skv"
         delimeter = ';' 
-    #Else it will be remain as MoleculesInfo.csv file as the default database file
-
+    else:
+        databaseFileChoiceSplit = databaseFileChoice.split(" ")
+        dataBaseFileName = databaseFileChoiceSplit[0]
+        delimeter = databaseFileChoiceSplit[1]
+    
     #Reading the information from database file
     #print(f"LOADING Information from {dataBaseFileName}")
     DataBase_data_holder = readFromLocalDatabaseFile(dataBaseFileName, delimeter=delimeter) #This variable will contain the full list or data of the CSV file in the link : https://github.com/AdityaSavara/JDX_Converter/blob/master/MoleculesInfo.csv
@@ -756,7 +767,7 @@ def startCommandLineInterface(dataBaseFileName='MoleculesInfo.csv', JDXFilesLoca
             try:
                 ENumber = int(molecule_final_meta_data[1])
             except:
-                ENumber = 'unknown'
+                ENumber = int(-1)
             try:
                 MWeight = float(molecule_final_meta_data[2])
             except:
@@ -820,22 +831,22 @@ def startCommandLineInterface(dataBaseFileName='MoleculesInfo.csv', JDXFilesLoca
         os.makedirs(outputFileDirectoryPath)
    
     #Now we will get the appropriate file name for the output. The OutputFiles will have a number at the end which is 1 or higher and the lowest number will be used.
+    outputFileNameTSV = getOutputFileName(outputFileDirectoryPath, expectedFileName='ConvertedSpectra.tsv', fileExtension='.tsv')
+    outputFileNameSKV = getOutputFileName(outputFileDirectoryPath, expectedFileName='ConvertedSpectra.skv', fileExtension='.skv')
     outputFileNameCSV = getOutputFileName(outputFileDirectoryPath)
-    outputFileNameTXT = getOutputFileName(outputFileDirectoryPath, expectedFileName='ConvertedSpectraTable.txt', fileExtension='.txt')
-    outputFileNameTAB = getOutputFileName(outputFileDirectoryPath, expectedFileName='ConvertedSpectraTable.tab', fileExtension='.tab')
-
+    
     #Now we have all the implied returns of this function and now we will call the exportToCSV function to write all the metadata and spectrum data to the csv file
+    OutputfilePathAndName = f"{outputFileDirectoryPath}\\{outputFileNameTSV}"
+    exportToCSV(OutputfilePathAndName , AllSpectra, MoleculeNames , ENumbers , MWeights , knownMoleculeIonizationTypes , knownIonizationFactorsRelativeToN2 , SourcesOfFragmentationPattern , SourceOfIonizationData, delimeter='\t')
+
+    OutputfilePathAndName = f"{outputFileDirectoryPath}\\{outputFileNameSKV}"
+    exportToCSV(OutputfilePathAndName , AllSpectra, MoleculeNames , ENumbers , MWeights , knownMoleculeIonizationTypes , knownIonizationFactorsRelativeToN2 , SourcesOfFragmentationPattern , SourceOfIonizationData, delimeter=';')
+
     OutputfilePathAndName = f"{outputFileDirectoryPath}\\{outputFileNameCSV}"
     exportToCSV(OutputfilePathAndName , AllSpectra, MoleculeNames , ENumbers , MWeights , knownMoleculeIonizationTypes , knownIonizationFactorsRelativeToN2 , SourcesOfFragmentationPattern , SourceOfIonizationData, delimeter=';')
 
-    OutputfilePathAndName = f"{outputFileDirectoryPath}\\{outputFileNameTXT}"
-    exportToCSV(OutputfilePathAndName , AllSpectra, MoleculeNames , ENumbers , MWeights , knownMoleculeIonizationTypes , knownIonizationFactorsRelativeToN2 , SourcesOfFragmentationPattern , SourceOfIonizationData, delimeter='\t')
-
-    OutputfilePathAndName = f"{outputFileDirectoryPath}\\{outputFileNameTAB}"
-    exportToCSV(OutputfilePathAndName , AllSpectra, MoleculeNames , ENumbers , MWeights , knownMoleculeIonizationTypes , knownIonizationFactorsRelativeToN2 , SourcesOfFragmentationPattern , SourceOfIonizationData, delimeter='\t')
-
     #Now this function will terminate showing the user where the output has been written
-    print(f"Conversion complete: outputs written in ./{outputFileDirectoryPath}/{outputFileNameCSV}, ./{outputFileDirectoryPath}/{outputFileNameTXT}, and /{outputFileDirectoryPath}/{outputFileNameTAB}")
+    print(f"Conversion complete: outputs written in ./{outputFileDirectoryPath}/{outputFileNameTSV} and ./{outputFileDirectoryPath}/{outputFileNameSKV}")
 
 if __name__ == "__main__":
     # getMultipleSpectrumFromNIST()
