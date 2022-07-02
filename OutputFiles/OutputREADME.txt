@@ -1,3 +1,0 @@
-This OutputFiles directory is the default location for JDXConverter output files, though the user can specify an alternate ouput location during runtime. 
-The file ConvertedSpectraExample contains an example of the JDXConverter output.
-Output files will be created with a number at the end (such as "1, 2" etc. to avoid overwriting outputs from previous runs. The csv file has ";" separated columns, and the txt file has tab separated columns.

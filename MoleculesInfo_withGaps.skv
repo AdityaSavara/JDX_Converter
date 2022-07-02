@@ -1,0 +1,39 @@
+Molecule Name;Electrons;Mass;File Name;knownMoleculeIonizationType;knownIonizationFactorRelativeToN2;SourceOfFragmentationPattern;SourceOfIonizationInformation
+1butanal;40;72.11;1butanal.jdx;Organic;unknown;NIST Webbook;None
+1butanol;42;74.12;1butanol.jdx;Organic;unknown;NIST Webbook;None
+1butene;32;56.11;1butene.jdx;Organic;unknown;NIST Webbook;None
+1pentene;40;70.13;1pentene.jdx;Organic;unknown;NIST Webbook;None
+2butanone;40;72.11;2butanone.jdx;Organic;unknown;NIST Webbook;None
+2buten1ol(crotyl alcohol);40;72.11;2buten1ol(crotyl alcohol).jdx;Organic;unknown;NIST Webbook;None
+2butenalE(crotonaldehyde);38;70.09;2butenalE(crotonaldehyde).jdx;Organic;unknown;NIST Webbook;None
+2butenalZ(crotonaldehyde);38;70.09;2butenalZ(crotonaldehyde).jdx;Organic;unknown;NIST Webbook;None
+2buteneE;32;56.1063;2buteneE.jdx;Organic;unknown;NIST Webbook;None
+2buteneZ;32;56.11;2buteneZ.jdx;Organic;unknown;NIST Webbook;None
+2methylbut1ene;40;70.13;2methylbut1ene.jdx;Organic;unknown;NIST Webbook;None
+2methylbut2ene;40;70.13;2methylbut2ene.jdx;Organic;unknown;NIST Webbook;None
+2pentanone;48;86.13;2pentanone.jdx;Organic;unknown;NIST Webbook;None
+2penteneE;40;70.13;2penteneE.jdx;Organic;unknown;NIST Webbook;None
+2penteneZ;40;70.13;2penteneZ.jdx;Organic;unknown;NIST Webbook;None
+3methylbut1ene;40;70.13;3methylbut1ene.jdx;Organic;unknown;NIST Webbook;None
+3pentanone;48;86.13;3pentanone.jdx;Organic;unknown;NIST Webbook;None
+13butadiene;30;54.09;13butadiene.jdx;Organic;unknown;NIST Webbook;None
+acetaldehyde;;;acetaldehyde.jdx;Organic;unknown;NIST Webbook;None
+aceticacid;32;60.05;aceticacid.jdx;Organic;unknown;NIST Webbook;None
+acetone;32;58.08;;Organic;unknown;NIST Webbook;None
+butane;34;58.12;butane.jdx;Organic;unknown;NIST Webbook;None
+carbon dioxide;22;44.01;carbon dioxide.jdx;Organic, Inorganic;1.44;NIST Webbook;unknown
+carbon monoxide;14;28.01;carbon monoxide.jdx;Organic, Inorganic;1.07;NIST Webbook;unknown
+diatomicHydrogen;2;2.02;diatomicHydrogen.jdx;Inorganic;0.43;NIST Webbook;unknown
+diethylether;42;74.12;diethylether.jdx;Organic;unknown;NIST Webbook;None
+ethane;18;30.07;ethane.jdx;Organic;unknown;NIST Webbook;None
+ethanol;26;46.07;ethanol.jdx;Organic;unknown;NIST Webbook;None
+ethene;16;28.05;ethene.jdx;Organic;unknown;NIST Webbook;None
+ethylacetate;48;88.11;ethylacetate.jdx;Organic;unknown;NIST Webbook;None
+hexane;50;86.18;hexane.jdx;Organic;unknown;NIST Webbook;None
+isobutene;32;56.11;isobutene.jdx;Organic;unknown;NIST Webbook;None
+methane;10;16.04;methane.jdx;Organic;unknown;NIST Webbook;None
+pentane;42;72.15;pentane.jdx;Organic;unknown;NIST Webbook;None
+propane;26;44.1;propane.jdx;Organic;unknown;NIST Webbook;None
+propene;24;42.08;propene.jdx;Organic;unknown;NIST Webbook;None
+water;10;18.02;water.jdx;Inorganic;0.97;NIST Webbook;unknown
+ethyne;14;26.0373;ethyne.jdx;Organic;unknown;NIST Webbook;unknown
