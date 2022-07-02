@@ -1,8 +1,9 @@
 ﻿JDX Converter
 
 **Project Description:
-JDX Converter is used to convert JDX spectra (typically obtained from https://webbook.nist.gov/chemistry/) into a more useable delimited formats of the type compatible with MSRESOLVE. 
-During 2022, a major upgrade was performed where JDXConverter will now populate the output file with certain metadata (like molecular weight and number of electrons) from online.
+JDX Converter is used to convert JDX spectra (typically obtained from https://webbook.nist.gov/chemistry/) into a more useable text delimited formats of the type compatible with MSRESOLVE. 
+
+JDXConverter will also try to populate the output file with  metadata (like molecular weight and number of electrons) from online if needed.
 In typical usage, a user simply adds a row into MoleculesInfo.tsv using microsoft excel, and then runs JDXConverter.py.
 
 **Installation and dependencies:
