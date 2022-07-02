@@ -74,10 +74,8 @@ def getMolecularFormula(URL):
     import bs4
     import requests
     from bs4 import BeautifulSoup
-    
     webpage = requests.get(URL) 
     soup = BeautifulSoup(webpage.content, "lxml")
-
     formula_tag = soup.find("a", attrs={"title": 'IUPAC definition of empirical formula'}).find_parent().next_siblings
     formula = ''
     for sib in formula_tag:                                                                                             #sib is the siblings inside formula_tag
@@ -85,7 +83,6 @@ def getMolecularFormula(URL):
             formula = formula +sib.text
         else:
             formula = formula + sib
-
     return formula
 
 def getElectronNumbers(formula):
@@ -95,7 +92,10 @@ def getElectronNumbers(formula):
     INPUT: formula ( molecular formula string of the specific molecule. Example: CH4 )
     OUTPUT: total_electrons ( total electron count of the specific molecule )
     """
-    import pymatgen.core.composition
+    try:
+        import pymatgen.core.composition
+    except:
+        print("Warning: pymatgen is not installed. Missing elctron numbers will be listed as 'unknown'")
 
     comp = pymatgen.core.composition.Composition(formula)
     return comp.total_electrons
@@ -323,14 +323,13 @@ def getMetaDataForMoleculeFromOnline(molecule_name):
     try: #check if the dependencies are available. If not, print a warning message.
         import httplib2
         from bs4 import BeautifulSoup, SoupStrainer
+        import lxml
     except:
-        print("Warning: The web retrieval dependencies are not present, httplib2 and bs4 are needed. Molecule metadata cannot be obtained from online.")
+        print("Warning: At least one of the web retrieval dependencies is not present: httplib2, requests, bs4, and lxml, are needed. Some molecule metadata will not be retrievable from online. Use 'pip install ___' to get each of the missing dependencies.  ")
 
     try:
         url = f'https://webbook.nist.gov/cgi/cbook.cgi?Name={molecule_name}&Units=SI'
-        print("line 331", url)
         molecular_formula = getMolecularFormula(url)
-        print("line 333", molecular_formula)
         molecular_weight = getMolecularWeight(url)
         electron_numbers = getElectronNumbers(molecular_formula)
     except:
@@ -744,10 +743,8 @@ def startCommandLineInterface(dataBaseFileName='MoleculesInfo.csv', JDXFilesLoca
                 #We will consider the data after index three is not retrievable from online.
                 for index in range(1,8): #looping over the indices of the data/metadata, index 0 is skipped because that is the molecule name
                     if((index == 1) and (molecule_final_meta_data_status[index] == False)):
-                        print("line 746", moleculeName)
                         molecular_formula_online , Mass_online, Electrons_online = getMetaDataForMoleculeFromOnline(moleculeName)
                         molecule_final_meta_data[index] = Electrons_online
-                        print("line 746", moleculeName, Electrons_online)
                     elif(index == 2 and (molecule_final_meta_data_status[index] == False)):
                         molecular_formula_online , Mass_online, Electrons_online = getMetaDataForMoleculeFromOnline(moleculeName)
                         molecule_final_meta_data[index] = Mass_online
