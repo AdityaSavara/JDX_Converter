@@ -385,9 +385,12 @@ def readFromLocalDatabaseFile(localDatabaseFileName, delimeter=';'):
     try:
         if('.csv' in localDatabaseFileName) or ('.skv' in localDatabaseFileName):
             csvData = csv.reader(open(localDatabaseFileName), delimiter=delimeter)
-        #Else if the provided database file is a TXT formatted file ( most likely tab delimeted ), then it will open with UTF-16 encoding.
+        #Else if the provided database file is a TXT formatted file ( most likely tab delimeted ), then it will open with UTF-16 encoding, and if that fails will try utf-8 encoding.
         elif ('.txt' in localDatabaseFileName) or ('.tab' in localDatabaseFileName) or ('.tsv' in localDatabaseFileName):
-            csvData = csv.reader(open(localDatabaseFileName,encoding='utf-16'), delimiter=delimeter)
+            try:
+                csvData = csv.reader(open(localDatabaseFileName,encoding='utf-16'), delimiter=delimeter)
+            except:
+                csvData = csv.reader(open(localDatabaseFileName,encoding='utf-8'), delimiter=delimeter)
         csvData #This line is just to force the program into the except statement if the csvData was not created correctly.
     except:
         print("ERROR: JDXConverter was unable to open or parse the database file (such as MoleculesInfo.csv). Please run the program again and ensure the database file and delimiter are specified correctly. Tab delimiters are specified as 'tab'"); import sys; sys.exit()
