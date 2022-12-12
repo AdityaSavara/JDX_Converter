@@ -1,4 +1,4 @@
-from numpy import array, linspace, amin, amax, alen, append, arange, float64, logical_and, log10
+from numpy import array, linspace, amin, amax, append, arange, float64, logical_and, log10
 import re
 import string
 import pdb
