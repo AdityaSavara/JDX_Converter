@@ -846,10 +846,13 @@ def startCommandLineInterface(dataBaseFileName='MoleculesInfo.csv', JDXFilesLoca
     exportToCSV(OutputfilePathAndName , AllSpectra, MoleculeNames , ENumbers , MWeights , knownMoleculeIonizationTypes , knownIonizationFactorsRelativeToN2 , SourcesOfFragmentationPattern , SourceOfIonizationData, delimeter=';')
 
     OutputfilePathAndName = f"{outputFileDirectoryPath}\\{outputFileNameCSV}"
-    exportToCSV(OutputfilePathAndName , AllSpectra, MoleculeNames , ENumbers , MWeights , knownMoleculeIonizationTypes , knownIonizationFactorsRelativeToN2 , SourcesOfFragmentationPattern , SourceOfIonizationData, delimeter=';')
+    if "," not in MoleculeNames: #If there is no comma in the molecule names, then we wll use a comma.
+        exportToCSV(OutputfilePathAndName , AllSpectra, MoleculeNames , ENumbers , MWeights , knownMoleculeIonizationTypes , knownIonizationFactorsRelativeToN2 , SourcesOfFragmentationPattern , SourceOfIonizationData, delimeter=',')
+    else: #else we will use a semicolon.
+        exportToCSV(OutputfilePathAndName , AllSpectra, MoleculeNames , ENumbers , MWeights , knownMoleculeIonizationTypes , knownIonizationFactorsRelativeToN2 , SourcesOfFragmentationPattern , SourceOfIonizationData, delimeter=';')
 
     #Now this function will terminate showing the user where the output has been written
-    print(f"Conversion complete: outputs written in ./{outputFileDirectoryPath}/{outputFileNameTSV} and ./{outputFileDirectoryPath}/{outputFileNameSKV}")
+    print(f"Conversion complete: outputs written in ./{outputFileDirectoryPath}/{outputFileNameCSV}, ./{outputFileDirectoryPath}/{outputFileNameTSV},  and ./{outputFileDirectoryPath}/{outputFileNameSKV}")
 
 if __name__ == "__main__":
     # getMultipleSpectrumFromNIST()
