@@ -215,7 +215,7 @@ def getSpectrumDataFromLocalJDX(JDXFilesList):
         AllSpectraData=combineArray(AllSpectraData, individual_spectrum)
     return AllSpectraData
 
-def exportToCSV(filename, OverallArray, MoleculeNames, ENumbers, MWeights, knownMoleculeIonizationTypes, knownIonizationFactorsRelativeToN2, SourceOfFragmentationPatterns, SourceOfIonizationData, delimeter=';'):
+def exportToCSV(filename, OverallArray, MoleculeNames, ENumbers, MWeights, knownMoleculeIonizationTypes, knownIonizationFactorsRelativeToN2, SourceOfFragmentationPatterns, SourceOfIonizationData, delimeter=';', comments =''):
     """
     This function basically takes in all the metadata of molecules and write them into csv file/files
     """
@@ -229,7 +229,7 @@ def exportToCSV(filename, OverallArray, MoleculeNames, ENumbers, MWeights, known
             os.mkdir(directory_name)
         f5 = open(filename, 'w')
 
-    f5.write('#CommentsLine:')
+    f5.write('#CommentsLine:' + comments)
     for i in range(len(MoleculeNames)):
         f5.write(delimeter)
     f5.write('\n')
@@ -849,7 +849,7 @@ def startCommandLineInterface(dataBaseFileName='MoleculesInfo.csv', JDXFilesLoca
     if "," not in MoleculeNames: #If there is no comma in the molecule names, then we wll use a comma.
         exportToCSV(OutputfilePathAndName , AllSpectra, MoleculeNames , ENumbers , MWeights , knownMoleculeIonizationTypes , knownIonizationFactorsRelativeToN2 , SourcesOfFragmentationPattern , SourceOfIonizationData, delimeter=',')
     else: #else we will use a semicolon.
-        exportToCSV(OutputfilePathAndName , AllSpectra, MoleculeNames , ENumbers , MWeights , knownMoleculeIonizationTypes , knownIonizationFactorsRelativeToN2 , SourcesOfFragmentationPattern , SourceOfIonizationData, delimeter=';')
+        exportToCSV(OutputfilePathAndName , AllSpectra, MoleculeNames , ENumbers , MWeights , knownMoleculeIonizationTypes , knownIonizationFactorsRelativeToN2 , SourcesOfFragmentationPattern , SourceOfIonizationData, delimeter=';', comments="WARNING: at least one molecule name had a comma symbol ',' so this file was made with a semi-colon delimeter. Remove commas (',') from the molecule names if you would like a comma separated csv.")
 
     #Now this function will terminate showing the user where the output has been written
     print(f"Conversion complete: outputs written in ./{outputFileDirectoryPath}/{outputFileNameCSV}, ./{outputFileDirectoryPath}/{outputFileNameTSV},  and ./{outputFileDirectoryPath}/{outputFileNameSKV}")
